@@ -1,0 +1,48 @@
+#!/bin/sh
+
+commit_regex='^\[(FEATURE|REFACTOR|TEST|CI|RELEASE|BUGFIX|SETUP|HOTFIX|DOCUMENTATION)\]\[[#]{1}[0-9]{1,6}\]\s-\s[A-Z][[:alpha:][:space:]]{9,54}$'
+result=$(grep -E $commit_regex "$1")
+
+error='
+/***************************************************\
+|        *The commit message is non-standard*       |
+|***************************************************|
+|  Please follow the format:                        |
+|  [TYPE][ISSUE] - Description                      |
+|  TYPE = FEATURE, REFACTOR, TEST, CI, RELEASE,     |
+|          BUGFIX, SETUP, HOTIFIX, DOCUMENTATION    |
+|  ISSUE = Task code on github e.g: #42             |
+|  Description = verb in the simple past            |
+|                with a brief explanation           |
+\***************************************************/'
+error_type=' |              Failed to find the TYPE            |'
+error_issue=' |             Failed to find the ISSUE            |'
+error_msg=' |          Failed to find the Description         |'
+error_end=' \*************************************************/'
+
+if [ -z "${result}" ]; then
+  echo "$error" >&2
+
+
+commit_regex='\[(FEATURE|REFACTOR|TEST|CI|RELEASE|BUGFIX|SETUP|HOTFIX|DOCUMENTATION)\]'
+  result=$(grep -E $commit_regex "$1")
+  if [ -z "${result}" ]; then
+    echo "$error_type" >&2
+  fi
+
+  commit_regex='\[[#]{1}[0-9]{1,6}\]'
+  result=$(grep -E $commit_regex "$1")
+  if [ -z "${result}" ]; then
+    echo "$error_issue" >&2
+  fi
+
+  commit_regex='\s-\s[A-Z][[:alpha:][:space:]]{9,54}$'
+  result=$(grep -E $commit_regex "$1")
+  if [ -z "${result}" ]; then
+    echo "$error_msg" >&2
+  fi
+
+  echo "$error_end"
+
+  exit 1
+fi

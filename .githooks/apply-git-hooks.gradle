@@ -1,0 +1,8 @@
+task installGitHook(type: Copy) {
+    description = 'Ensures git hooks are placed right'
+    from new File(rootProject.rootDir, '.githooks/commit-msg')
+    into { new File(rootProject.rootDir, '.git/hooks') }
+    fileMode 0777
+}
+tasks.getByPath('clean').dependsOn installGitHook
+tasks.getByPath('build').dependsOn installGitHook

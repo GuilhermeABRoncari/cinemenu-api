@@ -33,3 +33,5 @@ dependencies {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+apply(from = ".githooks/apply-git-hooks.gradle")
