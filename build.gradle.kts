@@ -2,6 +2,7 @@ plugins {
 	java
 	id("org.springframework.boot") version "3.0.6"
 	id("io.spring.dependency-management") version "1.1.0"
+	id("jacoco")
 }
 
 group = "br.com.cinemenu"
@@ -32,6 +33,17 @@ dependencies {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+jacoco {
+	toolVersion = "0.8.9"
+	reportsDir = file("$buildDir/customJacocoReportDir")
+}
+tasks.jacocoTestReport {
+	reports {
+		xml.isEnabled = false
+		csv.isEnabled = false
+		html.destination = file("${buildDir}/jacocoHtml")
+	}
 }
 
 apply(from = ".githooks/apply-git-hooks.gradle")
