@@ -1,0 +1,39 @@
+name: CI(continuous integration)
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+
+jobs:
+  run-action:
+    name: Run action
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Java 17 with Spring Boot
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'spring-boot'
+
+      - name: Grant execute permission for Gradle Wrapper
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build --no-daemon
+
+      - name: Run tests
+        run: ./gradlew test --no-daemon
+
+      - name: Verify coverage
+        run: ./gradlew jacocoTestReport --no-daemon
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: build/jacoco/test/html/index.html
