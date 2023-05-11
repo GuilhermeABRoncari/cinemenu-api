@@ -36,13 +36,13 @@ tasks.withType<Test> {
 }
 jacoco {
 	toolVersion = "0.8.9"
-	reportsDir = file("$buildDir/customJacocoReportDir")
+	reportsDir = file("$buildDir/jacoco")
 }
 tasks.jacocoTestReport {
 	reports {
 		xml.isEnabled = false
 		csv.isEnabled = false
-		html.destination = file("${buildDir}/jacocoHtml")
+		html.destination = file("${buildDir}/jacoco/test/html")
 	}
 }
 
