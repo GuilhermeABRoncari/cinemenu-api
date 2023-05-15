@@ -1,14 +1,15 @@
 package br.com.cinemenu.cinemenuapi;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
 
-class CineMenuApiApplicationTests {
+@SpringBootTest
+class CineMenuApiApplicationTest {
 
 	@Test
-	void contextLoads() {
-		assertThat("42").isEqualTo("42");
+	void textMain() {
+		CineMenuApiApplication.main(new String[]{});
 	}
 
 }
