@@ -24,7 +24,13 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build --no-daemon
+        run: |
+          POSTGRESQL_DB_NAME
+          POSTGRESQL_DB_PASSWORD
+          POSTGRESQL_DB_USER
+          POSTGRESQL_HOSTNAME
+          POSTGRESQL_PORT
+          ./gradlew build --no-daemon
 
       - name: Run tests
         run: ./gradlew test --no-daemon
