@@ -24,8 +24,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: |
-          HOSTNAME=${{ secrets.HOSTNAME }}
+        run: HOSTNAME=${{ secrets.HOSTNAME }}
           PORT=${{ secrets.PORT }}
           DBNAME=${{ secrets.DBNAME }}
           DBUSER=${{ secrets.DBUSER }}
