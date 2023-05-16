@@ -36,15 +36,9 @@ dependencies {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
-jacoco {
-	toolVersion = "0.8.9"
-	reportsDir = file("$buildDir/jacoco")
-}
-tasks.jacocoTestReport {
+tasks.named<JacocoReport>("jacocoTestReport") {
 	reports {
-		xml.isEnabled = false
-		csv.isEnabled = false
-		html.destination = file("${buildDir}/jacoco/test/html")
+		html.outputLocation.set(layout.buildDirectory.dir("jacoco/test/html"))
 	}
 }
 
