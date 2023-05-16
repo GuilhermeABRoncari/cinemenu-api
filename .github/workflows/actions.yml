@@ -25,11 +25,11 @@ jobs:
 
       - name: Build with Gradle
         run: |
-          POSTGRESQL_HOSTNAME=${{ secrets.POSTGRESQL_HOSTNAME }}
-          POSTGRESQL_PORT=${{ secrets.POSTGRESQL_PORT }}
-          POSTGRESQL_DB_NAME=${{ secrets.POSTGRESQL_DB_NAME }}
-          POSTGRESQL_DB_USER=${{ secrets.POSTGRESQL_DB_USER }}
-          POSTGRESQL_DB_PASSWORD=${{ secrets.POSTGRESQL_DB_PASSWORD }}
+          HOSTNAME=${{ secrets.HOSTNAME }}
+          PORT=${{ secrets.PORT }}
+          DBNAME=${{ secrets.DBNAME }}
+          DBUSER=${{ secrets.DBUSER }}
+          DBPASSWORD=${{ secrets.DBPASSWORD }}
           ./gradlew build --no-daemon
 
       - name: Run tests
