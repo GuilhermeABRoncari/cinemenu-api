@@ -40,7 +40,7 @@ jobs:
       - name: Check coverage
         run: |
           COVERAGE_THRESHOLD=80
-          ACTUAL_COVERAGE=$(sed -n 's/^.*<span class="text-success">\([0-9]*\)<\/span><\/td>.*$/\1/p' build/jacoco/test/html/index.html)
+          ACTUAL_COVERAGE=70
           if [ "$ACTUAL_COVERAGE" -lt "$COVERAGE_THRESHOLD" ]; then
             echo 'Coverage below threshold ($ACTUAL_COVERAGE% < $COVERAGE_THRESHOLD%)'
             exit 1
