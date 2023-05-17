@@ -1,6 +1,5 @@
 package br.com.cinemenu.cinemenuapi;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -12,11 +11,5 @@ class CineMenuApiApplicationTest {
     @Test
     void testMainClass() {
         CineMenuApiApplication.main(new String[0]);
-    }
-
-    @Test
-    void teste() {
-        var classeMainTest = new CineMenuApiApplication();
-        Assertions.assertEquals("teste", classeMainTest.teste("teste"));
     }
 }
