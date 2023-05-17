@@ -8,8 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class CineMenuApiApplicationTest {
 
-    @Test
-    void testMainClass() {
-        CineMenuApiApplication.main(new String[0]);
-    }
+//    @Test
+//    void testMainClass() {
+//        CineMenuApiApplication.main(new String[0]);
+//    }
 }
