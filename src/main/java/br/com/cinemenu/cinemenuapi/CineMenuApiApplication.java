@@ -9,5 +9,4 @@ public class CineMenuApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(CineMenuApiApplication.class, args);
 	}
-
 }

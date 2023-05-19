@@ -29,20 +29,16 @@ dependencies {
 	runtimeOnly("org.postgresql:postgresql")
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.0")
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.0")
 }
 
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
-jacoco {
-	toolVersion = "0.8.9"
-	reportsDir = file("$buildDir/jacoco")
-}
-tasks.jacocoTestReport {
+tasks.named<JacocoReport>("jacocoTestReport") {
 	reports {
-		xml.isEnabled = false
-		csv.isEnabled = false
-		html.destination = file("${buildDir}/jacoco/test/html")
+		html.outputLocation.set(layout.buildDirectory.dir("jacoco/test/html"))
 	}
 }
 

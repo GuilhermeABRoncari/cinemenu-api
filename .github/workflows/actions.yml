@@ -24,13 +24,27 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build --no-daemon
+        run: HOSTNAME=${{ secrets.HOSTNAME }}
+          PORT=${{ secrets.PORT }}
+          DBNAME=${{ secrets.DBNAME }}
+          DBUSER=${{ secrets.DBUSER }}
+          DBPASSWORD=${{ secrets.DBPASSWORD }}
+          ./gradlew build --no-daemon
 
       - name: Run tests
         run: ./gradlew test --no-daemon
 
       - name: Verify coverage
         run: ./gradlew jacocoTestReport --no-daemon
+
+      - name: Check coverage
+        run: |
+          COVERAGE_THRESHOLD=80
+          ACTUAL_COVERAGE="$(sed -n 's/.*<td class="ctr2">\([0-9]*\)%<\/td>.*/\1/p' build/jacoco/test/html/index.html)"
+          if [ "$(expr "$ACTUAL_COVERAGE" '<' "$COVERAGE_THRESHOLD")" -ne 0 ]; then
+            echo "Coverage below threshold (${ACTUAL_COVERAGE}% < ${COVERAGE_THRESHOLD}%)"
+            exit 1
+          fi  
 
       - name: Upload coverage
         uses: actions/upload-artifact@v2
