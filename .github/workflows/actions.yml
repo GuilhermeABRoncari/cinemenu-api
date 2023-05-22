@@ -29,6 +29,7 @@ jobs:
           DBNAME=${{ secrets.DBNAME }}
           DBUSER=${{ secrets.DBUSER }}
           DBPASSWORD=${{ secrets.DBPASSWORD }}
+          APIKEY=${{ secrets.APIKEY }}
           ./gradlew build --no-daemon
 
       - name: Run tests
