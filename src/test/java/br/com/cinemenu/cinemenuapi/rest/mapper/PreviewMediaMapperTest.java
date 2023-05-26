@@ -74,7 +74,7 @@ public class PreviewMediaMapperTest {
         // Given
         var previewMediaResultResponse = new PreviewMediaResponse.PreviewMediaResultResponse(
                 false, null, 3084, null, null, null,
-                null, null, "/fuTEPMsBtV1zE98ujPONbKiYDc2.jpg", "person", genderIDs, null, null,
+                null, null, "/fuTEPMsBtV1zE98ujPONbKiYDc2.jpg", "person", genderIDs, 0.0, null,
                 false, 0.0, 0, "Marlon Brando", "Marlon Brando", null, null
         );
 
