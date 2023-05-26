@@ -6,10 +6,7 @@ import br.com.cinemenu.cinemenuapi.rest.service.PreviewMediaService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,9 +16,10 @@ import java.util.List;
 public class CineMenuPreviewMediaController {
 
     private final PreviewMediaService service;
-    @PostMapping("/search")
-    public ResponseEntity<List<CineMenuMediaResponse>> searchMedia(@RequestBody @Valid MediaSearchDTO search) {
-        return ResponseEntity.ok(service.getResponse(search.search(), search.page()));
+
+    @PostMapping("/search/page={page}")
+    public ResponseEntity<List<CineMenuMediaResponse>> searchMedia(@RequestBody @Valid MediaSearchDTO search, @PathVariable int page) {
+        return ResponseEntity.ok(service.getResponse(search.search(), page));
     }
 
 }
