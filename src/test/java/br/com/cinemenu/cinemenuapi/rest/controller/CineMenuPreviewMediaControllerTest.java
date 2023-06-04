@@ -1,6 +1,5 @@
 package br.com.cinemenu.cinemenuapi.rest.controller;
 
-import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.MediaSearchDTO;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.CineMenuMediaResponse;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import br.com.cinemenu.cinemenuapi.rest.service.PreviewMediaService;
@@ -21,9 +20,9 @@ class CineMenuPreviewMediaControllerTest {
 
     @InjectMocks
     private CineMenuPreviewMediaController controller;
+    private String search;
     @Mock
     private PreviewMediaService service;
-    private MediaSearchDTO searchDTO;
     private CineMenuMediaResponse mediaResponse;
     private List<CineMenuMediaResponse> mediaResponseList = new ArrayList<>();
 
@@ -32,7 +31,7 @@ class CineMenuPreviewMediaControllerTest {
     void setup() {
         MockitoAnnotations.openMocks(this);
         controller = new CineMenuPreviewMediaController(service);
-        searchDTO = new MediaSearchDTO("Batman");
+        search = "Batman";
 
         mediaResponse = new CineMenuMediaResponse(
                 2287, "Batman", "/5GOO4GqoBZE6GOQ1SLFM6tNwfYo.jpg",
@@ -44,9 +43,9 @@ class CineMenuPreviewMediaControllerTest {
     @Test
     @DisplayName("When search is normal, should return list of media and status code 200")
     void searchMedia() {
-        Mockito.when(service.getResponse(searchDTO.search(), 1)).thenReturn(mediaResponseList);
+        Mockito.when(service.getResponse(search, 1)).thenReturn(mediaResponseList);
 
-        ResponseEntity<List<CineMenuMediaResponse>> listResponseEntity = controller.searchMedia(searchDTO, 1);
+        ResponseEntity<List<CineMenuMediaResponse>> listResponseEntity = controller.searchMedia(search, 1);
 
         Assertions.assertEquals(mediaResponseList, listResponseEntity.getBody());
         Assertions.assertEquals(ResponseEntity.ok(mediaResponseList), listResponseEntity);

@@ -27,23 +27,29 @@ public class PreviewMediaServiceTest {
     @InjectMocks
     private PreviewMediaService previewMediaService;
 
-    private List<CineMenuMediaResponse> mediaResponseList;
+    private List<CineMenuMediaResponse> mediaResponseList01;
+    private List<CineMenuMediaResponse> mediaResponseList02;
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
         previewMediaService = new PreviewMediaService(previewMediaRepository);
 
-        CineMenuMediaResponse mediaResponse = new CineMenuMediaResponse(
+        CineMenuMediaResponse mediaResponse01 = new CineMenuMediaResponse(
                 2287, "Batman", "/5GOO4GqoBZE6GOQ1SLFM6tNwfYo.jpg",
                 MediaType.TV, "1966-01-12", 7.4);
 
-        mediaResponseList = Collections.singletonList(mediaResponse);
+        CineMenuMediaResponse mediaResponse02 = new CineMenuMediaResponse(
+                3084, "Marlon Brando", "/fuTEPMsBtV1zE98ujPONbKiYDc2.jpg",
+                MediaType.PERSON, null, 0.0);
+
+        mediaResponseList01 = Collections.singletonList(mediaResponse01);
+        mediaResponseList02 = Collections.singletonList(mediaResponse02);
     }
 
     @Test
     @DisplayName("When searching for media with normal search, it should return a list of media and status code 200")
-    void testGetResponse() {
+    void testGetResponse01() {
         // Configuração do mock do PreviewMediaRepository
         List<Integer> genderIDs = new ArrayList<>();
         genderIDs.addAll(List.of(10765, 35, 10759));
@@ -51,11 +57,11 @@ public class PreviewMediaServiceTest {
         originCountry.add("US");
 
         PreviewMediaResponse.PreviewMediaResultResponse resultResponse = new PreviewMediaResponse.PreviewMediaResultResponse(
-                        false, "/5GOO4GqoBZE6GOQ1SLFM6tNwfYo.jpg", 2287,
-                        null, "en", null, "Batman (também conhecido como \"Batman e Robin\" ou \"Batman de Adam West\") foi uma série de televisão exibido entre 1966 e 1968, tendo ao todo 60 episódios , sendo cada uma dividida em duas partes , totalizando 120 episódios . O programa é baseado no personagem homônimo das histórias em quadrinhos e narra a luta contra o crime do herói (cujo nome verdadeiro é Bruce Wayne), sempre acompanhado pelo fiel parceiro Robin (alter-ego: Dick Grayson) e auxiliado pelo mordomo Alfred, pelo comissário de polícia James Gordon e pelo chefe de polícia O’Hara.",
+                false, "/5GOO4GqoBZE6GOQ1SLFM6tNwfYo.jpg", 2287,
+                null, "en", null, "Batman (também conhecido como \"Batman e Robin\" ou \"Batman de Adam West\") foi uma série de televisão exibido entre 1966 e 1968, tendo ao todo 60 episódios , sendo cada uma dividida em duas partes , totalizando 120 episódios . O programa é baseado no personagem homônimo das histórias em quadrinhos e narra a luta contra o crime do herói (cujo nome verdadeiro é Bruce Wayne), sempre acompanhado pelo fiel parceiro Robin (alter-ego: Dick Grayson) e auxiliado pelo mordomo Alfred, pelo comissário de polícia James Gordon e pelo chefe de polícia O’Hara.",
                 "/5GOO4GqoBZE6GOQ1SLFM6tNwfYo.jpg", null, "TV", genderIDs, 7.4, null,
-                        false, 7.4, 123, "Batman", "Batman","1966-01-12", originCountry
-                );
+                false, 7.4, 123, "Batman", "Batman", "1966-01-12", originCountry
+        );
 
         PreviewMediaResponse previewMediaResponse = new PreviewMediaResponse(
                 1, Collections.singletonList(resultResponse), 10
@@ -68,7 +74,7 @@ public class PreviewMediaServiceTest {
         List<CineMenuMediaResponse> response = previewMediaService.getResponse("Batman", 1);
 
         // Verificação do resultado esperado
-        assertEquals(mediaResponseList, response);
+        assertEquals(mediaResponseList01, response);
 
         // Verificação de chamadas de método no mock repository, se necessário
         verify(previewMediaRepository).getPreviewMediaResponse("Batman", 1);
@@ -76,5 +82,37 @@ public class PreviewMediaServiceTest {
         // Verificação do filtro de MediaType.PERSON
         assertEquals(false, response.stream()
                 .anyMatch(media -> media.media_type().equals(MediaType.PERSON.name().toLowerCase())));
+    }
+
+    @Test
+    @DisplayName("When searching for media with normal search, it should return a list of media whit a PERSON in response.")
+    void testGetResponse02() {
+
+        PreviewMediaResponse.PreviewMediaResultResponse resultResponse = new PreviewMediaResponse.PreviewMediaResultResponse(
+                false, null, 3084,
+                null, null, null, null, null, "/fuTEPMsBtV1zE98ujPONbKiYDc2.jpg",
+                "PERSON", null, 20.519, null, false, 0.0,
+                0, "Marlon Brando", "Marlon Brando", null, null
+        );
+
+        PreviewMediaResponse previewMediaResponse = new PreviewMediaResponse(
+                1, Collections.singletonList(resultResponse), 10
+        );
+
+        when(previewMediaRepository.getPreviewMediaResponse("Marlon Brando", 1))
+                .thenReturn(previewMediaResponse);
+
+        // Chamada do método a ser testado
+        List<CineMenuMediaResponse> response = previewMediaService.getResponse("Marlon Brando", 1);
+
+        // Verificação do resultado esperado
+        assertEquals(mediaResponseList02, response);
+
+        // Verificação de chamadas de método no mock repository, se necessário
+        verify(previewMediaRepository).getPreviewMediaResponse("Marlon Brando", 1);
+
+        // Verificação do filtro de MediaType.PERSON
+        assertEquals(true, response.stream()
+                .anyMatch(media -> !media.media_type().equals(MediaType.PERSON.name().toLowerCase())));
     }
 }
