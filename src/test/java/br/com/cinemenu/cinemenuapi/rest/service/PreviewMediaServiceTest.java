@@ -72,5 +72,9 @@ public class PreviewMediaServiceTest {
 
         // Verificação de chamadas de método no mock repository, se necessário
         verify(previewMediaRepository).getPreviewMediaResponse("Batman", 1);
+
+        // Verificação do filtro de MediaType.PERSON
+        assertEquals(false, response.stream()
+                .anyMatch(media -> media.media_type().equals(MediaType.PERSON.name().toLowerCase())));
     }
 }

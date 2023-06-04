@@ -17,7 +17,7 @@ public class CineMenuPreviewMediaController {
 
     private final PreviewMediaService service;
 
-    @PostMapping("/search/page={page}")
+    @GetMapping("/search/page={page}")
     public ResponseEntity<List<CineMenuMediaResponse>> searchMedia(@RequestBody @Valid MediaSearchDTO search, @PathVariable int page) {
         return ResponseEntity.ok(service.getResponse(search.search(), page));
     }
