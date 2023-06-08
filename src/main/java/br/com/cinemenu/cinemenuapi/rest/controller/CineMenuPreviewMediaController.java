@@ -20,7 +20,6 @@ public class CineMenuPreviewMediaController {
 
     @GetMapping("/search")
     public ResponseEntity<List<CineMenuMediaResponse>> searchMedia(@RequestParam("q") String search, @RequestParam("page") Integer page) {
-        System.out.println(search);
         return ResponseEntity.ok(service.getResponse(search, page));
     }
 
