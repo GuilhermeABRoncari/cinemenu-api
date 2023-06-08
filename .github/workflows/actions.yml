@@ -29,10 +29,12 @@ jobs:
           DBNAME=${{ secrets.DBNAME }}
           DBUSER=${{ secrets.DBUSER }}
           DBPASSWORD=${{ secrets.DBPASSWORD }}
+          APIKEY=${{ secrets.APIKEY }}
           ./gradlew build --no-daemon
 
       - name: Run tests
-        run: ./gradlew test --no-daemon
+        run: APIKEY=${{ secrets.APIKEY }}
+          ./gradlew test --no-daemon
 
       - name: Verify coverage
         run: ./gradlew jacocoTestReport --no-daemon
