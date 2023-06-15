@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public record PreviewMediaResponse(int page, List<PreviewMediaResultResponse> results, int total_pages) {
+public record PreviewMediaResults(Integer page, List<PreviewMediaResultResponse> results, Integer total_pages) {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public record PreviewMediaResultResponse(

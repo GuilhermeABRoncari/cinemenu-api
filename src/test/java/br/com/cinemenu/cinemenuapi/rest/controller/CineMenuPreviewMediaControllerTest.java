@@ -1,7 +1,9 @@
 package br.com.cinemenu.cinemenuapi.rest.controller;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.CineMenuMediaResponse;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResponsePage;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
+import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
 import br.com.cinemenu.cinemenuapi.rest.service.PreviewMediaService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,10 +13,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CineMenuPreviewMediaControllerTest {
 
@@ -25,7 +33,7 @@ class CineMenuPreviewMediaControllerTest {
     private PreviewMediaService service;
     private CineMenuMediaResponse mediaResponse;
     private List<CineMenuMediaResponse> mediaResponseList = new ArrayList<>();
-
+    private PreviewMediaResponsePage result;
 
     @BeforeEach
     void setup() {
@@ -38,17 +46,33 @@ class CineMenuPreviewMediaControllerTest {
                 MediaType.TV, "1966-01-12", 7.4);
 
         mediaResponseList.add(mediaResponse);
+
+        result = new PreviewMediaResponsePage(1, mediaResponseList, 1);
     }
 
     @Test
     @DisplayName("When search is normal, should return list of media and status code 200")
     void searchMedia() {
-        Mockito.when(service.getResponse(search, 1)).thenReturn(mediaResponseList);
+        Mockito.when(service.getSearchResponse(search, 1)).thenReturn(result);
 
-        ResponseEntity<List<CineMenuMediaResponse>> listResponseEntity = controller.searchMedia(search, 1);
+        ResponseEntity<PreviewMediaResponsePage> listResponseEntity = controller.searchMedia(search, 1);
 
-        Assertions.assertEquals(mediaResponseList, listResponseEntity.getBody());
-        Assertions.assertEquals(ResponseEntity.ok(mediaResponseList), listResponseEntity);
-        Assertions.assertEquals(listResponseEntity.getStatusCodeValue(),ResponseEntity.ok(listResponseEntity.getBody()).getStatusCodeValue());
+        assertEquals(result, listResponseEntity.getBody());
+        assertEquals(ResponseEntity.ok(result), listResponseEntity);
+        assertEquals(listResponseEntity.getStatusCodeValue(),ResponseEntity.ok(listResponseEntity.getBody()).getStatusCodeValue());
+    }
+
+    @Test
+    @DisplayName("Test mediaByGenre with valid genreId and page")
+    void testMediaByGenreWithValidInputs() {
+        // Given
+        List<Integer> genreIds = Arrays.asList(89, 76); // Example internal cine-menu genre IDs
+        int page = 1;
+
+        // When
+        ResponseEntity<PreviewMediaResponsePage> responseEntity = controller.mediaByGenre(genreIds, page);
+
+        // Then
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 }

@@ -26,6 +26,12 @@ public class InternalExceptionHandler {
     public ResponseEntity handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         return ResponseEntity.badRequest().body(new ExceptionValidation(ex.getFieldError(), ex.getMessage(), OffsetDateTime.now()));
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity handleInvalidArgumentException(IllegalArgumentException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
     public record ExceptionValidation(String field, String message, OffsetDateTime timestamp) {
         public ExceptionValidation(FieldError error, String message, OffsetDateTime offsetDateTime) {
             this(error.getField(), error.getDefaultMessage(), OffsetDateTime.now());

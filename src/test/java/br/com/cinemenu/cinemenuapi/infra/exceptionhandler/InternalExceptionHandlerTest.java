@@ -2,7 +2,6 @@ package br.com.cinemenu.cinemenuapi.infra.exceptionhandler;
 
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidApiKeyException;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.MethodParameter;
@@ -16,6 +15,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InternalExceptionHandlerTest {
 
@@ -31,8 +32,8 @@ public class InternalExceptionHandlerTest {
         ResponseEntity responseEntity = handler.handleInvalidSearchException(exception);
 
         // Then
-        Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        Assertions.assertEquals(errorMessage, responseEntity.getBody());
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(errorMessage, responseEntity.getBody());
     }
 
     @Test
@@ -47,8 +48,8 @@ public class InternalExceptionHandlerTest {
         ResponseEntity responseEntity = handler.handleInvalidApiKeyException(exception);
 
         // Then
-        Assertions.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
-        Assertions.assertEquals(errorMessage, responseEntity.getBody());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        assertEquals(errorMessage, responseEntity.getBody());
     }
 
     @Test
@@ -77,10 +78,26 @@ public class InternalExceptionHandlerTest {
         ResponseEntity responseEntity = handler.handleMethodArgumentNotValidException(exception);
 
         // Then
-        Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         InternalExceptionHandler.ExceptionValidation validation = (InternalExceptionHandler.ExceptionValidation) responseEntity.getBody();
-        Assertions.assertEquals(fieldName, validation.field());
-        Assertions.assertEquals(errorMessage, validation.message());
-        Assertions.assertEquals(OffsetDateTime.parse("2023-05-25T21:36-03:00"), timestamp);
+        assertEquals(fieldName, validation.field());
+        assertEquals(errorMessage, validation.message());
+        assertEquals(OffsetDateTime.parse("2023-05-25T21:36-03:00"), timestamp);
+    }
+
+    @Test
+    @DisplayName("Test handling IllegalArgumentException")
+    void handleInvalidArgumentException() {
+        // Given
+        String errorMessage = "Invalid argument";
+        IllegalArgumentException exception = new IllegalArgumentException(errorMessage);
+        InternalExceptionHandler handler = new InternalExceptionHandler();
+
+        // When
+        ResponseEntity responseEntity = handler.handleInvalidArgumentException(exception);
+
+        // Then
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(errorMessage, responseEntity.getBody());
     }
 }
