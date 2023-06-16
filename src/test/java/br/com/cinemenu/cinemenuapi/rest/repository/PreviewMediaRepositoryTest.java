@@ -36,7 +36,7 @@ class PreviewMediaRepositoryTest {
     RestTemplate restTemplate = new RestTemplate();
     private String search;
     private int page;
-    private List<Integer> cineMenuGenres;
+    private List<Integer> cineMenuGenres = new ArrayList<>();
 
     @BeforeEach
     void setup() {
@@ -133,6 +133,16 @@ class PreviewMediaRepositoryTest {
 
         Assertions.assertThrows(InvalidSearchException.class, () -> {
             repository.getGenrePreviewMediaResponse(List.of(67), invalidPage);
+        });
+    }
+
+    @Test
+    @DisplayName("When genreList is null, it should throw InvalidSearchException")
+    void getGenrePreviewMediaResponseTest_scene03() {
+        cineMenuGenres.clear();
+
+        Assertions.assertThrows(InvalidSearchException.class, () -> {
+            repository.getGenrePreviewMediaResponse(cineMenuGenres, page);
         });
     }
 }

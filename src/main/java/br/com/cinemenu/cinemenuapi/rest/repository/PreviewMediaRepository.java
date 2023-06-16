@@ -69,15 +69,18 @@ public class PreviewMediaRepository {
 
         List<CineMenuGenres> genreList = genreId.stream().map(id -> CineMenuGenres.fromId(id)).toList();
 
-        List<Integer> TMDBGenreIds = TMDBInternalGenreMapper.map(genreList);
-        String formattedUrl = TMDBGenreIds.stream().map(Object::toString).collect(Collectors.joining(AND_URL));
+        List<Integer> MovieGenreIds = TMDBInternalGenreMapper.mapToMovieIds(genreList);
+        String formattedMovieUrl = MovieGenreIds.stream().map(Object::toString).collect(Collectors.joining(AND_URL));
+
+        List<Integer> TvGenreIds = TMDBInternalGenreMapper.mapToTvShowIds(genreList);
+        String formattedTvUrl = TvGenreIds.stream().map(Object::toString).collect(Collectors.joining(AND_URL));
 
         URI movieUri = URI.create(
                 TMDB_BASE_URL
                         + TMDB_DISCOVERY_MOVIE_BASE_URL + apiKey
                         + TMDB_ADULT_FALSE + TMDB_BASE_PT_BR_LANGUAGE
                         + TMDB_BASE_PAGE + page + TMDB_WATCH_REGION
-                        + TMDB_SORT_BY_POP + TMDB_WHIT_GENDER + formattedUrl
+                        + TMDB_SORT_BY_POP + TMDB_WHIT_GENDER + formattedMovieUrl
         );
 
         URI tvUri = URI.create(
@@ -85,7 +88,7 @@ public class PreviewMediaRepository {
                         + TMDB_DISCOVERY_TV_BASE_URL + apiKey
                         + TMDB_ADULT_FALSE + TMDB_BASE_PT_BR_LANGUAGE
                         + TMDB_BASE_PAGE + page + TMDB_WATCH_REGION
-                        + TMDB_SORT_BY_POP + TMDB_WHIT_GENDER + formattedUrl
+                        + TMDB_SORT_BY_POP + TMDB_WHIT_GENDER + formattedTvUrl
         );
 
         var apiResponseMovie = restTemplate.getForObject(movieUri, PreviewMediaResults.class);
