@@ -3,72 +3,83 @@ package br.com.cinemenu.cinemenuapi.rest.mapper;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.CineMenuGenres;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TMDBInternalGenreMapper {
-    private static List<Integer> GenreIds = new ArrayList<>();
-    private static Integer action = 28;
-    private static Integer adventure = 12;
-    private static Integer actionAndAdventure = 10759;
-    private static Integer animation = 16;
-    private static Integer comedy = 35;
-    private static Integer crime = 80;
-    private static Integer documentary = 99;
-    private static Integer drama = 18;
-    private static Integer family = 10751;
-    private static Integer fantasy = 14;
-    private static Integer history = 36;
-    private static Integer historyShow = 10768;
-    private static Integer horror = 27;
-    private static Integer music = 10402;
-    private static Integer mystery = 9648;
-    private static Integer romance = 10749;
-    private static Integer scienceFiction = 878;
-    private static Integer scienceFictionShow = 10765;
+    private static Map<CineMenuGenres, Integer> genreIdMap = null;
+    private static Map<CineMenuGenres, Integer> movieGenreIdMap() {
+        Map<CineMenuGenres, Integer> map = new HashMap<>();
+        map.put(CineMenuGenres.ACTION, 28);
+        map.put(CineMenuGenres.ADVENTURE, 12);
+        map.put(CineMenuGenres.ANIMATION, 16);
+        map.put(CineMenuGenres.COMEDY, 35);
+        map.put(CineMenuGenres.CRIME, 80);
+        map.put(CineMenuGenres.DOCUMENTARY, 99);
+        map.put(CineMenuGenres.DRAMA, 18);
+        map.put(CineMenuGenres.FAMILY, 10751);
+        map.put(CineMenuGenres.FANTASY, 14);
+        map.put(CineMenuGenres.HISTORY, 36);
+        map.put(CineMenuGenres.HORROR, 27);
+        map.put(CineMenuGenres.MUSIC, 10402);
+        map.put(CineMenuGenres.MYSTERY, 9648);
+        map.put(CineMenuGenres.ROMANCE, 10749);
+        map.put(CineMenuGenres.SCIENCE_FICTION, 878);
+
+        return map;
+    }
+
+    private static Map<CineMenuGenres, Integer> tvShowGenreIdMap() {
+        Map<CineMenuGenres, Integer> map = new HashMap<>();
+        map.put(CineMenuGenres.ACTION, 10759);
+        map.put(CineMenuGenres.ADVENTURE, 10759);
+        map.put(CineMenuGenres.ANIMATION, 16);
+        map.put(CineMenuGenres.COMEDY, 35);
+        map.put(CineMenuGenres.CRIME, 80);
+        map.put(CineMenuGenres.DOCUMENTARY, 99);
+        map.put(CineMenuGenres.DRAMA, 18);
+        map.put(CineMenuGenres.FAMILY, 10751);
+        map.put(CineMenuGenres.FANTASY, 10765);
+        map.put(CineMenuGenres.MYSTERY, 9648);
+        map.put(CineMenuGenres.SCIENCE_FICTION, 10765);
+
+        return map;
+    }
 
     public static List<Integer> mapToMovieIds(List<CineMenuGenres> genre) {
-        GenreIds.clear();
-
-        genre.forEach(cineMenuGenres -> {
-            if (cineMenuGenres.equals(CineMenuGenres.ACTION)) GenreIds.add(action);
-            if (cineMenuGenres.equals(CineMenuGenres.ADVENTURE)) GenreIds.add(adventure);
-            if (cineMenuGenres.equals(CineMenuGenres.ANIMATION)) GenreIds.add(animation);
-            if (cineMenuGenres.equals(CineMenuGenres.COMEDY)) GenreIds.add(comedy);
-            if (cineMenuGenres.equals(CineMenuGenres.CRIME)) GenreIds.add(crime);
-            if (cineMenuGenres.equals(CineMenuGenres.DOCUMENTARY)) GenreIds.add(documentary);
-            if (cineMenuGenres.equals(CineMenuGenres.DRAMA)) GenreIds.add(drama);
-            if (cineMenuGenres.equals(CineMenuGenres.FAMILY)) GenreIds.add(family);
-            if (cineMenuGenres.equals(CineMenuGenres.FANTASY)) GenreIds.add(fantasy);
-            if (cineMenuGenres.equals(CineMenuGenres.HISTORY)) GenreIds.add(history);
-            if (cineMenuGenres.equals(CineMenuGenres.HORROR)) GenreIds.add(horror);
-            if (cineMenuGenres.equals(CineMenuGenres.MUSIC)) GenreIds.add(music);
-            if (cineMenuGenres.equals(CineMenuGenres.MYSTERY)) GenreIds.add(mystery);
-            if (cineMenuGenres.equals(CineMenuGenres.ROMANCE)) GenreIds.add(romance);
-            if (cineMenuGenres.equals(CineMenuGenres.SCIENCE_FICTION)) GenreIds.add(scienceFiction);
-        });
-
-        return GenreIds;
+        return mapForMoviesIds(genre);
     }
+
     public static List<Integer> mapToTvShowIds(List<CineMenuGenres> genre) {
-        GenreIds.clear();
+        return mapForTvShowsIds(genre);
+    }
 
-        genre.forEach(cineMenuGenres -> {
-            if (cineMenuGenres.equals(CineMenuGenres.ACTION) || cineMenuGenres.equals(CineMenuGenres.ADVENTURE)) GenreIds.add(actionAndAdventure);
-            if (cineMenuGenres.equals(CineMenuGenres.ANIMATION)) GenreIds.add(animation);
-            if (cineMenuGenres.equals(CineMenuGenres.COMEDY)) GenreIds.add(comedy);
-            if (cineMenuGenres.equals(CineMenuGenres.CRIME)) GenreIds.add(crime);
-            if (cineMenuGenres.equals(CineMenuGenres.DOCUMENTARY)) GenreIds.add(documentary);
-            if (cineMenuGenres.equals(CineMenuGenres.DRAMA)) GenreIds.add(drama);
-            if (cineMenuGenres.equals(CineMenuGenres.FAMILY)) GenreIds.add(family);
-            if (cineMenuGenres.equals(CineMenuGenres.FANTASY)) GenreIds.add(fantasy);
-            if (cineMenuGenres.equals(CineMenuGenres.HISTORY)) GenreIds.add(historyShow);
-            if (cineMenuGenres.equals(CineMenuGenres.HORROR)) GenreIds.add(horror);
-            if (cineMenuGenres.equals(CineMenuGenres.MUSIC)) GenreIds.add(music);
-            if (cineMenuGenres.equals(CineMenuGenres.MYSTERY)) GenreIds.add(mystery);
-            if (cineMenuGenres.equals(CineMenuGenres.ROMANCE)) GenreIds.add(romance);
-            if (cineMenuGenres.equals(CineMenuGenres.SCIENCE_FICTION)) GenreIds.add(scienceFictionShow);
-        });
+    private static List<Integer> mapForMoviesIds(List<CineMenuGenres> genres) {
+        genreIdMap = movieGenreIdMap();
+        List<Integer> genreIds = new ArrayList<>();
 
-        return GenreIds;
+        for (CineMenuGenres genre : genres) {
+            Integer genreId = genreIdMap.get(genre);
+            if (genreId != null) {
+                genreIds.add(genreId);
+            }
+        }
+
+        return genreIds;
+    }
+
+    private static List<Integer> mapForTvShowsIds(List<CineMenuGenres> genres) {
+        genreIdMap = tvShowGenreIdMap();
+        List<Integer> genreIds = new ArrayList<>();
+
+        for (CineMenuGenres genre : genres) {
+            Integer genreId = genreIdMap.get(genre);
+            if (genreId != null) {
+                genreIds.add(genreId);
+            }
+        }
+
+        return genreIds;
     }
 }

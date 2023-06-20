@@ -17,7 +17,7 @@ public enum CineMenuGenres {
     ROMANCE(38),
     SCIENCE_FICTION(78);
 
-    private int cineMenuGenreId;
+    private final Integer cineMenuGenreId;
 
     CineMenuGenres(int cineMenuGenreId) {
         this.cineMenuGenreId = cineMenuGenreId;

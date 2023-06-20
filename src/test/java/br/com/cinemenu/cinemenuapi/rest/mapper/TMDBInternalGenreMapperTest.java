@@ -35,8 +35,7 @@ public class TMDBInternalGenreMapperTest {
         // Given
         List<CineMenuGenres> genres = Arrays.asList(CineMenuGenres.values());
         List<Integer> expectedIds = Arrays.asList(
-                10759, 10759, 16, 35, 80, 99, 18, 10751, 14,
-                10768, 27, 10402, 9648, 10749, 10765
+                10759, 10759, 16, 35, 80, 99, 18, 10751, 10765, 9648, 10765
         );
 
         // When

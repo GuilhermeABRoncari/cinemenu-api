@@ -3,9 +3,7 @@ package br.com.cinemenu.cinemenuapi.rest.controller;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.CineMenuMediaResponse;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResponsePage;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
-import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
 import br.com.cinemenu.cinemenuapi.rest.service.PreviewMediaService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,11 +16,9 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CineMenuPreviewMediaControllerTest {
 
@@ -53,10 +49,13 @@ class CineMenuPreviewMediaControllerTest {
     @Test
     @DisplayName("When search is normal, should return list of media and status code 200")
     void searchMedia() {
+        //Given
         Mockito.when(service.getSearchResponse(search, 1)).thenReturn(result);
 
+        //When
         ResponseEntity<PreviewMediaResponsePage> listResponseEntity = controller.searchMedia(search, 1);
 
+        //Then
         assertEquals(result, listResponseEntity.getBody());
         assertEquals(ResponseEntity.ok(result), listResponseEntity);
         assertEquals(listResponseEntity.getStatusCodeValue(),ResponseEntity.ok(listResponseEntity.getBody()).getStatusCodeValue());

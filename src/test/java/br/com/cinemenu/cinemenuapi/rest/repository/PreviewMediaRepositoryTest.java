@@ -90,6 +90,7 @@ class PreviewMediaRepositoryTest {
     @Test
     @DisplayName("When valid request is performed, it should return the PreviewMediaResponsePage")
     void getGenrePreviewMediaResponseTest() {
+        //Given
         cineMenuGenres = List.of(67);
         var TMDBInternalGenre = 28;
         List<CineMenuMediaResponse> mediaList = new ArrayList<>();
@@ -103,6 +104,7 @@ class PreviewMediaRepositoryTest {
                         + "&include_adult=false&language=pt-BR&page=" + page
                         + "&region=US%2CBR&sort_by=popularity.desc&with_genres=" + TMDBInternalGenre);
 
+        //When
         var movieResponse = restTemplate.getForObject(expectedMovieUri, PreviewMediaResults.class);
         var tvResponse = restTemplate.getForObject(expectedTvUri, PreviewMediaResults.class);
 
@@ -113,6 +115,7 @@ class PreviewMediaRepositoryTest {
         var result = new PreviewMediaResponsePage(page, mediaList, 500);
         var apiResponse = repository.getGenrePreviewMediaResponse(cineMenuGenres, page);
 
+        //Then
         Assertions.assertNotEquals(apiResponse, result);
     }
 

@@ -12,10 +12,10 @@ public class CineMenuGenresTest {
     @DisplayName("fromId should return the corresponding genre for a valid genre ID")
     void testFromId_ValidGenreId() {
         // Given
-        int genreId = 32; // Comedy
+        int comedyGenreId = 32;
 
         // When
-        CineMenuGenres genre = CineMenuGenres.fromId(genreId);
+        CineMenuGenres genre = CineMenuGenres.fromId(comedyGenreId);
 
         // Then
         assertEquals(CineMenuGenres.COMEDY, genre);
@@ -25,9 +25,9 @@ public class CineMenuGenresTest {
     @DisplayName("fromId should throw an exception for an invalid genre ID")
     void testFromId_InvalidGenreId() {
         // Given
-        int genreId = 999; // Invalid genre ID
+        int invalidGenreId = 999;
 
         // When/Then
-        assertThrows(IllegalArgumentException.class, () -> CineMenuGenres.fromId(genreId));
+        assertThrows(IllegalArgumentException.class, () -> CineMenuGenres.fromId(invalidGenreId));
     }
 }
