@@ -40,9 +40,11 @@ public class PreviewMediaRepository {
     private final String AND_URL = "%2C";
     private final String OR_URL = "%7C";
 
+    private final Integer MAX_PAGES = 500;
+
     public PreviewMediaResults getSearchPreviewMediaResponse(String search, Integer page) {
         if (apiKey == null) throw new InvalidApiKeyException("invalid api key");
-        if (page < 1 || page > 1000) throw new InvalidSearchException("search page cannot be less then 1 or more than 1000");
+        if (page < 1 || page > MAX_PAGES) throw new InvalidSearchException("search page cannot be less then 1 or more than 1000");
 
         String userQuery = StringUtils.stripAccents(search.trim().replaceAll(" ", "+").toLowerCase());
 
@@ -61,7 +63,7 @@ public class PreviewMediaRepository {
 
     public PreviewMediaResponsePage getGenrePreviewMediaResponse(List<Integer> genreId, Integer page) {
         if (genreId.isEmpty()) throw new InvalidSearchException("Genre id most be provided");
-        if (page < 1 || page > 500) throw new InvalidSearchException("search page cannot be less then 1 or more than 500");
+        if (page < 1 || page > MAX_PAGES) throw new InvalidSearchException("search page cannot be less then 1 or more than 500");
 
         RestTemplate restTemplate = new RestTemplate();
         List<CineMenuMediaResponse> mediaList = new ArrayList<>();

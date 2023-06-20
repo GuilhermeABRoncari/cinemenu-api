@@ -80,7 +80,7 @@ class PreviewMediaRepositoryTest {
     @Test
     @DisplayName("When page is greater than 1000, it should throw InvalidSearchException")
     void getPreviewMediaResponse_pageGreaterThanMax_shouldThrowInvalidSearchException() {
-        int invalidPage = 1001;
+        int invalidPage = 501;
 
         Assertions.assertThrows(InvalidSearchException.class, () -> {
             repository.getSearchPreviewMediaResponse(search, invalidPage);
