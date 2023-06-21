@@ -94,11 +94,6 @@ public class PreviewMediaRepository {
         );
 
         var apiResponseMovie = restTemplate.getForObject(movieUri, PreviewMediaResults.class);
-        try {
-            Thread.sleep(500); // Atraso de 0.5 segundo (500 milissegundos)
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         var apiResponseTv = restTemplate.getForObject(tvUri, PreviewMediaResults.class);
 
         mediaList.addAll(apiResponseMovie.results().stream().map(PreviewMediaMapper::movieMediaMap).toList());
