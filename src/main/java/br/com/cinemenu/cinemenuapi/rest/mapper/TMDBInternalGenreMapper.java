@@ -48,29 +48,15 @@ public class TMDBInternalGenreMapper {
     }
 
     public static List<Integer> mapToMovieIds(List<CineMenuGenres> genre) {
-        return mapForMoviesIds(genre);
+        return mapForIds(genre, movieGenreIdMap());
     }
 
     public static List<Integer> mapToTvShowIds(List<CineMenuGenres> genre) {
-        return mapForTvShowsIds(genre);
+        return mapForIds(genre, tvShowGenreIdMap());
     }
 
-    private static List<Integer> mapForMoviesIds(List<CineMenuGenres> genres) {
-        genreIdMap = movieGenreIdMap();
-        List<Integer> genreIds = new ArrayList<>();
-
-        for (CineMenuGenres genre : genres) {
-            Integer genreId = genreIdMap.get(genre);
-            if (genreId != null) {
-                genreIds.add(genreId);
-            }
-        }
-
-        return genreIds;
-    }
-
-    private static List<Integer> mapForTvShowsIds(List<CineMenuGenres> genres) {
-        genreIdMap = tvShowGenreIdMap();
+    private static List<Integer> mapForIds(List<CineMenuGenres> genres, Map<CineMenuGenres, Integer> cineMenuGenresIntegerMap) {
+        genreIdMap = cineMenuGenresIntegerMap;
         List<Integer> genreIds = new ArrayList<>();
 
         for (CineMenuGenres genre : genres) {
