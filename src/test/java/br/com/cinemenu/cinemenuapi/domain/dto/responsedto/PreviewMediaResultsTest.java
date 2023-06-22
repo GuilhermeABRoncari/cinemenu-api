@@ -7,15 +7,15 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
-public class PreviewMediaResponseTest {
+public class PreviewMediaResultsTest {
 
     @Test
     @DisplayName("Test creating PreviewMediaResponse")
     void createPreviewMediaResponse() {
         // Given
         int page = 1;
-        List<PreviewMediaResponse.PreviewMediaResultResponse> results = Arrays.asList(
-                new PreviewMediaResponse.PreviewMediaResultResponse(
+        List<PreviewMediaResults.PreviewMediaResultResponse> results = Arrays.asList(
+                new PreviewMediaResults.PreviewMediaResultResponse(
                         false, "backdrop_path", 1, "title", "pt-br", "original_title", "overview",
                         "poster_path", "profile_path", "movie", Arrays.asList(1, 2), 5.0, "2023-05-24",
                         false, 7.5, 100, null, null, null, Arrays.asList("BR")
@@ -24,15 +24,15 @@ public class PreviewMediaResponseTest {
         int totalPages = 2;
 
         // When
-        PreviewMediaResponse previewMediaResponse = new PreviewMediaResponse(page, results, totalPages);
+        PreviewMediaResults previewMediaResults = new PreviewMediaResults(page, results, totalPages);
 
         // Then
-        Assertions.assertEquals(page, previewMediaResponse.page());
-        Assertions.assertEquals(results, previewMediaResponse.results());
-        Assertions.assertEquals(totalPages, previewMediaResponse.total_pages());
+        Assertions.assertEquals(page, previewMediaResults.page());
+        Assertions.assertEquals(results, previewMediaResults.results());
+        Assertions.assertEquals(totalPages, previewMediaResults.total_pages());
 
         // Verify attributes of PreviewMediaResultResponse
-        PreviewMediaResponse.PreviewMediaResultResponse result = results.get(0);
+        PreviewMediaResults.PreviewMediaResultResponse result = results.get(0);
         Assertions.assertEquals(false, result.adult());
         Assertions.assertEquals("backdrop_path", result.backdrop_path());
         Assertions.assertEquals(1, result.id());

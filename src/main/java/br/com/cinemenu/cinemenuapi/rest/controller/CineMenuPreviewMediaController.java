@@ -1,6 +1,6 @@
 package br.com.cinemenu.cinemenuapi.rest.controller;
 
-import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.CineMenuMediaResponse;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResponsePage;
 import br.com.cinemenu.cinemenuapi.rest.service.PreviewMediaService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +19,13 @@ public class CineMenuPreviewMediaController {
     private final PreviewMediaService service;
 
     @GetMapping("/search")
-    public ResponseEntity<List<CineMenuMediaResponse>> searchMedia(@RequestParam("q") String search, @RequestParam("page") Integer page) {
-        return ResponseEntity.ok(service.getResponse(search, page));
+    public ResponseEntity<PreviewMediaResponsePage> searchMedia(@RequestParam("q") String search, @RequestParam("page") Integer page) {
+        return ResponseEntity.ok(service.getSearchResponse(search, page));
+    }
+
+    @GetMapping("/genre")
+    public ResponseEntity<PreviewMediaResponsePage> mediaByGenre(@RequestParam("id") List<Integer> genreId, @RequestParam("page") Integer page) {
+        return ResponseEntity.ok(service.getGenreResponse(genreId, page));
     }
 
 }
