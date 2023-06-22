@@ -29,6 +29,6 @@ public enum CineMenuGenres {
                 return genre;
             }
         }
-        throw new IllegalArgumentException("Invalid CineMenuGenre ID: " + cineMenuGenreId);
+        throw new IllegalArgumentException("Invalid genre id: " + cineMenuGenreId);
     }
 }
