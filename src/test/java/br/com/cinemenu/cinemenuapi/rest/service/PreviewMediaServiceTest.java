@@ -5,7 +5,6 @@ import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResponsePa
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResults;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewPopularResults;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
-import br.com.cinemenu.cinemenuapi.rest.mapper.PreviewMediaMapper;
 import br.com.cinemenu.cinemenuapi.rest.repository.PreviewMediaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

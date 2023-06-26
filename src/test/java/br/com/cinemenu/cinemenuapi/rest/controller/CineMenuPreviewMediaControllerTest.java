@@ -74,4 +74,17 @@ class CineMenuPreviewMediaControllerTest {
         // Then
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
+
+    @Test
+    @DisplayName("Test popularPeopleList end point")
+    void popularPeopleListTest() {
+        // Given
+        Integer page = 1;
+
+        // When
+        ResponseEntity<PreviewMediaResponsePage> responseEntity = controller.popularPeopleList(page);
+
+        // Then
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
 }
