@@ -16,8 +16,8 @@ public class PreviewMediaResultsPageTest {
         // Given
         Integer page = 1;
         List<CineMenuMediaResponse> results = List.of(
-                new CineMenuMediaResponse(1, "Movie 1", "path/to/movie1.jpg", MediaType.MOVIE, "0000-00-00", 0.0),
-                new CineMenuMediaResponse(2, "Movie 2", "path/to/movie2.jpg", MediaType.TV, "0000-00-00", 0.0)
+                new CineMenuMediaResponse(1L, "Movie 1", "path/to/movie1.jpg", MediaType.MOVIE, "0000-00-00", 0.0),
+                new CineMenuMediaResponse(2L, "Movie 2", "path/to/movie2.jpg", MediaType.TV, "0000-00-00", 0.0)
         );
         Integer totalPages = 10;
 

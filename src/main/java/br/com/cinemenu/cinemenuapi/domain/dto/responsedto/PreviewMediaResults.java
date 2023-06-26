@@ -11,7 +11,7 @@ public record PreviewMediaResults(Integer page, List<PreviewMediaResultResponse>
     public record PreviewMediaResultResponse(
             Boolean adult,
             String backdrop_path,
-            Integer id,
+            Long id,
             String title,
             String original_language,
             String original_title,

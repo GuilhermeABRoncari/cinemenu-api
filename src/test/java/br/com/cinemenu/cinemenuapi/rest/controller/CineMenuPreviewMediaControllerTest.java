@@ -38,7 +38,7 @@ class CineMenuPreviewMediaControllerTest {
         search = "Batman";
 
         mediaResponse = new CineMenuMediaResponse(
-                2287, "Batman", "/5GOO4GqoBZE6GOQ1SLFM6tNwfYo.jpg",
+                2287L, "Batman", "/5GOO4GqoBZE6GOQ1SLFM6tNwfYo.jpg",
                 MediaType.TV, "1966-01-12", 7.4);
 
         mediaResponseList.add(mediaResponse);

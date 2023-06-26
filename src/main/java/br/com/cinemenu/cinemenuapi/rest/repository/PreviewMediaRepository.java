@@ -3,6 +3,7 @@ package br.com.cinemenu.cinemenuapi.rest.repository;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.CineMenuMediaResponse;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResponsePage;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResults;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewPopularResults;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.CineMenuGenres;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidApiKeyException;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
@@ -24,36 +25,37 @@ public class PreviewMediaRepository {
 
     @Value("${api.key.from.tmdb}")
     private String apiKey;
-    private final String TMDB_BASE_URL = "https://api.themoviedb.org/3/";
-    private final String TMBD_MULTI_SEARCH_BASE_URL = "/search/multi?api_key=";
-    private final String TMDB_DISCOVERY_MOVIE_BASE_URL = "/discover/movie?api_key=";
-    private final String TMDB_DISCOVERY_TV_BASE_URL = "/discover/tv?api_key=";
-    private final String TMDB_BASE_PT_BR_LANGUAGE = "&language=pt-BR";
-    //private final String TMDB_BASE_EN_LANGUAGE = "&language=en-US";
-    private final String TMDB_SORT_BY_POP = "&sort_by=popularity.desc";
-    private final String TMDB_SORT_BY_VOTE = "&sort_by=vote_average.desc";
-    private final String TMDB_BASE_PAGE = "&page=";
-    private final String TMDB_ADULT_FALSE = "&include_adult=false";
-    private final String TMDB_USER_QUERY = "&query=";
-    private final String TMDB_WHIT_GENDER = "&with_genres=";
-    private final String TMDB_WATCH_REGION = "&region=US%2CBR";
-    private final String AND_URL = "%2C";
-    private final String OR_URL = "%7C";
+    private static final String TMDB_BASE_URL = "https://api.themoviedb.org/3/";
+    private static final String TMBD_MULTI_SEARCH_BASE_URL = "/search/multi?api_key=";
+    private static final String TMBD_POPULAR_PERSON = "/person/popular?api_key=";
+    private static final String TMDB_DISCOVERY_MOVIE_BASE_URL = "/discover/movie?api_key=";
+    private static final String TMDB_DISCOVERY_TV_BASE_URL = "/discover/tv?api_key=";
+    private static final String TMDB_LANGUAGE_PT_BR = "&language=pt-BR";
+    private static final String TMDB_BASE_EN_LANGUAGE = "&language=en-US";
+    private static final String TMDB_SORT_BY_POP = "&sort_by=popularity.desc";
+    private static final String TMDB_SORT_BY_VOTE = "&sort_by=vote_average.desc";
+    private static final String TMDB_BASE_PAGE = "&page=";
+    private static final String TMDB_ADULT_FALSE = "&include_adult=false";
+    private static final String TMDB_USER_QUERY = "&query=";
+    private static final String TMDB_WHIT_GENDER = "&with_genres=";
+    private static final String TMDB_WATCH_REGION = "&region=US%2CBR";
+    private static final String AND_URL = "%2C";
+    private static final String OR_URL = "%7C";
 
-    private final Integer MAX_PAGES = 500;
+    private static final Integer MAX_PAGES = 500;
+    private static RestTemplate restTemplate = new RestTemplate();
 
     public PreviewMediaResults getSearchPreviewMediaResponse(String search, Integer page) {
         if (apiKey == null) throw new InvalidApiKeyException("invalid api key");
-        if (page < 1 || page > MAX_PAGES) throw new InvalidSearchException("search page cannot be less then 1 or more than %d".formatted(MAX_PAGES));
+        verifyPage(page);
 
         String userQuery = StringUtils.stripAccents(search.trim().replaceAll(" ", "+").toLowerCase());
 
-        RestTemplate restTemplate = new RestTemplate();
 
         URI uri = URI.create(
                 TMDB_BASE_URL
                         + TMBD_MULTI_SEARCH_BASE_URL + apiKey
-                        + TMDB_BASE_PT_BR_LANGUAGE + TMDB_BASE_PAGE + page
+                        + TMDB_LANGUAGE_PT_BR + TMDB_BASE_PAGE + page
                         + TMDB_ADULT_FALSE + TMDB_USER_QUERY + userQuery);
 
         var apiResponse = restTemplate.getForObject(uri, PreviewMediaResults.class);
@@ -63,9 +65,8 @@ public class PreviewMediaRepository {
 
     public PreviewMediaResponsePage getGenrePreviewMediaResponse(List<Integer> genreId, Integer page) {
         if (genreId.isEmpty()) throw new InvalidSearchException("Genre id most be provided");
-        if (page < 1 || page > MAX_PAGES) throw new InvalidSearchException("search page cannot be less then 1 or more than %d".formatted(MAX_PAGES));
+        verifyPage(page);
 
-        RestTemplate restTemplate = new RestTemplate();
         List<CineMenuMediaResponse> mediaList = new ArrayList<>();
         Integer totalPages;
 
@@ -80,7 +81,7 @@ public class PreviewMediaRepository {
         URI movieUri = URI.create(
                 TMDB_BASE_URL
                         + TMDB_DISCOVERY_MOVIE_BASE_URL + apiKey
-                        + TMDB_ADULT_FALSE + TMDB_BASE_PT_BR_LANGUAGE
+                        + TMDB_ADULT_FALSE + TMDB_LANGUAGE_PT_BR
                         + TMDB_BASE_PAGE + page + TMDB_WATCH_REGION
                         + TMDB_SORT_BY_POP + TMDB_WHIT_GENDER + formattedMovieUrl
         );
@@ -88,7 +89,7 @@ public class PreviewMediaRepository {
         URI tvUri = URI.create(
                 TMDB_BASE_URL
                         + TMDB_DISCOVERY_TV_BASE_URL + apiKey
-                        + TMDB_ADULT_FALSE + TMDB_BASE_PT_BR_LANGUAGE
+                        + TMDB_ADULT_FALSE + TMDB_LANGUAGE_PT_BR
                         + TMDB_BASE_PAGE + page + TMDB_WATCH_REGION
                         + TMDB_SORT_BY_POP + TMDB_WHIT_GENDER + formattedTvUrl
         );
@@ -107,7 +108,24 @@ public class PreviewMediaRepository {
         return new PreviewMediaResponsePage(page, mediaList, totalPages);
     }
 
+    public PreviewPopularResults getPeopleListResults(Integer page) {
+        verifyPage(page);
+
+        URI uri = URI.create(
+                TMDB_BASE_URL
+                        + TMBD_POPULAR_PERSON
+                        + apiKey
+                        + TMDB_LANGUAGE_PT_BR
+                        + TMDB_BASE_PAGE + page
+        );
+
+        return restTemplate.getForObject(uri, PreviewPopularResults.class);
+    }
+
     public void setApiKey(String apiKey) {
         this.apiKey = apiKey;
+    }
+    private static void verifyPage(Integer page) {
+        if (page < 1 || page > MAX_PAGES) throw new InvalidSearchException("search page cannot be less then 1 or more than %d".formatted(MAX_PAGES));
     }
 }

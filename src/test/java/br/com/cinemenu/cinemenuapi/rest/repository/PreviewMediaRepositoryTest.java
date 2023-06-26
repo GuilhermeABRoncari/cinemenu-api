@@ -3,6 +3,7 @@ package br.com.cinemenu.cinemenuapi.rest.repository;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.CineMenuMediaResponse;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResponsePage;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResults;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewPopularResults;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidApiKeyException;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
 import br.com.cinemenu.cinemenuapi.rest.mapper.PreviewMediaMapper;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static br.com.cinemenu.cinemenuapi.rest.repository.PreviewMediaRepository.*;
 
 @SpringBootTest
 class PreviewMediaRepositoryTest {
@@ -148,4 +152,24 @@ class PreviewMediaRepositoryTest {
             repository.getGenrePreviewMediaResponse(cineMenuGenres, page);
         });
     }
+
+    @Test
+    @DisplayName("When getting popular people list, it should return the expected result")
+    void getPeopleListResults_validPage_shouldReturnExpectedResults() {
+        // Given
+        Integer page = 1;
+        URI expectedUri = URI.create(
+                "https://api.themoviedb.org/3/person/popular?api_key=" + apiKey
+                        + "&language=pt-BR&page=" + page
+        );
+
+        PreviewPopularResults expectedResult = restTemplate.getForObject(expectedUri, PreviewPopularResults.class);
+
+        // When
+        PreviewPopularResults result = repository.getPeopleListResults(page);
+
+        // Then
+        Assertions.assertEquals(expectedResult, result);
+    }
+
 }

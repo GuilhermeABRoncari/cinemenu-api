@@ -33,4 +33,11 @@ public class PreviewMediaService {
     public PreviewMediaResponsePage getGenreResponse(List<Integer> genreId, Integer page) {
         return previewMediaRepository.getGenrePreviewMediaResponse(genreId, page);
     }
+
+    public PreviewMediaResponsePage getPopularPeopleList(Integer page) {
+        var result = previewMediaRepository.getPeopleListResults(page);
+
+        List<CineMenuMediaResponse> popularPeopleList = result.results().stream().map(PreviewMediaMapper::personMediaMap).toList();
+        return new PreviewMediaResponsePage(result.page(), popularPeopleList, result.totalPages());
+    }
 }
