@@ -1,11 +1,9 @@
 package br.com.cinemenu.cinemenuapi.rest.repository;
 
-import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.CineMenuMediaResponse;
-import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResponsePage;
-import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResults;
-import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewPopularResults;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.*;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidApiKeyException;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
+import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.TMDBNotFoundException;
 import br.com.cinemenu.cinemenuapi.rest.mapper.PreviewMediaMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -170,6 +168,44 @@ class PreviewMediaRepositoryTest {
 
         // Then
         Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    @DisplayName("Test getMovieListByActorId method")
+    void testGetMovieListByActorId() {
+        // Given
+        Long id = 73457L; // Chris Pratt TMDB id;
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/person/%d/movie_credits?api_key=".formatted(id) + apiKey
+                        + "&language=pt-BR");
+
+        var expectedResult = restTemplate.getForObject(expectedUri, PreviewActorCreditsListResults.class);
+
+        // When
+        var result = repository.getMovieListByActorId(id);
+
+        // Then
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    @DisplayName("Test getMovieListByActorId method and catch TMDBNotFoundException")
+    void testGetMovieListByActorId02() {
+        // Given
+        Long invalidId = 125L;
+
+        // Then
+        Assertions.assertThrows(TMDBNotFoundException.class, () -> {
+            repository.getMovieListByActorId(invalidId);
+        });
+    }
+
+    @Test
+    @DisplayName("Test method verifyId")
+    void verifyIdTest() {
+        Assertions.assertThrows(InvalidSearchException.class, () -> {
+            repository.getMovieListByActorId(null);
+        });
     }
 
 }

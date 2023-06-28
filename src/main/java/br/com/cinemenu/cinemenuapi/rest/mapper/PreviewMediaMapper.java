@@ -1,6 +1,7 @@
 package br.com.cinemenu.cinemenuapi.rest.mapper;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.CineMenuMediaResponse;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewActorCreditsListResults;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResults;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewPopularResults;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
@@ -29,6 +30,17 @@ public class PreviewMediaMapper {
                 MediaType.MOVIE,
                 response.release_date(),
                 response.vote_average()
+        );
+    }
+
+    public static CineMenuMediaResponse movieMediaMap(PreviewActorCreditsListResults.PreviewActorCreditsListResultsResponse response) {
+        return new CineMenuMediaResponse(
+                response.id(),
+                response.title(),
+                response.posterPath(),
+                MediaType.MOVIE,
+                response.releaseDate(),
+                response.voteAverage()
         );
     }
 

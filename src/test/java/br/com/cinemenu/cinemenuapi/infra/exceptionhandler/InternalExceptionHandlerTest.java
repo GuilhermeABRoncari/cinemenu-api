@@ -2,6 +2,7 @@ package br.com.cinemenu.cinemenuapi.infra.exceptionhandler;
 
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidApiKeyException;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
+import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.TMDBNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.MethodParameter;
@@ -98,6 +99,22 @@ public class InternalExceptionHandlerTest {
 
         // Then
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(errorMessage, responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("Test handling TMDBNotFoundException")
+    void handleTMDBNotFoundException() {
+        // Given
+        String errorMessage = "not found";
+        TMDBNotFoundException exception = new TMDBNotFoundException(errorMessage);
+        InternalExceptionHandler handler = new InternalExceptionHandler();
+
+        //When
+        ResponseEntity responseEntity = handler.notFoundResponseFromTMDBApi(exception);
+
+        // Then
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
         assertEquals(errorMessage, responseEntity.getBody());
     }
 }

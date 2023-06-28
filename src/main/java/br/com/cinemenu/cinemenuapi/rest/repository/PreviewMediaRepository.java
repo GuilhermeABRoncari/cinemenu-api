@@ -1,5 +1,6 @@
 package br.com.cinemenu.cinemenuapi.rest.repository;
 
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewActorCreditsListResults;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.CineMenuMediaResponse;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResponsePage;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResults;
@@ -7,11 +8,13 @@ import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewPopularResults;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.CineMenuGenres;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidApiKeyException;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
+import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.TMDBNotFoundException;
 import br.com.cinemenu.cinemenuapi.rest.mapper.PreviewMediaMapper;
 import br.com.cinemenu.cinemenuapi.rest.mapper.TMDBInternalGenreMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -30,6 +33,7 @@ public class PreviewMediaRepository {
     private static final String TMBD_POPULAR_PERSON = "/person/popular?api_key=";
     private static final String TMDB_DISCOVERY_MOVIE_BASE_URL = "/discover/movie?api_key=";
     private static final String TMDB_DISCOVERY_TV_BASE_URL = "/discover/tv?api_key=";
+    private static final String TMDB_ACTOR_MOVIE_LIST = "/person/%d/movie_credits?api_key=";
     private static final String TMDB_LANGUAGE_PT_BR = "&language=pt-BR";
     private static final String TMDB_BASE_EN_LANGUAGE = "&language=en-US";
     private static final String TMDB_SORT_BY_POP = "&sort_by=popularity.desc";
@@ -122,10 +126,32 @@ public class PreviewMediaRepository {
         return restTemplate.getForObject(uri, PreviewPopularResults.class);
     }
 
+    public PreviewActorCreditsListResults getMovieListByActorId(Long id) {
+        verifyId(id);
+
+        URI uri = URI.create(
+                TMDB_BASE_URL
+                        + TMDB_ACTOR_MOVIE_LIST.formatted(id) + apiKey
+                        + TMDB_LANGUAGE_PT_BR
+        );
+
+        try {
+            return restTemplate.getForObject(uri, PreviewActorCreditsListResults.class);
+        } catch (HttpClientErrorException ex) {
+            throw new TMDBNotFoundException("id not found");
+        }
+    }
+
     public void setApiKey(String apiKey) {
         this.apiKey = apiKey;
     }
+
     private static void verifyPage(Integer page) {
-        if (page < 1 || page > MAX_PAGES) throw new InvalidSearchException("search page cannot be less then 1 or more than %d".formatted(MAX_PAGES));
+        if (page < 1 || page > MAX_PAGES)
+            throw new InvalidSearchException("search page cannot be less then 1 or more than %d".formatted(MAX_PAGES));
+    }
+
+    private static void verifyId(Long id) {
+        if (id == null) throw new InvalidSearchException("invalid search, actor id can not be null.");
     }
 }
