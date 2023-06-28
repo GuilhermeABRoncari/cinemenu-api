@@ -189,6 +189,24 @@ class PreviewMediaRepositoryTest {
     }
 
     @Test
+    @DisplayName("Test getSeriesListByActorId method")
+    void testGetSeriesListByActorId() {
+        // Given
+        Long id = 73457L; // Chris Pratt TMDB id;
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/person/%d/tv_credits?api_key=".formatted(id) + apiKey
+                        + "&language=pt-BR");
+
+        var expectedResult = restTemplate.getForObject(expectedUri, PreviewActorCreditsListResults.class);
+
+        // When
+        var result = repository.getSeriesListByActorId(id);
+
+        // Then
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
     @DisplayName("Test getMovieListByActorId method and catch TMDBNotFoundException")
     void testGetMovieListByActorId02() {
         // Given
@@ -197,6 +215,18 @@ class PreviewMediaRepositoryTest {
         // Then
         Assertions.assertThrows(TMDBNotFoundException.class, () -> {
             repository.getMovieListByActorId(invalidId);
+        });
+    }
+
+    @Test
+    @DisplayName("Test getSeriesListByActorId method and catch TMDBNotFoundException")
+    void testGetSeriesListByActorId02() {
+        // Given
+        Long invalidId = 125L;
+
+        // Then
+        Assertions.assertThrows(TMDBNotFoundException.class, () -> {
+            repository.getSeriesListByActorId(invalidId);
         });
     }
 

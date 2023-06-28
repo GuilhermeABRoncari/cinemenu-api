@@ -92,4 +92,17 @@ class CineMenuPreviewMediaControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
+    @Test
+    @DisplayName("Test seriesByActor and expect http code 200")
+    void seriesListByActorIdTestScene01() {
+        // Given
+        Long id = 73457L; // Chris Pratt TMDB id
+
+        // When
+        var responseEntity = controller.seriesListByActorId(id);
+
+        // Then
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
+
 }

@@ -51,4 +51,13 @@ public class PreviewMediaService {
 
         return new PreviewMediaResponsePage(1, resultList, null);
     }
+
+    public PreviewMediaResponsePage getSeriesListByActor(Long id) {
+        PreviewActorCreditsListResults seriesListByActorId = previewMediaRepository.getSeriesListByActorId(id);
+        seriesListByActorId.results().sort(Comparator.comparing(PreviewActorCreditsListResults.PreviewActorCreditsListResultsResponse::popularity).reversed());
+
+        var resultList = seriesListByActorId.results().stream().map(PreviewMediaMapper::tvMediaMap).toList();
+
+        return new PreviewMediaResponsePage(1, resultList, null);
+    }
 }

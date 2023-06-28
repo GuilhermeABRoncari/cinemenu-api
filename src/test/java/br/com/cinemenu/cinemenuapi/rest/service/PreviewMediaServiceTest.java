@@ -191,10 +191,7 @@ public class PreviewMediaServiceTest {
                         "credit_id_value2", 5, 2
                 );
 
-        PreviewActorCreditsListResults movieListByActorId = new PreviewActorCreditsListResults(
-                List.of(response1, response2),    // results
-                actorId                           // id
-        );
+        PreviewActorCreditsListResults movieListByActorId = new PreviewActorCreditsListResults(List.of(response1, response2), actorId);
 
         // Mocking the repository method
         when(previewMediaRepository.getMovieListByActorId(actorId)).thenReturn(movieListByActorId);
@@ -221,6 +218,60 @@ public class PreviewMediaServiceTest {
         assertEquals(response2.posterPath(), result.results().get(1).poster_path());
         assertEquals(MediaType.MOVIE, result.results().get(1).media_type());
         assertEquals(response2.releaseDate(), result.results().get(1).release_date());
+        assertEquals(response2.voteAverage(), result.results().get(1).vote_average());
+    }
+
+    @Test
+    @DisplayName("Test getSeriesListByActor method")
+    void testGetSeriesListByActor() {
+        // Given
+        Long actorId = 12345L;
+
+        // Mocking the repository response
+        PreviewActorCreditsListResults.PreviewActorCreditsListResultsResponse response1 =
+                new PreviewActorCreditsListResults.PreviewActorCreditsListResultsResponse(
+                        true, "backdrop_path_value1", List.of(1, 2, 3), 12345L, "original_name_value1",
+                        "original_title_value1", "name_value1", "title_value1", "original_language_value1", "overview_value1",
+                        7.8, "poster_path_value1", "release_date_value1", "first_air_date_value1",
+                        true, 6.9, 1000, "character_value1", "credit_id_value1", 10, 1
+                );
+
+        PreviewActorCreditsListResults.PreviewActorCreditsListResultsResponse response2 =
+                new PreviewActorCreditsListResults.PreviewActorCreditsListResultsResponse(
+                        true, "backdrop_path_value2", List.of(4, 5, 6), 67890L, "original_name_value2",
+                        "original_title_value2", "name_value2", "title_value2", "original_language_value2",
+                        "overview_value2", 6.5, "poster_path_value2", "release_date_value2",
+                        "first_air_date_value2", true, 5.7, 500, "character_value2",
+                        "credit_id_value2", 5, 2
+                );
+
+        PreviewActorCreditsListResults seriesListByActorId = new PreviewActorCreditsListResults(List.of(response1, response2), actorId);
+
+        // Mocking the repository method
+        when(previewMediaRepository.getSeriesListByActorId(actorId)).thenReturn(seriesListByActorId);
+        var list = seriesListByActorId.results().stream().map(PreviewMediaMapper::tvMediaMap).toList();
+        var page = new PreviewMediaResponsePage(1, list, 2);
+
+        // When
+        PreviewMediaService service = Mockito.mock(PreviewMediaService.class);
+        when(service.getSeriesListByActor(actorId)).thenReturn(page);
+        PreviewMediaResponsePage result = page;
+
+        // Then
+        assertEquals(1, result.page());
+        assertEquals(2, result.results().size());
+        assertEquals(response1.id(), result.results().get(0).id());
+        assertEquals(response1.name(), result.results().get(0).title());
+        assertEquals(response1.posterPath(), result.results().get(0).poster_path());
+        assertEquals(MediaType.TV, result.results().get(0).media_type());
+        assertEquals(response1.firstAirDate(), result.results().get(0).release_date());
+        assertEquals(response1.voteAverage(), result.results().get(0).vote_average());
+
+        assertEquals(response2.id(), result.results().get(1).id());
+        assertEquals(response2.name(), result.results().get(1).title());
+        assertEquals(response2.posterPath(), result.results().get(1).poster_path());
+        assertEquals(MediaType.TV, result.results().get(1).media_type());
+        assertEquals(response2.firstAirDate(), result.results().get(1).release_date());
         assertEquals(response2.voteAverage(), result.results().get(1).vote_average());
     }
 
