@@ -105,4 +105,19 @@ class CineMenuPreviewMediaControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
+    @Test
+    @DisplayName("Test similarByMedia whit MediaType MOVIE and expect status code 200")
+    void similarByMediaAndIdTest() {
+        // Given
+        Long id = 12L;
+        MediaType media = MediaType.MOVIE;
+        Integer page = 1;
+
+        // When
+        var responseEntity = controller.similarByIdAndMedia(id, media, page);
+
+        // Then
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
+
 }

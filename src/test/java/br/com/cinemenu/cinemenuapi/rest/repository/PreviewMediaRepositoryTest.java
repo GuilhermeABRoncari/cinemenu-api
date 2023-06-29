@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static br.com.cinemenu.cinemenuapi.rest.repository.PreviewMediaRepository.*;
-
 @SpringBootTest
 class PreviewMediaRepositoryTest {
 
@@ -235,6 +233,74 @@ class PreviewMediaRepositoryTest {
     void verifyIdTest() {
         Assertions.assertThrows(InvalidSearchException.class, () -> {
             repository.getMovieListByActorId(null);
+        });
+    }
+
+    @Test
+    @DisplayName("Test method getSimilarTVShowList whit correct variables")
+    void getSimilarTVShowListByIdTest01() {
+        // Given
+        Long id = 2287L; // Batman id
+        Integer page = 1;
+
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/tv/%d/similar?api_key=".formatted(id) + apiKey
+                        + "&language=pt-BR&page=" + page
+        );
+
+        var expectedResult = restTemplate.getForObject(expectedUri, PreviewMediaResults.class);
+
+        // When
+        var result = repository.getSimilarTVShowListById(id, page);
+
+        // Then
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    @DisplayName("Test method getSimilarTVShowList whit invalid id")
+    void getSimilarTVShowListByIdTest02() {
+        // Given
+        Long invalidId = 9898989L;
+        Integer page = 1;
+
+        // Then
+        Assertions.assertThrows(TMDBNotFoundException.class, () -> {
+            repository.getSimilarTVShowListById(invalidId, page);
+        });
+    }
+
+    @Test
+    @DisplayName("Test method getSimilarMovieList whit correct variables")
+    void getSimilarMovieListByIdTest01() {
+        // Given
+        Long id = 260514L; // Cars 3 id
+        Integer page = 1;
+
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/movie/%d/similar?api_key=".formatted(id) + apiKey
+                        + "&language=pt-BR&page=" + page
+        );
+
+        var expectedResult = restTemplate.getForObject(expectedUri, PreviewMediaResults.class);
+
+        // When
+        var result = repository.getSimilarMovieListById(id, page);
+
+        // Then
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    @DisplayName("Test method getSimilarMovieList whit invalid id")
+    void getSimilarMovieListByIdTest02() {
+        // Given
+        Long invalidId = 9898989L;
+        Integer page = 1;
+
+        // Then
+        Assertions.assertThrows(TMDBNotFoundException.class, () -> {
+            repository.getSimilarMovieListById(invalidId, page);
         });
     }
 
