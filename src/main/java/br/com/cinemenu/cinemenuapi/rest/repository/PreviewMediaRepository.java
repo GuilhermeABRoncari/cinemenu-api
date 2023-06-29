@@ -138,7 +138,7 @@ public class PreviewMediaRepository {
         try {
             return restTemplate.getForObject(uri, PreviewActorCreditsListResults.class);
         } catch (HttpClientErrorException ex) {
-            throw new TMDBNotFoundException("id not found");
+            throw new TMDBNotFoundException("id not found: %d".formatted(id));
         }
     }
 
@@ -146,12 +146,12 @@ public class PreviewMediaRepository {
         this.apiKey = apiKey;
     }
 
-    private static void verifyPage(Integer page) {
+    private void verifyPage(Integer page) {
         if (page < 1 || page > MAX_PAGES)
             throw new InvalidSearchException("search page cannot be less then 1 or more than %d".formatted(MAX_PAGES));
     }
 
-    private static void verifyId(Long id) {
+    private void verifyId(Long id) {
         if (id == null) throw new InvalidSearchException("invalid search, actor id can not be null.");
     }
 }
