@@ -285,18 +285,18 @@ class PreviewMediaRepositoryTest {
     @DisplayName("Test method getSimilarMovieList whit correct variables")
     void getSimilarMovieListByIdTest01() {
         // Given
-        Long id = 260514L; // Cars 3 id
+        Long cars3Id = 260514L;
         Integer page = 1;
 
         URI expectedUri = URI.create(
-                "http://api.themoviedb.org/3/movie/%d/similar?api_key=".formatted(id) + apiKey
+                "http://api.themoviedb.org/3/movie/%d/similar?api_key=".formatted(cars3Id) + apiKey
                         + "&language=pt-BR&page=" + page
         );
 
         var expectedResult = restTemplate.getForObject(expectedUri, PreviewMediaResults.class);
 
         // When
-        var result = repository.getSimilarMovieListById(id, page);
+        var result = repository.getSimilarMovieListById(cars3Id, page);
 
         // Then
         Assertions.assertEquals(expectedResult, result);

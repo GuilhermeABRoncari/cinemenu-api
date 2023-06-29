@@ -305,7 +305,7 @@ public class PreviewMediaServiceTest {
     @DisplayName("Test method getSimilarByIdAndMedia whit MediaType MOVIE")
     void getSimilarByIdAndMediaTest02() {
         // Given
-        Long id = 260514L; // Cars 3 id
+        Long cars3Id = 260514L;
         Integer page = 1;
 
         var expectedResult = new PreviewMediaResults(page,
@@ -316,10 +316,10 @@ public class PreviewMediaServiceTest {
                         "2006-03-22", List.of("US"))), 134);
 
         // Mock response
-        when(previewMediaRepository.getSimilarMovieListById(id, page)).thenReturn(expectedResult);
+        when(previewMediaRepository.getSimilarMovieListById(cars3Id, page)).thenReturn(expectedResult);
 
         // When
-        var result = previewMediaRepository.getSimilarMovieListById(id, page);
+        var result = previewMediaRepository.getSimilarMovieListById(cars3Id, page);
 
         // Then
         assertEquals(expectedResult, result);
@@ -329,13 +329,13 @@ public class PreviewMediaServiceTest {
     @DisplayName("Test method getSimilarByIdAndMedia whit invalid MediaType")
     void getSimilarByIdAndMediaTest03() {
         // Given
-        Long id = 260514L; // Cars 3 id
+        Long cars3Id = 260514L;
         Integer page = 1;
         MediaType invalidMedia = MediaType.PERSON;
 
         // Then
         assertThrows(InvalidSearchException.class, () -> {
-            previewMediaService.getSimilarByIdAndMedia(id, invalidMedia, page);
+            previewMediaService.getSimilarByIdAndMedia(cars3Id, invalidMedia, page);
         });
     }
 
