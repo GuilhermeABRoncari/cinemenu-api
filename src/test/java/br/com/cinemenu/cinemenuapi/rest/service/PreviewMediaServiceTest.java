@@ -281,7 +281,7 @@ public class PreviewMediaServiceTest {
     @DisplayName("Test method getSimilarByIdAndMedia whit MediaType TV")
     void getSimilarByIdAndMediaTest01() {
         // Given
-        Long id = 1396L; // Breaking Bad id
+        Long breakingBadId = 1396L;
         Integer page = 1;
 
         var expectedResult = new PreviewMediaResults(page,
@@ -292,10 +292,10 @@ public class PreviewMediaServiceTest {
                         "2006-03-22", List.of("US"))), 24);
 
         // Mock response
-        when(previewMediaRepository.getSimilarTVShowListById(id, page)).thenReturn(expectedResult);
+        when(previewMediaRepository.getSimilarTVShowListById(breakingBadId, page)).thenReturn(expectedResult);
 
         // When
-        var result = previewMediaRepository.getSimilarTVShowListById(id, page);
+        var result = previewMediaRepository.getSimilarTVShowListById(breakingBadId, page);
 
         // Then
         assertEquals(expectedResult, result);
