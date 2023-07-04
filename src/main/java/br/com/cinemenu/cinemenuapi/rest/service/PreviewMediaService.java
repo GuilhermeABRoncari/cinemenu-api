@@ -3,7 +3,9 @@ package br.com.cinemenu.cinemenuapi.rest.service;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.CineMenuMediaResponse;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewActorCreditsListResults;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResponsePage;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResults;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
+import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
 import br.com.cinemenu.cinemenuapi.rest.mapper.PreviewMediaMapper;
 import br.com.cinemenu.cinemenuapi.rest.repository.PreviewMediaRepository;
 import lombok.AllArgsConstructor;
@@ -59,5 +61,22 @@ public class PreviewMediaService {
         var resultList = seriesListByActorId.results().stream().map(PreviewMediaMapper::tvMediaMap).toList();
 
         return new PreviewMediaResponsePage(1, resultList, null);
+    }
+
+    public PreviewMediaResponsePage getSimilarByIdAndMedia(Long id, MediaType media, Integer page) {
+        if (media.equals(MediaType.TV)) {
+            PreviewMediaResults similarTVShowListById = previewMediaRepository.getSimilarTVShowListById(id, page);
+            List<CineMenuMediaResponse> list = similarTVShowListById.results().stream().map(PreviewMediaMapper::tvMediaMap).toList();
+
+            return new PreviewMediaResponsePage(page, list, similarTVShowListById.total_pages());
+        }
+        if (media.equals(MediaType.MOVIE)) {
+            PreviewMediaResults similarMovieListById = previewMediaRepository.getSimilarMovieListById(id, page);
+            List<CineMenuMediaResponse> list = similarMovieListById.results().stream().map(PreviewMediaMapper::movieMediaMap).toList();
+
+            return new PreviewMediaResponsePage(page, list, similarMovieListById.total_pages());
+        }
+
+        throw new InvalidSearchException("invalid media type: %s".formatted(media));
     }
 }

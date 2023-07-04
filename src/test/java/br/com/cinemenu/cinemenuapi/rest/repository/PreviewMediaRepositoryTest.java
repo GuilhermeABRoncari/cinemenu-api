@@ -1,6 +1,7 @@
 package br.com.cinemenu.cinemenuapi.rest.repository;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.*;
+import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidApiKeyException;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.TMDBNotFoundException;
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static br.com.cinemenu.cinemenuapi.rest.repository.PreviewMediaRepository.*;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class PreviewMediaRepositoryTest {
@@ -39,12 +39,18 @@ class PreviewMediaRepositoryTest {
     private String search;
     private int page;
     private List<Integer> cineMenuGenres = new ArrayList<>();
+    private PreviewMediaResults.PreviewMediaResultResponse genericResponse;
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
         search = "carros+3";
         page = 1;
+        genericResponse = new PreviewMediaResults.PreviewMediaResultResponse(
+                false, "backdrop_path", 1L, "Title", "pt-BR", "Title",
+                "Overview", "poster_path", "profile_path", "movie", List.of(1,2,3),
+                0.0, "0000-00-00", false, 0.0, 0, "name", "name",
+                "0000-00-00", List.of("BR"));
     }
 
     @Test
@@ -235,6 +241,53 @@ class PreviewMediaRepositoryTest {
     void verifyIdTest() {
         Assertions.assertThrows(InvalidSearchException.class, () -> {
             repository.getMovieListByActorId(null);
+        });
+    }
+
+    @Test
+    @DisplayName("Test method getSimilarTVShowList whit invalid id")
+    void getSimilarTVShowListByIdTest02() {
+        // Given
+        Long invalidId = 9898989L;
+        Integer page = 1;
+
+        // Then
+        Assertions.assertThrows(TMDBNotFoundException.class, () -> {
+            repository.getSimilarTVShowListById(invalidId, page);
+        });
+    }
+
+    @Test
+    @DisplayName("Test method getSimilarMovieList whit correct variables")
+    void getSimilarMovieListByIdTest01() {
+        // Given
+        Long cars3Id = 260514L;
+        Integer page = 1;
+
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/movie/%d/similar?api_key=".formatted(cars3Id) + apiKey
+                        + "&language=pt-BR&page=" + page
+        );
+
+        var expectedResult = restTemplate.getForObject(expectedUri, PreviewMediaResults.class);
+
+        // When
+        var result = repository.getSimilarMovieListById(cars3Id, page);
+
+        // Then
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    @Test
+    @DisplayName("Test method getSimilarMovieList whit invalid id")
+    void getSimilarMovieListByIdTest02() {
+        // Given
+        Long invalidId = 9898989L;
+        Integer page = 1;
+
+        // Then
+        Assertions.assertThrows(TMDBNotFoundException.class, () -> {
+            repository.getSimilarMovieListById(invalidId, page);
         });
     }
 

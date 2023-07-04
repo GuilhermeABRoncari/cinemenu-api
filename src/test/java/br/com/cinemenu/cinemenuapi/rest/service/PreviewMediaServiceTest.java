@@ -2,6 +2,7 @@ package br.com.cinemenu.cinemenuapi.rest.service;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.*;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
+import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
 import br.com.cinemenu.cinemenuapi.rest.mapper.PreviewMediaMapper;
 import br.com.cinemenu.cinemenuapi.rest.repository.PreviewMediaRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +16,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class PreviewMediaServiceTest {
@@ -273,6 +275,68 @@ public class PreviewMediaServiceTest {
         assertEquals(MediaType.TV, result.results().get(1).media_type());
         assertEquals(response2.firstAirDate(), result.results().get(1).release_date());
         assertEquals(response2.voteAverage(), result.results().get(1).vote_average());
+    }
+
+    @Test
+    @DisplayName("Test method getSimilarByIdAndMedia whit MediaType TV")
+    void getSimilarByIdAndMediaTest01() {
+        // Given
+        Long breakingBadId = 1396L;
+        Integer page = 1;
+
+        var expectedResult = new PreviewMediaResults(page,
+                List.of(new PreviewMediaResults.PreviewMediaResultResponse(
+                        false, "/dzAv7UFFJ7MFnd0XGiNM6OVgwiC.jpg",2039L, null, "en",
+                        null, null, "/pPaVP9iIBHzHr8MfiGUqfdk6eA5.jpg", null, null,
+                        List.of(18), 6.768, null, null, 6.5, 2, "Heist", "Heist",
+                        "2006-03-22", List.of("US"))), 24);
+
+        // Mock response
+        when(previewMediaRepository.getSimilarTVShowListById(breakingBadId, page)).thenReturn(expectedResult);
+
+        // When
+        var result = previewMediaRepository.getSimilarTVShowListById(breakingBadId, page);
+
+        // Then
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    @DisplayName("Test method getSimilarByIdAndMedia whit MediaType MOVIE")
+    void getSimilarByIdAndMediaTest02() {
+        // Given
+        Long cars3Id = 260514L;
+        Integer page = 1;
+
+        var expectedResult = new PreviewMediaResults(page,
+                List.of(new PreviewMediaResults.PreviewMediaResultResponse(
+                        false, "/dzAv7UFFJ7MFnd0XGiNM6OVgwiC.jpg",2039L, null, "en",
+                        null, null, "/pPaVP9iIBHzHr8MfiGUqfdk6eA5.jpg", null, null,
+                        List.of(18), 6.768, null, null, 6.5, 2, "Heist", "Heist",
+                        "2006-03-22", List.of("US"))), 134);
+
+        // Mock response
+        when(previewMediaRepository.getSimilarMovieListById(cars3Id, page)).thenReturn(expectedResult);
+
+        // When
+        var result = previewMediaRepository.getSimilarMovieListById(cars3Id, page);
+
+        // Then
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    @DisplayName("Test method getSimilarByIdAndMedia whit invalid MediaType")
+    void getSimilarByIdAndMediaTest03() {
+        // Given
+        Long cars3Id = 260514L;
+        Integer page = 1;
+        MediaType invalidMedia = MediaType.PERSON;
+
+        // Then
+        assertThrows(InvalidSearchException.class, () -> {
+            previewMediaService.getSimilarByIdAndMedia(cars3Id, invalidMedia, page);
+        });
     }
 
 }

@@ -35,6 +35,8 @@ public class PreviewMediaRepository {
     private static final String TMDB_DISCOVERY_TV_BASE_URL = "/discover/tv?api_key=";
     private static final String TMDB_ACTOR_MOVIE_LIST = "/person/%d/movie_credits?api_key=";
     private static final String TMDB_ACTOR_TV_LIST = "/person/%d/tv_credits?api_key=";
+    private static final String TMDB_SIMILAR_TV_LIST = "/tv/%d/similar?api_key=";
+    private static final String TMDB_SIMILAR_MOVIE_LIST = "/movie/%d/similar?api_key=";
     private static final String TMDB_LANGUAGE_PT_BR = "&language=pt-BR";
     private static final String TMDB_BASE_EN_LANGUAGE = "&language=en-US";
     private static final String TMDB_SORT_BY_POP = "&sort_by=popularity.desc";
@@ -154,6 +156,42 @@ public class PreviewMediaRepository {
 
         try {
             return restTemplate.getForObject(uri, PreviewActorCreditsListResults.class);
+        } catch (HttpClientErrorException ex) {
+            throw new TMDBNotFoundException("id not found");
+        }
+    }
+
+    public PreviewMediaResults getSimilarTVShowListById(Long id, Integer page) {
+        verifyId(id);
+        verifyPage(page);
+
+        URI uri = URI.create(
+                TMDB_BASE_URL
+                        + TMDB_SIMILAR_TV_LIST.formatted(id) + apiKey
+                        + TMDB_LANGUAGE_PT_BR
+                        + TMDB_BASE_PAGE + page
+        );
+
+        try {
+            return restTemplate.getForObject(uri, PreviewMediaResults.class);
+        } catch (HttpClientErrorException ex) {
+            throw new TMDBNotFoundException("id not found");
+        }
+    }
+
+    public PreviewMediaResults getSimilarMovieListById(Long id, Integer page) {
+        verifyId(id);
+        verifyPage(page);
+
+        URI uri = URI.create(
+                TMDB_BASE_URL
+                        + TMDB_SIMILAR_MOVIE_LIST.formatted(id) + apiKey
+                        + TMDB_LANGUAGE_PT_BR
+                        + TMDB_BASE_PAGE + page
+        );
+
+        try {
+            return restTemplate.getForObject(uri, PreviewMediaResults.class);
         } catch (HttpClientErrorException ex) {
             throw new TMDBNotFoundException("id not found");
         }
