@@ -29,7 +29,7 @@ public class CineMenuPreviewMediaController {
         return ResponseEntity.ok(service.getGenreResponse(genreId, page));
     }
 
-    @GetMapping("/popular")
+    @GetMapping("/popular_people")
     public ResponseEntity<PreviewMediaResponsePage> popularPeopleList(@RequestParam("page") Integer page) {
         return ResponseEntity.ok(service.getPopularPeopleList(page));
     }
