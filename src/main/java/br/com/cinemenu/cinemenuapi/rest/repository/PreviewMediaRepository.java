@@ -34,6 +34,7 @@ public class PreviewMediaRepository {
     private static final String TMDB_DISCOVERY_MOVIE_BASE_URL = "/discover/movie?api_key=";
     private static final String TMDB_DISCOVERY_TV_BASE_URL = "/discover/tv?api_key=";
     private static final String TMDB_ACTOR_MOVIE_LIST = "/person/%d/movie_credits?api_key=";
+    private static final String TMDB_ACTOR_TV_LIST = "/person/%d/tv_credits?api_key=";
     private static final String TMDB_LANGUAGE_PT_BR = "&language=pt-BR";
     private static final String TMDB_BASE_EN_LANGUAGE = "&language=en-US";
     private static final String TMDB_SORT_BY_POP = "&sort_by=popularity.desc";
@@ -139,6 +140,22 @@ public class PreviewMediaRepository {
             return restTemplate.getForObject(uri, PreviewActorCreditsListResults.class);
         } catch (HttpClientErrorException ex) {
             throw new TMDBNotFoundException("id not found: %d".formatted(id));
+        }
+    }
+
+    public PreviewActorCreditsListResults getSeriesListByActorId(Long id) {
+        verifyId(id);
+
+        URI uri = URI.create(
+                TMDB_BASE_URL
+                        + TMDB_ACTOR_TV_LIST.formatted(id) + apiKey
+                        + TMDB_LANGUAGE_PT_BR
+        );
+
+        try {
+            return restTemplate.getForObject(uri, PreviewActorCreditsListResults.class);
+        } catch (HttpClientErrorException ex) {
+            throw new TMDBNotFoundException("id not found");
         }
     }
 

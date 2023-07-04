@@ -83,10 +83,23 @@ class CineMenuPreviewMediaControllerTest {
     @DisplayName("Test moviesByActor and expect http code 200")
     void moviesListByActorIdTestScene01() {
         // Given
-        Long id = 73457L; // Chris Pratt TMDB id
+        Long chrisPrattId = 73457L;
 
         // When
-        var responseEntity = controller.movieListByActorId(id);
+        var responseEntity = controller.movieListByActorId(chrisPrattId);
+
+        // Then
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Test seriesByActor and expect http code 200")
+    void seriesListByActorIdTestScene01() {
+        // Given
+        Long chrisPrattId = 73457L;
+
+        // When
+        var responseEntity = controller.seriesListByActorId(chrisPrattId);
 
         // Then
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());

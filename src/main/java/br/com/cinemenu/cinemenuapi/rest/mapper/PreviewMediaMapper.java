@@ -55,6 +55,17 @@ public class PreviewMediaMapper {
         );
     }
 
+    public static CineMenuMediaResponse tvMediaMap(PreviewActorCreditsListResults.PreviewActorCreditsListResultsResponse response) {
+        return new CineMenuMediaResponse(
+                response.id(),
+                response.name(),
+                response.posterPath(),
+                MediaType.TV,
+                response.firstAirDate(),
+                response.voteAverage()
+        );
+    }
+
     public static CineMenuMediaResponse personMediaMap(PreviewPopularResults.PreviewPopularResultsResponse response) {
         return new CineMenuMediaResponse(
                 response.id(),
