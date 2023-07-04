@@ -2,6 +2,7 @@ package br.com.cinemenu.cinemenuapi.rest.service;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.*;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
+import br.com.cinemenu.cinemenuapi.rest.mapper.PreviewMediaMapper;
 import br.com.cinemenu.cinemenuapi.rest.repository.PreviewMediaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,7 +12,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
