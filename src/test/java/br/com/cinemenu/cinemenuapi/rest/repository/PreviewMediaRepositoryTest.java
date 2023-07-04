@@ -174,7 +174,7 @@ class PreviewMediaRepositoryTest {
     @DisplayName("Test getMovieListByActorId method")
     void testGetMovieListByActorId() {
         // Given
-        Long chrisPrattId = 73457L; // Chris Pratt TMDB id;
+        Long chrisPrattId = 73457L;
         URI expectedUri = URI.create(
                 "http://api.themoviedb.org/3/person/%d/movie_credits?api_key=".formatted(chrisPrattId) + apiKey
                         + "&language=pt-BR");
