@@ -180,15 +180,15 @@ class PreviewMediaRepositoryTest {
     @DisplayName("Test getMovieListByActorId method")
     void testGetMovieListByActorId() {
         // Given
-        Long id = 73457L; // Chris Pratt TMDB id;
+        Long chrisPrattId = 73457L;
         URI expectedUri = URI.create(
-                "http://api.themoviedb.org/3/person/%d/movie_credits?api_key=".formatted(id) + apiKey
+                "http://api.themoviedb.org/3/person/%d/movie_credits?api_key=".formatted(chrisPrattId) + apiKey
                         + "&language=pt-BR");
 
         var expectedResult = restTemplate.getForObject(expectedUri, PreviewActorCreditsListResults.class);
 
         // When
-        var result = repository.getMovieListByActorId(id);
+        var result = repository.getMovieListByActorId(chrisPrattId);
 
         // Then
         Assertions.assertEquals(expectedResult, result);
@@ -198,15 +198,15 @@ class PreviewMediaRepositoryTest {
     @DisplayName("Test getSeriesListByActorId method")
     void testGetSeriesListByActorId() {
         // Given
-        Long id = 73457L; // Chris Pratt TMDB id;
+        Long chrisPrattId = 73457L;
         URI expectedUri = URI.create(
-                "http://api.themoviedb.org/3/person/%d/tv_credits?api_key=".formatted(id) + apiKey
+                "http://api.themoviedb.org/3/person/%d/tv_credits?api_key=".formatted(chrisPrattId) + apiKey
                         + "&language=pt-BR");
 
         var expectedResult = restTemplate.getForObject(expectedUri, PreviewActorCreditsListResults.class);
 
         // When
-        var result = repository.getSeriesListByActorId(id);
+        var result = repository.getSeriesListByActorId(chrisPrattId);
 
         // Then
         Assertions.assertEquals(expectedResult, result);
@@ -243,30 +243,6 @@ class PreviewMediaRepositoryTest {
             repository.getMovieListByActorId(null);
         });
     }
-
-//    @Test
-//    @DisplayName("Test method getSimilarTVShowList whit correct variables")
-//    void getSimilarTVShowListByIdTest01() {
-//        // Given
-//        Long id = 2287L; // Batman id
-//        Integer page = 1;
-//        var expectedResult = new PreviewMediaResults(page, List.of(genericResponse), 43);
-//
-//        URI expectedUri = URI.create(
-//                "http://api.themoviedb.org/3/tv/%d/similar?api_key=".formatted(id) + apiKey
-//                        + "&language=pt-BR&page=" + page
-//        );
-//
-//        // var expectedResult = restTemplate.getForObject(expectedUri, PreviewMediaResults.class);
-//
-//        // When
-//        when(restTemplate.getForObject(expectedUri, PreviewMediaResults.class)).thenReturn(expectedResult);
-//        var result = repository.getSimilarTVShowListById(2287L, page);
-//
-//        // Then
-//        Assertions.assertInstanceOf(PreviewMediaResults.class, result);
-//        Assertions.assertNotEquals(expectedResult, result);
-//    }
 
     @Test
     @DisplayName("Test method getSimilarTVShowList whit invalid id")

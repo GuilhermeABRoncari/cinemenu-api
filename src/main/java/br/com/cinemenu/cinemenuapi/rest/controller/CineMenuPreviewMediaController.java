@@ -34,17 +34,17 @@ public class CineMenuPreviewMediaController {
         return ResponseEntity.ok(service.getPopularPeopleList(page));
     }
 
-    @GetMapping("/moviesByActor")
+    @GetMapping("/movies_by_actor")
     public ResponseEntity<PreviewMediaResponsePage> movieListByActorId(@RequestParam("id") Long id) {
         return ResponseEntity.ok(service.getMovieListByActor(id));
     }
 
-    @GetMapping("/seriesByActor")
+    @GetMapping("/series_by_actor")
     public ResponseEntity<PreviewMediaResponsePage> seriesListByActorId(@RequestParam("id") Long id) {
         return ResponseEntity.ok(service.getSeriesListByActor(id));
     }
 
-    @GetMapping("/similarByMedia")
+    @GetMapping("/similar_by_media")
     public ResponseEntity<PreviewMediaResponsePage> similarByIdAndMedia(
             @RequestParam("id") Long id, @RequestParam("media") MediaType media, @RequestParam("page") Integer page) {
         return ResponseEntity.ok(service.getSimilarByIdAndMedia(id, media, page));
