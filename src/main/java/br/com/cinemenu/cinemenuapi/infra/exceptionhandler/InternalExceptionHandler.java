@@ -4,6 +4,7 @@ import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidApiKe
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.TMDBNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -37,7 +38,7 @@ public class InternalExceptionHandler {
 
     @ExceptionHandler(TMDBNotFoundException.class)
     public ResponseEntity notFoundResponseFromTMDBApi(TMDBNotFoundException ex) {
-        return ResponseEntity.status(404).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
     public record ExceptionValidation(String field, String message, OffsetDateTime timestamp) {
