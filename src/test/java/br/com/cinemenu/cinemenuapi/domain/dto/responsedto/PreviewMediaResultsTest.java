@@ -16,7 +16,7 @@ public class PreviewMediaResultsTest {
         int page = 1;
         List<PreviewMediaResults.PreviewMediaResultResponse> results = Arrays.asList(
                 new PreviewMediaResults.PreviewMediaResultResponse(
-                        false, "backdrop_path", 1, "title", "pt-br", "original_title", "overview",
+                        false, "backdrop_path", 1L, "title", "pt-br", "original_title", "overview",
                         "poster_path", "profile_path", "movie", Arrays.asList(1, 2), 5.0, "2023-05-24",
                         false, 7.5, 100, null, null, null, Arrays.asList("BR")
                 )
