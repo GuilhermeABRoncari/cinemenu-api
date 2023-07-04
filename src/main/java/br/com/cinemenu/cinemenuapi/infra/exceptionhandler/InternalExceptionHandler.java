@@ -2,6 +2,8 @@ package br.com.cinemenu.cinemenuapi.infra.exceptionhandler;
 
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidApiKeyException;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
+import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.TMDBNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,6 +24,7 @@ public class InternalExceptionHandler {
     public ResponseEntity handleInvalidApiKeyException(InvalidApiKeyException ex) {
         return ResponseEntity.internalServerError().body(ex.getMessage());
     }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         return ResponseEntity.badRequest().body(new ExceptionValidation(ex.getFieldError(), ex.getMessage(), OffsetDateTime.now()));
@@ -30,6 +33,11 @@ public class InternalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity handleInvalidArgumentException(IllegalArgumentException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(TMDBNotFoundException.class)
+    public ResponseEntity notFoundResponseFromTMDBApi(TMDBNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
     public record ExceptionValidation(String field, String message, OffsetDateTime timestamp) {

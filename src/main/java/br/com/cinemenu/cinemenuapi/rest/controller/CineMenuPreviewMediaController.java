@@ -33,4 +33,13 @@ public class CineMenuPreviewMediaController {
         return ResponseEntity.ok(service.getPopularPeopleList(page));
     }
 
+    @GetMapping("/movies_by_actor")
+    public ResponseEntity<PreviewMediaResponsePage> movieListByActorId(@RequestParam("id") Long id) {
+        return ResponseEntity.ok(service.getMovieListByActor(id));
+    }
+
+    @GetMapping("/seriesByActor")
+    public ResponseEntity<PreviewMediaResponsePage> seriesListByActorId(@RequestParam("id") Long id) {
+        return ResponseEntity.ok(service.getSeriesListByActor(id));
+    }
 }

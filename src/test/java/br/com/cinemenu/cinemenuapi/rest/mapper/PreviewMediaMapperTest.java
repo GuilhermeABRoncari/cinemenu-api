@@ -1,8 +1,10 @@
 package br.com.cinemenu.cinemenuapi.rest.mapper;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.CineMenuMediaResponse;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewActorCreditsListResults;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResults;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -133,5 +135,55 @@ public class PreviewMediaMapperTest {
         assertEquals(MediaType.TV, result.media_type());
         assertEquals("0000-00-00", result.release_date());
         assertEquals(0.0, result.vote_average());
+    }
+
+    @Test
+    @DisplayName("Test movieMediaMap method")
+    void testMovieMediaMap02() {
+        // Given
+        PreviewActorCreditsListResults.PreviewActorCreditsListResultsResponse response =
+                new PreviewActorCreditsListResults.PreviewActorCreditsListResultsResponse(
+                        true, "backdrop_path_value", List.of(1, 2, 3), 12345L, "original_name_value",
+                        "original_title_value", "name_value", "title_value", "original_language_value",
+                        "overview_value", 7.8, "poster_path_value", "release_date_value",
+                        "first_air_date_value", true, 6.9, 1000, "character_value",
+                        "credit_id_value", 10, 1
+                );
+
+        // When
+        CineMenuMediaResponse result = PreviewMediaMapper.movieMediaMap(response);
+
+        // Then
+        Assertions.assertEquals(response.id(), result.id());
+        Assertions.assertEquals(response.title(), result.title());
+        Assertions.assertEquals(response.posterPath(), result.poster_path());
+        Assertions.assertEquals(MediaType.MOVIE, result.media_type());
+        Assertions.assertEquals(response.releaseDate(), result.release_date());
+        Assertions.assertEquals(response.voteAverage(), result.vote_average());
+    }
+
+    @Test
+    @DisplayName("Test tvMediaMap method whit PreviewActorCreditsResultResponse param")
+    void tvMediaMapTest() {
+        // Given
+        PreviewActorCreditsListResults.PreviewActorCreditsListResultsResponse response =
+                new PreviewActorCreditsListResults.PreviewActorCreditsListResultsResponse(
+                        true, "backdrop_path_value", List.of(1, 2, 3), 12345L, "original_name_value",
+                        "original_title_value", "name_value", "title_value", "original_language_value",
+                        "overview_value", 7.8, "poster_path_value", "release_date_value",
+                        "first_air_date_value", true, 6.9, 1000, "character_value",
+                        "credit_id_value", 10, 1
+                );
+
+        // When
+        CineMenuMediaResponse result = PreviewMediaMapper.tvMediaMap(response);
+
+        // Then
+        Assertions.assertEquals(response.id(), result.id());
+        Assertions.assertEquals(response.name(), result.title());
+        Assertions.assertEquals(response.posterPath(), result.poster_path());
+        Assertions.assertEquals(MediaType.TV, result.media_type());
+        Assertions.assertEquals(response.firstAirDate(), result.release_date());
+        Assertions.assertEquals(response.voteAverage(), result.vote_average());
     }
 }

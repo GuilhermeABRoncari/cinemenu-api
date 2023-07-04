@@ -3,6 +3,8 @@ package br.com.cinemenu.cinemenuapi.rest.controller;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.CineMenuMediaResponse;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResponsePage;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
+import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
+import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.TMDBNotFoundException;
 import br.com.cinemenu.cinemenuapi.rest.service.PreviewMediaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,12 +15,14 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CineMenuPreviewMediaControllerTest {
 
@@ -84,7 +88,30 @@ class CineMenuPreviewMediaControllerTest {
         // When
         ResponseEntity<PreviewMediaResponsePage> responseEntity = controller.popularPeopleList(page);
 
+    @DisplayName("Test moviesByActor and expect http code 200")
+    void moviesListByActorIdTestScene01() {
+        // Given
+        Long chrisPrattId = 73457L;
+
+        // When
+        var responseEntity = controller.movieListByActorId(chrisPrattId);
+
+
         // Then
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
+
+    @Test
+    @DisplayName("Test seriesByActor and expect http code 200")
+    void seriesListByActorIdTestScene01() {
+        // Given
+        Long chrisPrattId = 73457L;
+
+        // When
+        var responseEntity = controller.seriesListByActorId(chrisPrattId);
+
+        // Then
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
+
 }
