@@ -2,15 +2,16 @@ package br.com.cinemenu.cinemenuapi.rest.mapper;
 
 import br.com.cinemenu.cinemenuapi.domain.enumeration.CineMenuGenres;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TMDBInternalGenreMapper {
-    private static Map<CineMenuGenres, Integer> genreIdMap = null;
+
+    private TMDBInternalGenreMapper() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static Map<CineMenuGenres, Integer> movieGenreIdMap() {
-        Map<CineMenuGenres, Integer> map = new HashMap<>();
+        EnumMap<CineMenuGenres, Integer> map = new EnumMap<>(CineMenuGenres.class);
         map.put(CineMenuGenres.ACTION, 28);
         map.put(CineMenuGenres.ADVENTURE, 12);
         map.put(CineMenuGenres.ANIMATION, 16);
@@ -31,7 +32,7 @@ public class TMDBInternalGenreMapper {
     }
 
     private static Map<CineMenuGenres, Integer> tvShowGenreIdMap() {
-        Map<CineMenuGenres, Integer> map = new HashMap<>();
+        EnumMap<CineMenuGenres, Integer> map = new EnumMap<>(CineMenuGenres.class);
         map.put(CineMenuGenres.ACTION, 10759);
         map.put(CineMenuGenres.ADVENTURE, 10759);
         map.put(CineMenuGenres.ANIMATION, 16);
@@ -56,6 +57,7 @@ public class TMDBInternalGenreMapper {
     }
 
     private static List<Integer> mapForIds(List<CineMenuGenres> genres, Map<CineMenuGenres, Integer> cineMenuGenresIntegerMap) {
+        Map<CineMenuGenres, Integer> genreIdMap = null;
         genreIdMap = cineMenuGenresIntegerMap;
         List<Integer> genreIds = new ArrayList<>();
 

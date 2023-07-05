@@ -11,37 +11,38 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.OffsetDateTime;
+import java.util.Objects;
 
 @RestControllerAdvice
 public class InternalExceptionHandler {
 
     @ExceptionHandler(InvalidSearchException.class)
-    public ResponseEntity handleInvalidSearchException(InvalidSearchException ex) {
+    public ResponseEntity<Object> handleInvalidSearchException(InvalidSearchException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
     @ExceptionHandler(InvalidApiKeyException.class)
-    public ResponseEntity handleInvalidApiKeyException(InvalidApiKeyException ex) {
+    public ResponseEntity<Object> handleInvalidApiKeyException(InvalidApiKeyException ex) {
         return ResponseEntity.internalServerError().body(ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        return ResponseEntity.badRequest().body(new ExceptionValidation(ex.getFieldError(), ex.getMessage(), OffsetDateTime.now()));
+    public ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        return ResponseEntity.badRequest().body(new ExceptionValidation(String.valueOf(Objects.requireNonNull(ex.getFieldError())), ex.getMessage(), OffsetDateTime.now()));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity handleInvalidArgumentException(IllegalArgumentException ex) {
+    public ResponseEntity<Object> handleInvalidArgumentException(IllegalArgumentException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
     @ExceptionHandler(TMDBNotFoundException.class)
-    public ResponseEntity notFoundResponseFromTMDBApi(TMDBNotFoundException ex) {
+    public ResponseEntity<Object> notFoundResponseFromTMDBApi(TMDBNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
     public record ExceptionValidation(String field, String message, OffsetDateTime timestamp) {
-        public ExceptionValidation(FieldError error, String message, OffsetDateTime offsetDateTime) {
+        public ExceptionValidation(FieldError error) {
             this(error.getField(), error.getDefaultMessage(), OffsetDateTime.now());
         }
     }
