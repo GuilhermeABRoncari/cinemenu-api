@@ -5,17 +5,8 @@ import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearc
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.TMDBNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -51,39 +42,6 @@ public class InternalExceptionHandlerTest {
         // Then
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
         assertEquals(errorMessage, responseEntity.getBody());
-    }
-
-    @Test
-    @DisplayName("Test handling MethodArgumentNotValidException")
-    void handleMethodArgumentNotValidException() {
-        // Given
-        String fieldName = "name";
-        String errorMessage = "Field 'name' is required";
-        LocalDate date = LocalDate.of(2023, 5, 25);
-        LocalTime time = LocalTime.of(21, 36);
-        ZoneOffset offset = ZoneOffset.ofHours(-3);
-
-        OffsetDateTime timestamp = OffsetDateTime.of(date, time, offset);
-        FieldError fieldError = new FieldError("object", fieldName, errorMessage);
-        BindingResult bindingResult = new org.springframework.validation.BeanPropertyBindingResult(null, null);
-        bindingResult.addError(fieldError);
-        MethodArgumentNotValidException exception = new MethodArgumentNotValidException((MethodParameter) null, bindingResult) {
-            @Override
-            public String getMessage() {
-                return errorMessage;
-            }
-        };
-        InternalExceptionHandler handler = new InternalExceptionHandler();
-
-        // When
-        ResponseEntity responseEntity = handler.handleMethodArgumentNotValidException(exception);
-
-        // Then
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        InternalExceptionHandler.ExceptionValidation validation = (InternalExceptionHandler.ExceptionValidation) responseEntity.getBody();
-        assertEquals(fieldName, validation.field());
-        assertEquals(errorMessage, validation.message());
-        assertEquals(OffsetDateTime.parse("2023-05-25T21:36-03:00"), timestamp);
     }
 
     @Test

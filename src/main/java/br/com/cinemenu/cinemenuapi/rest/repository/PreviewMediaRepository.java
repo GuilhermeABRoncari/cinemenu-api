@@ -21,6 +21,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Repository
@@ -38,19 +39,16 @@ public class PreviewMediaRepository {
     private static final String TMDB_SIMILAR_TV_LIST = "/tv/%d/similar?api_key=";
     private static final String TMDB_SIMILAR_MOVIE_LIST = "/movie/%d/similar?api_key=";
     private static final String TMDB_LANGUAGE_PT_BR = "&language=pt-BR";
-    private static final String TMDB_BASE_EN_LANGUAGE = "&language=en-US";
     private static final String TMDB_SORT_BY_POP = "&sort_by=popularity.desc";
-    private static final String TMDB_SORT_BY_VOTE = "&sort_by=vote_average.desc";
     private static final String TMDB_BASE_PAGE = "&page=";
     private static final String TMDB_ADULT_FALSE = "&include_adult=false";
     private static final String TMDB_USER_QUERY = "&query=";
     private static final String TMDB_WHIT_GENDER = "&with_genres=";
     private static final String TMDB_WATCH_REGION = "&region=US%2CBR";
     private static final String AND_URL = "%2C";
-    private static final String OR_URL = "%7C";
-
+    private static final String ID_NOT_FOUND = "id not found: %d";
     private static final Integer MAX_PAGES = 500;
-    private static RestTemplate restTemplate = new RestTemplate();
+    private static final RestTemplate restTemplate = new RestTemplate();
 
     public PreviewMediaResults getSearchPreviewMediaResponse(String search, Integer page) {
         if (apiKey == null) throw new InvalidApiKeyException("invalid api key");
@@ -58,16 +56,13 @@ public class PreviewMediaRepository {
 
         String userQuery = StringUtils.stripAccents(search.trim().replaceAll(" ", "+").toLowerCase());
 
-
         URI uri = URI.create(
                 TMDB_BASE_URL
                         + TMBD_MULTI_SEARCH_BASE_URL + apiKey
                         + TMDB_LANGUAGE_PT_BR + TMDB_BASE_PAGE + page
                         + TMDB_ADULT_FALSE + TMDB_USER_QUERY + userQuery);
 
-        var apiResponse = restTemplate.getForObject(uri, PreviewMediaResults.class);
-
-        return apiResponse;
+        return restTemplate.getForObject(uri, PreviewMediaResults.class);
     }
 
     public PreviewMediaResponsePage getGenrePreviewMediaResponse(List<Integer> genreId, Integer page) {
@@ -75,15 +70,15 @@ public class PreviewMediaRepository {
         verifyPage(page);
 
         List<CineMenuMediaResponse> mediaList = new ArrayList<>();
-        Integer totalPages;
+        int totalPages;
 
-        List<CineMenuGenres> genreList = genreId.stream().map(id -> CineMenuGenres.fromId(id)).toList();
+        List<CineMenuGenres> genreList = genreId.stream().map(CineMenuGenres::fromId).toList();
 
-        List<Integer> MovieGenreIds = TMDBInternalGenreMapper.mapToMovieIds(genreList);
-        String formattedMovieUrl = MovieGenreIds.stream().map(Object::toString).collect(Collectors.joining(AND_URL));
+        List<Integer> movieGenreIds = TMDBInternalGenreMapper.mapToMovieIds(genreList);
+        String formattedMovieUrl = movieGenreIds.stream().map(Object::toString).collect(Collectors.joining(AND_URL));
 
-        List<Integer> TvGenreIds = TMDBInternalGenreMapper.mapToTvShowIds(genreList);
-        String formattedTvUrl = TvGenreIds.stream().map(Object::toString).collect(Collectors.joining(AND_URL));
+        List<Integer> tvGenreIds = TMDBInternalGenreMapper.mapToTvShowIds(genreList);
+        String formattedTvUrl = tvGenreIds.stream().map(Object::toString).collect(Collectors.joining(AND_URL));
 
         URI movieUri = URI.create(
                 TMDB_BASE_URL
@@ -104,8 +99,8 @@ public class PreviewMediaRepository {
         var apiResponseMovie = restTemplate.getForObject(movieUri, PreviewMediaResults.class);
         var apiResponseTv = restTemplate.getForObject(tvUri, PreviewMediaResults.class);
 
-        mediaList.addAll(apiResponseMovie.results().stream().map(PreviewMediaMapper::movieMediaMap).toList());
-        mediaList.addAll(apiResponseTv.results().stream().map(PreviewMediaMapper::tvMediaMap).toList());
+        if (Objects.requireNonNull(apiResponseMovie).results() != null) mediaList.addAll(apiResponseMovie.results().stream().map(PreviewMediaMapper::movieMediaMap).toList());
+        if (Objects.requireNonNull(apiResponseTv).results() != null) mediaList.addAll(apiResponseTv.results().stream().map(PreviewMediaMapper::tvMediaMap).toList());
         Collections.shuffle(mediaList);
 
         totalPages = apiResponseMovie.total_pages() + apiResponseTv.total_pages();
@@ -141,7 +136,7 @@ public class PreviewMediaRepository {
         try {
             return restTemplate.getForObject(uri, PreviewActorCreditsListResults.class);
         } catch (HttpClientErrorException ex) {
-            throw new TMDBNotFoundException("id not found: %d".formatted(id));
+            throw new TMDBNotFoundException(ID_NOT_FOUND.formatted(id));
         }
     }
 
@@ -157,7 +152,7 @@ public class PreviewMediaRepository {
         try {
             return restTemplate.getForObject(uri, PreviewActorCreditsListResults.class);
         } catch (HttpClientErrorException ex) {
-            throw new TMDBNotFoundException("id not found");
+            throw new TMDBNotFoundException(ID_NOT_FOUND.formatted(id));
         }
     }
 
@@ -175,7 +170,7 @@ public class PreviewMediaRepository {
         try {
             return restTemplate.getForObject(uri, PreviewMediaResults.class);
         } catch (HttpClientErrorException ex) {
-            throw new TMDBNotFoundException("id not found");
+            throw new TMDBNotFoundException(ID_NOT_FOUND.formatted(id));
         }
     }
 
@@ -193,7 +188,7 @@ public class PreviewMediaRepository {
         try {
             return restTemplate.getForObject(uri, PreviewMediaResults.class);
         } catch (HttpClientErrorException ex) {
-            throw new TMDBNotFoundException("id not found");
+            throw new TMDBNotFoundException(ID_NOT_FOUND.formatted(id));
         }
     }
 

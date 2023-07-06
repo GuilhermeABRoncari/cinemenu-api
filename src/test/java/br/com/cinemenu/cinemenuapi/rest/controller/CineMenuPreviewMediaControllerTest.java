@@ -27,8 +27,7 @@ class CineMenuPreviewMediaControllerTest {
     private String search;
     @Mock
     private PreviewMediaService service;
-    private CineMenuMediaResponse mediaResponse;
-    private List<CineMenuMediaResponse> mediaResponseList = new ArrayList<>();
+    private final List<CineMenuMediaResponse> mediaResponseList = new ArrayList<>();
     private PreviewMediaResponsePage result;
 
     @BeforeEach
@@ -37,7 +36,7 @@ class CineMenuPreviewMediaControllerTest {
         controller = new CineMenuPreviewMediaController(service);
         search = "Batman";
 
-        mediaResponse = new CineMenuMediaResponse(
+        CineMenuMediaResponse mediaResponse = new CineMenuMediaResponse(
                 2287L, "Batman", "/5GOO4GqoBZE6GOQ1SLFM6tNwfYo.jpg",
                 MediaType.TV, "1966-01-12", 7.4);
 
