@@ -30,6 +30,7 @@ jobs:
           DBUSER=${{ secrets.DBUSER }}
           DBPASSWORD=${{ secrets.DBPASSWORD }}
           APIKEY=${{ secrets.APIKEY }}
+          SECURITY=${{ secrets.SECURITY }}
           ./gradlew build --no-daemon
 
       - name: Run tests
