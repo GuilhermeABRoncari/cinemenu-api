@@ -1,5 +1,6 @@
 package br.com.cinemenu.cinemenuapi.rest.service;
 
+import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.CineMenuUserRequestDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -10,6 +11,16 @@ class SignServiceTest {
     private SignService signService = new SignService();
 
     @Test
+    @DisplayName("Test checkSignValidations whit valid CineMenuUserRequestDto")
+    void testCheckSignValidations() {
+        //Given
+        var userDto = new CineMenuUserRequestDto("name", "username", "email@example.com", "Password1!", "Password1!");
+
+        //When/Then
+        assertDoesNotThrow(() -> signService.checkSignValidations(userDto));
+    }
+
+    @Test
     @DisplayName("Test passwordValidation method with valid password")
     void testPasswordValidationWithValidPassword() {
         // Given
@@ -18,6 +29,45 @@ class SignServiceTest {
 
         // When/Then
         assertDoesNotThrow(() -> signService.passwordValidation(password, confirmationPassword));
+    }
+
+    @Test
+    @DisplayName("Test passwordValidation method with invalid password")
+    void testPasswordValidationWithValidPassword02() {
+        // Given
+        String password = "Password11";
+        String confirmationPassword = "Password11";
+
+        // When/Then
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+            signService.passwordValidation(password, confirmationPassword));
+            assertEquals("The password must contain at least one uppercase letter, one number, one special character, and be between 8 and 32 characters", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test passwordValidation method with invalid password")
+    void testPasswordValidationWithValidPassword03() {
+        // Given
+        String password = "Password!!";
+        String confirmationPassword = "Password!!";
+
+        // When/Then
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+                signService.passwordValidation(password, confirmationPassword));
+        assertEquals("The password must contain at least one uppercase letter, one number, one special character, and be between 8 and 32 characters", ex.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test passwordValidation method with invalid password")
+    void testPasswordValidationWithValidPassword04() {
+        // Given
+        String password = "password1!";
+        String confirmationPassword = "password1!";
+
+        // When/Then
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
+                signService.passwordValidation(password, confirmationPassword));
+        assertEquals("The password must contain at least one uppercase letter, one number, one special character, and be between 8 and 32 characters", ex.getMessage());
     }
 
     @Test
@@ -39,6 +89,19 @@ class SignServiceTest {
         // Given
         String password = "pass";
         String confirmationPassword = "pass";
+
+        // When/Then
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> signService.passwordValidation(password, confirmationPassword));
+        assertEquals("The password must contain at least one uppercase letter, one number, one special character, and be between 8 and 32 characters", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test passwordValidation method with invalid password length")
+    void testPasswordValidationWithInvalidPasswordLength02() {
+        // Given
+        String password = "12345678910111213141516171819202122";
+        String confirmationPassword = "12345678910111213141516171819202122";
 
         // When/Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
