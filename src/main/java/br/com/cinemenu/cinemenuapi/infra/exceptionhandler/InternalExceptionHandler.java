@@ -6,49 +6,34 @@ import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.JWTCineMenuE
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.TMDBNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.time.OffsetDateTime;
 
 @RestControllerAdvice
 public class InternalExceptionHandler {
 
     @ExceptionHandler(InvalidSearchException.class)
-    public ResponseEntity handleInvalidSearchException(InvalidSearchException ex) {
+    public ResponseEntity<String> handleInvalidSearchException(InvalidSearchException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
     @ExceptionHandler(InvalidApiKeyException.class)
-    public ResponseEntity handleInvalidApiKeyException(InvalidApiKeyException ex) {
+    public ResponseEntity<String> handleInvalidApiKeyException(InvalidApiKeyException ex) {
         return ResponseEntity.internalServerError().body(ex.getMessage());
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        return ResponseEntity.badRequest().body(new ExceptionValidation(ex.getFieldError(), ex.getMessage(), OffsetDateTime.now()));
-    }
-
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity handleInvalidArgumentException(IllegalArgumentException ex) {
+    public ResponseEntity<String> handleInvalidArgumentException(IllegalArgumentException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
     @ExceptionHandler(TMDBNotFoundException.class)
-    public ResponseEntity notFoundResponseFromTMDBApi(TMDBNotFoundException ex) {
+    public ResponseEntity<Object> notFoundResponseFromTMDBApi(TMDBNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
     @ExceptionHandler(JWTCineMenuException.class)
     public ResponseEntity<String> handleJWTException(JWTCineMenuException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-    }
-
-    public record ExceptionValidation(String field, String message, OffsetDateTime timestamp) {
-        public ExceptionValidation(FieldError error, String message, OffsetDateTime offsetDateTime) {
-            this(error.getField(), error.getDefaultMessage(), OffsetDateTime.now());
-        }
     }
 }
