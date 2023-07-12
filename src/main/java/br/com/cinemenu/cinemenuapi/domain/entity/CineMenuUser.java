@@ -20,6 +20,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class CineMenuUser implements UserDetails {
 
