@@ -1,6 +1,7 @@
 package br.com.cinemenu.cinemenuapi.infra.security;
 
 import lombok.AllArgsConstructor;
+import lombok.Generated;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
+@Generated
 public class SecurityConfigurations {
 
     private SecurityFilter securityFilter;

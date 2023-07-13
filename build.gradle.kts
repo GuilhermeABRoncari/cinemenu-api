@@ -42,9 +42,11 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 tasks.named<JacocoReport>("jacocoTestReport") {
+
 	reports {
 		html.outputLocation.set(layout.buildDirectory.dir("jacoco/test/html"))
 	}
+
 }
 
 apply(from = ".githooks/apply-git-hooks.gradle")
