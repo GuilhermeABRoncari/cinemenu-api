@@ -33,15 +33,20 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.0")
 	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.0")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	testImplementation("org.springframework.security:spring-security-test")
+	implementation("com.auth0:java-jwt:4.4.0")
 }
 
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
 tasks.named<JacocoReport>("jacocoTestReport") {
+
 	reports {
 		html.outputLocation.set(layout.buildDirectory.dir("jacoco/test/html"))
 	}
+
 }
 
 apply(from = ".githooks/apply-git-hooks.gradle")

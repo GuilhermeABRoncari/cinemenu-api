@@ -2,6 +2,7 @@ package br.com.cinemenu.cinemenuapi.infra.exceptionhandler;
 
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidApiKeyException;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
+import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.JWTCineMenuException;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.TMDBNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,4 +32,8 @@ public class InternalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
+    @ExceptionHandler(JWTCineMenuException.class)
+    public ResponseEntity<String> handleJWTException(JWTCineMenuException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
 }
