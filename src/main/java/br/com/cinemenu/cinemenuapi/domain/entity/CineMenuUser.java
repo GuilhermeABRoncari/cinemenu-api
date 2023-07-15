@@ -25,8 +25,8 @@ import java.util.List;
 public class CineMenuUser implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    String id;
     String name;
     String username;
     String email;

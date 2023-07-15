@@ -12,7 +12,7 @@ class CineMenuUserTest {
     @DisplayName("Test CineMenuUser entity")
     void testCineMenuUserEntity() {
         // Given
-        Long id = 1L;
+        String id = "1L";
         String name = "John Doe";
         String username = "johndoe";
         String email = "johndoe@example.com";
@@ -41,7 +41,7 @@ class CineMenuUserTest {
     @DisplayName("Test CineMenuUser entity EqualsAndHashcode of id")
     void testCineMenuUserEntity02() {
         // Given
-        Long id = 1L;
+        String id = "1L";
         String name = "John Doe";
         String username = "johndoe";
         String email = "johndoe@example.com";
@@ -64,8 +64,8 @@ class CineMenuUserTest {
     @DisplayName("Test CineMenuUser entity EqualsAndHashcode of id")
     void testCineMenuUserEntity03() {
         // Given
-        Long firstId = 1L;
-        Long secondId = 2L;
+        String firstId = "1L";
+        String secondId = "2L";
         String name = "John Doe";
         String username = "johndoe";
         String email = "johndoe@example.com";

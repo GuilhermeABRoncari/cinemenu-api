@@ -192,7 +192,7 @@ public class PreviewMediaMapperTest {
 
     @Test
     void testPersonMediaMap_WithValidResponse_ShouldReturnCineMenuMediaResponse() {
-        // Arrange
+        // Given
         List<PreviewMediaResults.PreviewMediaResultResponse> knownFor = new ArrayList<>();
 
         PreviewPopularResults.PreviewPopularResultsResponse response = new PreviewPopularResults.PreviewPopularResultsResponse(
@@ -200,10 +200,10 @@ public class PreviewMediaMapperTest {
                 0.0, "/profile.jpg"
         );
 
-        // Act
+        // When
         CineMenuMediaResponse result = PreviewMediaMapper.personMediaMap(response);
 
-        // Assert
+        // Then
         assertNotNull(result);
         assertEquals(1L, result.id());
         assertEquals("John Doe", result.title());
