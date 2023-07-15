@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SignServiceTest {
+class SignupServiceTest {
 
-    private SignService signService = new SignService();
+    private SignupService signupService = new SignupService();
 
     @Test
     @DisplayName("Test checkSignValidations whit valid CineMenuUserRequestDto")
@@ -17,7 +17,7 @@ class SignServiceTest {
         var userDto = new CineMenuUserRequestDto("name", "username", "email@example.com", "Password1!", "Password1!");
 
         //When/Then
-        assertDoesNotThrow(() -> signService.checkSignValidations(userDto));
+        assertDoesNotThrow(() -> signupService.checkSignValidations(userDto));
     }
 
     @Test
@@ -28,7 +28,7 @@ class SignServiceTest {
         String confirmationPassword = "Password1!";
 
         // When/Then
-        assertDoesNotThrow(() -> signService.passwordValidation(password, confirmationPassword));
+        assertDoesNotThrow(() -> signupService.passwordValidation(password, confirmationPassword));
     }
 
     @Test
@@ -40,7 +40,7 @@ class SignServiceTest {
 
         // When/Then
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
-            signService.passwordValidation(password, confirmationPassword));
+            signupService.passwordValidation(password, confirmationPassword));
             assertEquals("The password must contain at least one uppercase letter, one number, one special character, and be between 8 and 32 characters", ex.getMessage());
     }
 
@@ -53,7 +53,7 @@ class SignServiceTest {
 
         // When/Then
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
-                signService.passwordValidation(password, confirmationPassword));
+                signupService.passwordValidation(password, confirmationPassword));
         assertEquals("The password must contain at least one uppercase letter, one number, one special character, and be between 8 and 32 characters", ex.getMessage());
     }
 
@@ -66,7 +66,7 @@ class SignServiceTest {
 
         // When/Then
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () ->
-                signService.passwordValidation(password, confirmationPassword));
+                signupService.passwordValidation(password, confirmationPassword));
         assertEquals("The password must contain at least one uppercase letter, one number, one special character, and be between 8 and 32 characters", ex.getMessage());
     }
 
@@ -79,7 +79,7 @@ class SignServiceTest {
 
         // When/Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> signService.passwordValidation(password, confirmationPassword));
+                () -> signupService.passwordValidation(password, confirmationPassword));
         assertEquals("The entered passwords must be the same", exception.getMessage());
     }
 
@@ -92,7 +92,7 @@ class SignServiceTest {
 
         // When/Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> signService.passwordValidation(password, confirmationPassword));
+                () -> signupService.passwordValidation(password, confirmationPassword));
         assertEquals("The password must contain at least one uppercase letter, one number, one special character, and be between 8 and 32 characters", exception.getMessage());
     }
 
@@ -105,7 +105,7 @@ class SignServiceTest {
 
         // When/Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> signService.passwordValidation(password, confirmationPassword));
+                () -> signupService.passwordValidation(password, confirmationPassword));
         assertEquals("The password must contain at least one uppercase letter, one number, one special character, and be between 8 and 32 characters", exception.getMessage());
     }
 
@@ -116,7 +116,7 @@ class SignServiceTest {
         String username = "username123";
 
         // When/Then
-        assertDoesNotThrow(() -> signService.checkUsernameSanitization(username));
+        assertDoesNotThrow(() -> signupService.checkUsernameSanitization(username));
     }
 
     @Test
@@ -127,7 +127,7 @@ class SignServiceTest {
 
         // When/Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> signService.checkUsernameSanitization(username));
+                () -> signupService.checkUsernameSanitization(username));
         assertEquals("Username can not be length then 16 characters", exception.getMessage());
     }
 
@@ -139,7 +139,7 @@ class SignServiceTest {
 
         // When/Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> signService.checkUsernameSanitization(username));
+                () -> signupService.checkUsernameSanitization(username));
         assertEquals("Username can have only letters or numbers", exception.getMessage());
     }
 
@@ -150,7 +150,7 @@ class SignServiceTest {
         String name = "John Doe";
 
         // When/Then
-        assertDoesNotThrow(() -> signService.checkCompleteNameSanitization(name));
+        assertDoesNotThrow(() -> signupService.checkCompleteNameSanitization(name));
     }
 
     @Test
@@ -161,7 +161,7 @@ class SignServiceTest {
 
         // When/Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> signService.checkCompleteNameSanitization(name));
+                () -> signupService.checkCompleteNameSanitization(name));
         assertEquals("Complete name can not be length then 80 characters", exception.getMessage());
     }
 
@@ -173,7 +173,7 @@ class SignServiceTest {
 
         // When/Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> signService.checkCompleteNameSanitization(name));
+                () -> signupService.checkCompleteNameSanitization(name));
         assertEquals("Complete name can have only letters", exception.getMessage());
     }
 
@@ -184,7 +184,7 @@ class SignServiceTest {
         String email = "test@example.com";
 
         // When/Then
-        assertDoesNotThrow(() -> signService.checkEmailLength(email));
+        assertDoesNotThrow(() -> signupService.checkEmailLength(email));
     }
 
     @Test
@@ -195,7 +195,7 @@ class SignServiceTest {
 
         // When/Then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> signService.checkEmailLength(email));
+                () -> signupService.checkEmailLength(email));
         assertEquals("Email can not be length then 80 characters", exception.getMessage());
     }
 }

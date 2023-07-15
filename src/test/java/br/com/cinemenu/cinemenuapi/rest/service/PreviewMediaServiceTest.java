@@ -31,7 +31,7 @@ class PreviewMediaServiceTest {
 
     @Test
     void testGetSearchResponse_WithValidSearchAndPage_ShouldReturnPreviewMediaResponsePage() {
-        // Arrange
+        // Given
         String search = "test";
         Integer page = 1;
 
@@ -46,10 +46,10 @@ class PreviewMediaServiceTest {
 
         when(previewMediaRepository.getSearchPreviewMediaResponse(eq(search), eq(page))).thenReturn(previewMediaResults);
 
-        // Act
+        // When
         PreviewMediaResponsePage response = previewMediaService.getSearchResponse(search, page);
 
-        // Assert
+        // Then
         assertNotNull(response);
         assertEquals(page, response.page());
         assertEquals(1, response.results().size());
@@ -60,7 +60,7 @@ class PreviewMediaServiceTest {
 
     @Test
     void testGetGenreResponse_WithValidGenreIdAndPage_ShouldReturnPreviewMediaResponsePage() {
-        // Arrange
+        // Given
         List<Integer> genreId = List.of(1, 2, 3);
         List<CineMenuMediaResponse> results = new ArrayList<>();
         Integer page = 1;
@@ -68,10 +68,10 @@ class PreviewMediaServiceTest {
         PreviewMediaResponsePage expectedResponse = new PreviewMediaResponsePage(page, results, 1);
         when(previewMediaRepository.getGenrePreviewMediaResponse(genreId, page)).thenReturn(expectedResponse);
 
-        // Act
+        // When
         PreviewMediaResponsePage response = previewMediaService.getGenreResponse(genreId, page);
 
-        // Assert
+        // Then
         assertNotNull(response);
         assertSame(expectedResponse, response);
 
@@ -80,7 +80,7 @@ class PreviewMediaServiceTest {
 
     @Test
     void testGetPopularPeopleList_WithValidPage_ShouldReturnPreviewMediaResponsePage() {
-        // Arrange
+        // Given
         Integer page = 1;
         Integer totalPages = 2;
         List<PreviewPopularResults.PreviewPopularResultsResponse> results = new ArrayList<>();
@@ -89,10 +89,10 @@ class PreviewMediaServiceTest {
 
         when(previewMediaRepository.getPeopleListResults(page)).thenReturn(previewPopularResults);
 
-        // Act
+        // When
         PreviewMediaResponsePage response = previewMediaService.getPopularPeopleList(page);
 
-        // Assert
+        // Then
         assertNotNull(response);
         assertEquals(page, response.page());
         assertEquals(0, response.results().size());
@@ -103,7 +103,7 @@ class PreviewMediaServiceTest {
 
     @Test
     void testGetMovieListByActor_WithValidId_ShouldReturnPreviewMediaResponsePage() {
-        // Arrange
+        // Given
         Long id = 1L;
         List<PreviewActorCreditsListResults.PreviewActorCreditsListResultsResponse> results = new ArrayList<>();
 
@@ -111,10 +111,10 @@ class PreviewMediaServiceTest {
 
         when(previewMediaRepository.getMovieListByActorId(id)).thenReturn(previewActorCreditsListResults);
 
-        // Act
+        // When
         PreviewMediaResponsePage response = previewMediaService.getMovieListByActor(id);
 
-        // Assert
+        // Then
         assertNotNull(response);
         assertEquals(0, response.results().size());
 
@@ -123,7 +123,7 @@ class PreviewMediaServiceTest {
 
     @Test
     void testGetSeriesListByActor_WithValidId_ShouldReturnPreviewMediaResponsePage() {
-        // Arrange
+        // Given
         Long id = 1L;
         List<PreviewActorCreditsListResults.PreviewActorCreditsListResultsResponse> results = new ArrayList<>();
 
@@ -131,10 +131,10 @@ class PreviewMediaServiceTest {
 
         when(previewMediaRepository.getSeriesListByActorId(id)).thenReturn(previewActorCreditsListResults);
 
-        // Act
+        // When
         PreviewMediaResponsePage response = previewMediaService.getSeriesListByActor(id);
 
-        // Assert
+        // Then
         assertNotNull(response);
         assertEquals(0, response.results().size());
 
@@ -143,7 +143,7 @@ class PreviewMediaServiceTest {
 
     @Test
     void testGetSimilarByIdAndMedia_WithValidIdAndMediaAndPage_ShouldReturnPreviewMediaResponsePage() {
-        // Arrange
+        // Given
         Long id = 1L;
         MediaType media = MediaType.TV;
         List<PreviewMediaResults.PreviewMediaResultResponse> results = new ArrayList<>();
@@ -154,10 +154,10 @@ class PreviewMediaServiceTest {
 
         when(previewMediaRepository.getSimilarTVShowListById(id, page)).thenReturn(previewMediaResults);
 
-        // Act
+        // When
         PreviewMediaResponsePage response = previewMediaService.getSimilarByIdAndMedia(id, media, page);
 
-        // Assert
+        // Then
         assertNotNull(response);
         assertEquals(page, response.page());
         assertEquals(0, response.results().size());
@@ -168,7 +168,7 @@ class PreviewMediaServiceTest {
 
     @Test
     void testGetSimilarByIdAndMedia_WithValidIdAndMediaAndPage_ShouldReturnPreviewMediaResponsePage02() {
-        // Arrange
+        // Given
         Long id = 1L;
         MediaType media = MediaType.MOVIE;
         List<PreviewMediaResults.PreviewMediaResultResponse> results = new ArrayList<>();
@@ -179,10 +179,10 @@ class PreviewMediaServiceTest {
 
         when(previewMediaRepository.getSimilarMovieListById(id, page)).thenReturn(previewMediaResults);
 
-        // Act
+        // When
         PreviewMediaResponsePage response = previewMediaService.getSimilarByIdAndMedia(id, media, page);
 
-        // Assert
+        // Then
         assertNotNull(response);
         assertEquals(page, response.page());
         assertEquals(0, response.results().size());
@@ -193,12 +193,12 @@ class PreviewMediaServiceTest {
 
     @Test
     void testGetSimilarByIdAndMedia_WithInvalidMedia_ShouldThrowInvalidSearchException() {
-        // Arrange
+        // Given
         Long id = 1L;
         MediaType media = MediaType.PERSON;
         Integer page = 1;
 
-        // Act and Assert
+        // When / Then
         assertThrows(InvalidSearchException.class, () -> previewMediaService.getSimilarByIdAndMedia(id, media, page));
 
         verify(previewMediaRepository, never()).getSimilarTVShowListById(anyLong(), anyInt());

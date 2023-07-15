@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.regex.Pattern;
 
 @Service
-public class SignService {
+public class SignupService {
 
     private static final String INVALID_PASSWORD = "The password must contain at least one uppercase letter, one number, one special character, and be between 8 and 32 characters";
     private static final String INVALID_NAME_LENGTH = "Complete name can not be length then 80 characters";

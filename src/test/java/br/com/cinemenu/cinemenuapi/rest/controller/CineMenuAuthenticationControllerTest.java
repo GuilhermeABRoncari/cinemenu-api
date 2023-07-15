@@ -3,7 +3,7 @@ package br.com.cinemenu.cinemenuapi.rest.controller;
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.CineMenuUserRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserResponseDto;
 import br.com.cinemenu.cinemenuapi.rest.service.CineMenuUserService;
-import br.com.cinemenu.cinemenuapi.rest.service.SignService;
+import br.com.cinemenu.cinemenuapi.rest.service.SignupService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,13 +24,13 @@ class CineMenuAuthenticationControllerTest {
     private CineMenuUserService userService;
 
     @Mock
-    private SignService signService;
+    private SignupService signupService;
 
     @BeforeEach
     void setup() {
         userService = Mockito.mock(CineMenuUserService.class);
-        signService = Mockito.mock(SignService.class);
-        authenticationController = new CineMenuAuthenticationController(userService, signService);
+        signupService = Mockito.mock(SignupService.class);
+        authenticationController = new CineMenuAuthenticationController(userService, signupService);
     }
 
     @Test
@@ -54,7 +54,7 @@ class CineMenuAuthenticationControllerTest {
         // Then
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(responseDto, response.getBody());
-        verify(signService).checkSignValidations(requestDto);
+        verify(signupService).checkSignValidations(requestDto);
         verify(userService).sign(requestDto);
     }
 }

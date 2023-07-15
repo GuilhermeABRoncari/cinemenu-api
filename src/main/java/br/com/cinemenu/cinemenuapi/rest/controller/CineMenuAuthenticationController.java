@@ -3,7 +3,7 @@ package br.com.cinemenu.cinemenuapi.rest.controller;
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.CineMenuUserRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserResponseDto;
 import br.com.cinemenu.cinemenuapi.rest.service.CineMenuUserService;
-import br.com.cinemenu.cinemenuapi.rest.service.SignService;
+import br.com.cinemenu.cinemenuapi.rest.service.SignupService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class CineMenuAuthenticationController {
 
     private CineMenuUserService cineMenuUserService;
-    private SignService signService;
+    private SignupService signupService;
 
-    @PostMapping("/sign")
+    @PostMapping("/signup")
     public ResponseEntity<UserResponseDto> signup(@RequestBody @Valid CineMenuUserRequestDto userDto) {
-        signService.checkSignValidations(userDto);
+        signupService.checkSignValidations(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(cineMenuUserService.sign(userDto));
     }
 
