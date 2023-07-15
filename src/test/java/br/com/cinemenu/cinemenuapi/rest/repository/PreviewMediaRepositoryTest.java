@@ -180,15 +180,15 @@ class PreviewMediaRepositoryTest {
     @DisplayName("Test getMovieListByActorId method")
     void testGetMovieListByActorId() {
         // Given
-        Long chrisPrattId = 73457L;
+        Long renatoAragaoId = 936457L;
         URI expectedUri = URI.create(
-                "http://api.themoviedb.org/3/person/%d/movie_credits?api_key=".formatted(chrisPrattId) + apiKey
+                "http://api.themoviedb.org/3/person/%d/movie_credits?api_key=".formatted(renatoAragaoId) + apiKey
                         + "&language=pt-BR");
 
         var expectedResult = restTemplate.getForObject(expectedUri, PreviewActorCreditsListResults.class);
 
         // When
-        var result = repository.getMovieListByActorId(chrisPrattId);
+        var result = repository.getMovieListByActorId(renatoAragaoId);
 
         // Then
         Assertions.assertEquals(expectedResult, result);
@@ -198,15 +198,15 @@ class PreviewMediaRepositoryTest {
     @DisplayName("Test getSeriesListByActorId method")
     void testGetSeriesListByActorId() {
         // Given
-        Long chrisPrattId = 73457L;
+        Long renatoAragaoId = 936457L;
         URI expectedUri = URI.create(
-                "http://api.themoviedb.org/3/person/%d/tv_credits?api_key=".formatted(chrisPrattId) + apiKey
+                "http://api.themoviedb.org/3/person/%d/tv_credits?api_key=".formatted(renatoAragaoId) + apiKey
                         + "&language=pt-BR");
 
         var expectedResult = restTemplate.getForObject(expectedUri, PreviewActorCreditsListResults.class);
 
         // When
-        var result = repository.getSeriesListByActorId(chrisPrattId);
+        var result = repository.getSeriesListByActorId(renatoAragaoId);
 
         // Then
         Assertions.assertEquals(expectedResult, result);

@@ -42,7 +42,7 @@ class CineMenuAuthenticationControllerTest {
         String email = "email@example.com";
         String password = "password";
         String confirmationPassword = "password";
-        Long id = 1L;
+        String id = "1L";
 
         CineMenuUserRequestDto requestDto = new CineMenuUserRequestDto(name, username, email, password, confirmationPassword);
         UserResponseDto responseDto = new UserResponseDto(id, username);

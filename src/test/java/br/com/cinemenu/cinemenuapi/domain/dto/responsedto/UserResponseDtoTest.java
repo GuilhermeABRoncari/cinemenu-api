@@ -13,7 +13,7 @@ class UserResponseDtoTest {
     @DisplayName("Test UserResponseDto constructor")
     void testUserResponseDtoConstructor() {
         // Given
-        Long id = 1L;
+        String id = "1L";
         String username = "johndoe";
 
         // When
@@ -28,7 +28,7 @@ class UserResponseDtoTest {
     @DisplayName("Test UserResponseDto constructor with CineMenuUser")
     void testUserResponseDtoConstructorWithCineMenuUser() {
         // Given
-        Long id = 1L;
+        String id = "1L";
         String username = "johndoe";
         String name = "John Doe";
         CineMenuUser cineMenuUser = new CineMenuUser(id, name, username, "johndoe@example.com", "password", OffsetDateTime.now());
