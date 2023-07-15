@@ -3,6 +3,7 @@ package br.com.cinemenu.cinemenuapi.rest.mapper;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.CineMenuMediaResponse;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewActorCreditsListResults;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResults;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewPopularResults;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -11,7 +12,9 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class PreviewMediaMapperTest {
 
@@ -185,5 +188,28 @@ public class PreviewMediaMapperTest {
         Assertions.assertEquals(MediaType.TV, result.media_type());
         Assertions.assertEquals(response.firstAirDate(), result.release_date());
         Assertions.assertEquals(response.voteAverage(), result.vote_average());
+    }
+
+    @Test
+    void testPersonMediaMap_WithValidResponse_ShouldReturnCineMenuMediaResponse() {
+        // Given
+        List<PreviewMediaResults.PreviewMediaResultResponse> knownFor = new ArrayList<>();
+
+        PreviewPopularResults.PreviewPopularResultsResponse response = new PreviewPopularResults.PreviewPopularResultsResponse(
+                false, 1, 1L, knownFor, "acting", "John Doe",
+                0.0, "/profile.jpg"
+        );
+
+        // When
+        CineMenuMediaResponse result = PreviewMediaMapper.personMediaMap(response);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(1L, result.id());
+        assertEquals("John Doe", result.title());
+        assertEquals("/profile.jpg", result.poster_path());
+        assertEquals(MediaType.PERSON, result.media_type());
+        assertNull(result.release_date());
+        assertNull(result.vote_average());
     }
 }

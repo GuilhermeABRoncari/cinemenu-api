@@ -2,7 +2,9 @@ package br.com.cinemenu.cinemenuapi.infra.exceptionhandler;
 
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidApiKeyException;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
+import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.JWTCineMenuException;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.TMDBNotFoundException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -74,5 +76,21 @@ public class InternalExceptionHandlerTest {
         // Then
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
         assertEquals(errorMessage, responseEntity.getBody());
+    }
+
+    @Test
+    @DisplayName("Test handling JWTCineMenuException")
+    void handleJWTCineMenuException() {
+        // Given
+        String errorMessage = "Invalid JWT token";
+        JWTCineMenuException exception = new JWTCineMenuException(errorMessage);
+        InternalExceptionHandler handler = new InternalExceptionHandler();
+
+        // When
+        ResponseEntity<String> responseEntity = handler.handleJWTException(exception);
+
+        // Then
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        Assertions.assertEquals(errorMessage, responseEntity.getBody());
     }
 }
