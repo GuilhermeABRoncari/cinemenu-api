@@ -30,7 +30,7 @@ public class SecurityConfigurations {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST, "/login", "/sign").permitAll()
+                .requestMatchers(HttpMethod.POST, "/login", "/signup").permitAll()
                 .requestMatchers(HttpMethod.GET, "/cinemenu/**").permitAll()
                 .anyRequest().authenticated()
                 .and().addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
