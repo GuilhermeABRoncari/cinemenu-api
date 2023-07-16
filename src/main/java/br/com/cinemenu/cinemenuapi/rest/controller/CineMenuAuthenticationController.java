@@ -1,6 +1,8 @@
 package br.com.cinemenu.cinemenuapi.rest.controller;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.CineMenuUserRequestDto;
+import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.LoginRequestDto;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.TokenResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserResponseDto;
 import br.com.cinemenu.cinemenuapi.rest.service.CineMenuUserService;
 import br.com.cinemenu.cinemenuapi.rest.service.SignupService;
@@ -20,9 +22,14 @@ public class CineMenuAuthenticationController {
     private SignupService signupService;
 
     @PostMapping("/signup")
-    public ResponseEntity<UserResponseDto> signup(@RequestBody @Valid CineMenuUserRequestDto userDto) {
+    public ResponseEntity<TokenResponseDto> signup(@RequestBody @Valid CineMenuUserRequestDto userDto) {
         signupService.checkSignValidations(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(cineMenuUserService.sign(userDto));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<TokenResponseDto> login(@RequestBody @Valid LoginRequestDto loginDto) {
+        return ResponseEntity.ok(cineMenuUserService.login(loginDto));
     }
 
 }
