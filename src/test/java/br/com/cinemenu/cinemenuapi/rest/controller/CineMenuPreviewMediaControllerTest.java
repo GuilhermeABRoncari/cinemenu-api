@@ -84,6 +84,7 @@ class CineMenuPreviewMediaControllerTest {
         ResponseEntity<PreviewMediaResponsePage> responseEntity = controller.popularPeopleList(page);
     }
 
+    @Test
     @DisplayName("Test moviesByActor and expect http code 200")
     void moviesListByActorIdTestScene01() {
         // Given
