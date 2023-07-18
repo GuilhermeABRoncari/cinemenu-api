@@ -36,7 +36,7 @@ public class CineMenuUserService {
         var user = new CineMenuUser(userDto, securityConfigurations.passwordEncoder().encode(userDto.password()));
         repository.save(user);
 
-        return login(new LoginRequestDto(user.getUsername(), userDto.password()));
+        return login(new LoginRequestDto(userDto.email(), userDto.password()));
     }
 
     public TokenResponseDto login(LoginRequestDto loginDto) {
