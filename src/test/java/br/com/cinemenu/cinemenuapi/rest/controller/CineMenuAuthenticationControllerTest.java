@@ -62,11 +62,11 @@ class CineMenuAuthenticationControllerTest {
     @DisplayName("Test login endpoint")
     void testLogin() {
         // Given
-        String username = "test";
+        String email = "email@example.com";
         String password = "Test123*";
         String tokenResponse = "tokenJWT";
 
-        LoginRequestDto loginDto = new LoginRequestDto(username, password);
+        LoginRequestDto loginDto = new LoginRequestDto(email, password);
         TokenResponseDto responseDto = new TokenResponseDto(tokenResponse);
         when(userService.login(loginDto)).thenReturn(responseDto);
 

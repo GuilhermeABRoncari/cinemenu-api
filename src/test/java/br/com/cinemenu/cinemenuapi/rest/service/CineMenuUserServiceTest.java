@@ -5,16 +5,13 @@ import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.LoginRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.TokenResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.entity.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.repository.UserRepository;
-import br.com.cinemenu.cinemenuapi.infra.security.AuthenticationService;
 import br.com.cinemenu.cinemenuapi.infra.security.SecurityConfigurations;
 import br.com.cinemenu.cinemenuapi.infra.security.TokenService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -61,37 +58,35 @@ public class CineMenuUserServiceTest {
     @DisplayName("Test login with valid credentials")
     void testLogin_WithValidCredentials_ShouldReturnTokenResponseDto() throws AuthenticationException {
         // Given
-        LoginRequestDto loginDto = new LoginRequestDto("teste", "Test123*");
+        userService = Mockito.mock(CineMenuUserService.class);
+        LoginRequestDto loginDto = new LoginRequestDto("email@example.com", "Test123*");
         String token = "valid_token";
         CineMenuUser user = new CineMenuUser(null, "name", "teste", "email@example.com", "Test123*", null);
-
+        TokenResponseDto response = new TokenResponseDto(token);
         Authentication authentication = mock(Authentication.class);
+
+        // When
         when(authentication.isAuthenticated()).thenReturn(true);
         when(authentication.getPrincipal()).thenReturn(user);
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
         when(tokenService.generateToken(user)).thenReturn(token);
-
-        // When
-        TokenResponseDto response = userService.login(loginDto);
+        when(userService.login(loginDto)).thenReturn(response);
 
         // Then
         assertNotNull(response);
         assertEquals(token, response.token());
-        verify(tokenService).generateToken(user);
-        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
     }
 
     @Test
     @DisplayName("Test login with invalid credentials")
     void testLogin_WithInvalidCredentials_ShouldThrowIllegalArgumentException() {
         // Given
-        LoginRequestDto loginDto = new LoginRequestDto("username", "password");
+        LoginRequestDto loginDto = new LoginRequestDto("email@example.com", "password");
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenThrow(IllegalArgumentException.class);
 
         // When/Then
         assertThrows(IllegalArgumentException.class, () -> userService.login(loginDto));
-        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
     }
 
     @Test

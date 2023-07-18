@@ -3,7 +3,6 @@ package br.com.cinemenu.cinemenuapi.rest.service;
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.CineMenuUserRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.LoginRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.TokenResponseDto;
-import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.entity.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.repository.UserRepository;
 import br.com.cinemenu.cinemenuapi.infra.security.SecurityConfigurations;
@@ -26,7 +25,7 @@ public class CineMenuUserService {
     private AuthenticationManager authenticationManager;
 
     private static final String EMAIL_IN_USE = "This email is already in use";
-    private static final String INVALID_LOGIN = "Username or password is invalid";
+    private static final String INVALID_LOGIN = "Email or password is invalid";
     private static final String USERNAME_IN_USE = "This username is already in use";
 
     @Transactional
@@ -41,7 +40,9 @@ public class CineMenuUserService {
     }
 
     public TokenResponseDto login(LoginRequestDto loginDto) {
-        var authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.username(), loginDto.password());
+        var user = repository.getReferenceByEmail(loginDto.email());
+        if (user == null) throw new IllegalArgumentException(INVALID_LOGIN);
+        var authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), loginDto.password());
         try {
             Authentication authenticate = authenticationManager.authenticate(authenticationToken);
             if (!authenticate.isAuthenticated()) throw new IllegalArgumentException(INVALID_LOGIN);
