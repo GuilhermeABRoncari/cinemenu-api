@@ -55,7 +55,7 @@ class PreviewMediaRepositoryTest {
 
     @Test
     @DisplayName("When valid search is performed, it should return the preview media response")
-    void getPreviewMediaResponse_validSearch_shouldReturnResponse() {
+    void getPreviewMediaResponseValidSearchShouldReturnResponse() {
 
         URI expectedUri = URI.create("https://api.themoviedb.org/3//search/multi?api_key=" + apiKey + "&language=pt-BR&page=" + page + "&include_adult=false&query=" + search);
         PreviewMediaResults apiResponse = restTemplate.getForObject(expectedUri, PreviewMediaResults.class);
@@ -68,7 +68,7 @@ class PreviewMediaRepositoryTest {
 
     @Test
     @DisplayName("When API key is null, it should throw InvalidApiKeyException")
-    void getPreviewMediaResponse_nullApiKey_shouldThrowInvalidApiKeyException() {
+    void getPreviewMediaResponseNullApiKeyShouldThrowInvalidApiKeyException() {
         Assertions.assertThrows(InvalidApiKeyException.class, () -> {
             repository.setApiKey(null);
             repository.getSearchPreviewMediaResponse(search, page);
@@ -77,7 +77,7 @@ class PreviewMediaRepositoryTest {
 
     @Test
     @DisplayName("When page is less than 1, it should throw InvalidSearchException")
-    void getPreviewMediaResponse_invalidPage_shouldThrowInvalidSearchException() {
+    void getPreviewMediaResponseInvalidPageShouldThrowInvalidSearchException() {
         int invalidPage = 0;
 
         Assertions.assertThrows(InvalidSearchException.class, () -> {
@@ -87,7 +87,7 @@ class PreviewMediaRepositoryTest {
 
     @Test
     @DisplayName("When page is greater than 1000, it should throw InvalidSearchException")
-    void getPreviewMediaResponse_pageGreaterThanMax_shouldThrowInvalidSearchException() {
+    void getPreviewMediaResponsePageGreaterThanMaxShouldThrowInvalidSearchException() {
         int invalidPage = 501;
 
         Assertions.assertThrows(InvalidSearchException.class, () -> {
@@ -129,7 +129,7 @@ class PreviewMediaRepositoryTest {
 
     @Test
     @DisplayName("When page is less than 1, it should throw InvalidSearchException")
-    void getGenrePreviewMediaResponseTest_scene01() {
+    void getGenrePreviewMediaResponseTestScene01() {
         int invalidPage = 0;
 
         Assertions.assertThrows(InvalidSearchException.class, () -> {
@@ -139,7 +139,7 @@ class PreviewMediaRepositoryTest {
 
     @Test
     @DisplayName("When page is greater than 500, it should throw InvalidSearchException")
-    void getGenrePreviewMediaResponseTest_scene02() {
+    void getGenrePreviewMediaResponseTestScene02() {
         int invalidPage = 501;
 
         Assertions.assertThrows(InvalidSearchException.class, () -> {
@@ -149,7 +149,7 @@ class PreviewMediaRepositoryTest {
 
     @Test
     @DisplayName("When genreList is null, it should throw InvalidSearchException")
-    void getGenrePreviewMediaResponseTest_scene03() {
+    void getGenrePreviewMediaResponseTestScene03() {
         cineMenuGenres.clear();
 
         Assertions.assertThrows(InvalidSearchException.class, () -> {
@@ -159,7 +159,7 @@ class PreviewMediaRepositoryTest {
 
     @Test
     @DisplayName("When getting popular people list, it should return the expected result")
-    void getPeopleListResults_validPage_shouldReturnExpectedResults() {
+    void getPeopleListResultsValidPageShouldReturnExpectedResults() {
         // Given
         Integer page = 1;
         URI expectedUri = URI.create(

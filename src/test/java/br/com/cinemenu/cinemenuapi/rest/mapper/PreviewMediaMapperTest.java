@@ -191,7 +191,8 @@ public class PreviewMediaMapperTest {
     }
 
     @Test
-    void testPersonMediaMap_WithValidResponse_ShouldReturnCineMenuMediaResponse() {
+    @DisplayName("Test PersonMediaMap with valid response")
+    void testPersonMediaMapWithValidResponseShouldReturnCineMenuMediaResponse() {
         // Given
         List<PreviewMediaResults.PreviewMediaResultResponse> knownFor = new ArrayList<>();
 

@@ -5,6 +5,7 @@ import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
 import br.com.cinemenu.cinemenuapi.rest.repository.PreviewMediaRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -30,7 +31,8 @@ class PreviewMediaServiceTest {
     }
 
     @Test
-    void testGetSearchResponse_WithValidSearchAndPage_ShouldReturnPreviewMediaResponsePage() {
+    @DisplayName("Test getSearchResponse whit valid search and page")
+    void testGetSearchResponseWithValidSearchAndPageShouldReturnPreviewMediaResponsePage() {
         // Given
         String search = "test";
         Integer page = 1;
@@ -59,7 +61,8 @@ class PreviewMediaServiceTest {
     }
 
     @Test
-    void testGetGenreResponse_WithValidGenreIdAndPage_ShouldReturnPreviewMediaResponsePage() {
+    @DisplayName("Test getGenreResponse whit valid id and page")
+    void testGetGenreResponseWithValidGenreIdAndPageShouldReturnPreviewMediaResponsePage() {
         // Given
         List<Integer> genreId = List.of(1, 2, 3);
         List<CineMenuMediaResponse> results = new ArrayList<>();
@@ -79,7 +82,8 @@ class PreviewMediaServiceTest {
     }
 
     @Test
-    void testGetPopularPeopleList_WithValidPage_ShouldReturnPreviewMediaResponsePage() {
+    @DisplayName("Test getPopularPeopleList whit valid page")
+    void testGetPopularPeopleListWithValidPageShouldReturnPreviewMediaResponsePage() {
         // Given
         Integer page = 1;
         Integer totalPages = 2;
@@ -102,7 +106,8 @@ class PreviewMediaServiceTest {
     }
 
     @Test
-    void testGetMovieListByActor_WithValidId_ShouldReturnPreviewMediaResponsePage() {
+    @DisplayName("Test getMovieListByActor whit valid id")
+    void testGetMovieListByActorWithValidIdShouldReturnPreviewMediaResponsePage() {
         // Given
         Long id = 1L;
         List<PreviewActorCreditsListResults.PreviewActorCreditsListResultsResponse> results = new ArrayList<>();
@@ -122,7 +127,8 @@ class PreviewMediaServiceTest {
     }
 
     @Test
-    void testGetSeriesListByActor_WithValidId_ShouldReturnPreviewMediaResponsePage() {
+    @DisplayName("Test method getSeriesListByActor whit valid id")
+    void testGetSeriesListByActorWithValidIdShouldReturnPreviewMediaResponsePage() {
         // Given
         Long id = 1L;
         List<PreviewActorCreditsListResults.PreviewActorCreditsListResultsResponse> results = new ArrayList<>();
@@ -142,7 +148,8 @@ class PreviewMediaServiceTest {
     }
 
     @Test
-    void testGetSimilarByIdAndMedia_WithValidIdAndMediaAndPage_ShouldReturnPreviewMediaResponsePage() {
+    @DisplayName("Test getSimilarByIdAndMedia whit valid id, tv media and page")
+    void testGetSimilarByIdAndMediaWithValidIdAndMediaAndPageShouldReturnPreviewMediaResponsePage() {
         // Given
         Long id = 1L;
         MediaType media = MediaType.TV;
@@ -167,6 +174,7 @@ class PreviewMediaServiceTest {
     }
 
     @Test
+    @DisplayName("Test getSimilarByIdAndMedia whit valid id, movie media and page")
     void testGetSimilarByIdAndMedia_WithValidIdAndMediaAndPage_ShouldReturnPreviewMediaResponsePage02() {
         // Given
         Long id = 1L;
@@ -192,6 +200,7 @@ class PreviewMediaServiceTest {
     }
 
     @Test
+    @DisplayName("Test getSimilarByIdAndMedia whit invalid media")
     void testGetSimilarByIdAndMedia_WithInvalidMedia_ShouldThrowInvalidSearchException() {
         // Given
         Long id = 1L;

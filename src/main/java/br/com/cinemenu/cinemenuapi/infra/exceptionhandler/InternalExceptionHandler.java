@@ -4,13 +4,16 @@ import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidApiKe
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.JWTCineMenuException;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.TMDBNotFoundException;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Generated;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,37 +22,46 @@ import java.util.List;
 public class InternalExceptionHandler {
 
     @ExceptionHandler(InvalidSearchException.class)
-    public ResponseEntity<String> handleInvalidSearchException(InvalidSearchException ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+    public ResponseEntity<ExceptionResponse> handleInvalidSearchException(InvalidSearchException ex) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), null, List.of(ex.getMessage()), OffsetDateTime.now()));
     }
 
     @ExceptionHandler(InvalidApiKeyException.class)
-    public ResponseEntity<String> handleInvalidApiKeyException(InvalidApiKeyException ex) {
-        return ResponseEntity.internalServerError().body(ex.getMessage());
+    public ResponseEntity<ExceptionResponse> handleInvalidApiKeyException(InvalidApiKeyException ex) {
+        return ResponseEntity.internalServerError().body(new ExceptionResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), null, List.of(ex.getMessage()), OffsetDateTime.now()));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleInvalidArgumentException(IllegalArgumentException ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+    public ResponseEntity<ExceptionResponse> handleInvalidArgumentException(IllegalArgumentException ex) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), null, List.of(ex.getMessage()), OffsetDateTime.now()));
     }
 
     @ExceptionHandler(TMDBNotFoundException.class)
-    public ResponseEntity<Object> notFoundResponseFromTMDBApi(TMDBNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    public ResponseEntity<ExceptionResponse> notFoundResponseFromTMDBApi(TMDBNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionResponse(HttpStatus.NOT_FOUND.value(), null, List.of(ex.getMessage()), OffsetDateTime.now()));
     }
 
     @ExceptionHandler(JWTCineMenuException.class)
-    public ResponseEntity<String> handleJWTException(JWTCineMenuException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    public ResponseEntity<ExceptionResponse> handleJWTException(JWTCineMenuException ex) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), null, List.of(ex.getMessage()), OffsetDateTime.now()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<List<String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        List<String> errorsMessage = new ArrayList<>();
+    public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        List<String> errorsMessages = new ArrayList<>();
         ex.getFieldErrors().forEach(message -> {
             String errorMessage = message.getField() + ": " + message.getDefaultMessage();
-            errorsMessage.add(errorMessage);
+            errorsMessages.add(errorMessage);
         });
-        return ResponseEntity.badRequest().body(errorsMessage);
+        return ResponseEntity.badRequest().body(new ExceptionResponse(ex.getBody().getStatus(), String.valueOf(ex.getFieldErrors().size()), errorsMessages, OffsetDateTime.now()));
     }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ExceptionResponse> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(ex.getBody().getStatus(), ex.getParameterName(), List.of(ex.getMessage()), OffsetDateTime.now()));
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private record ExceptionResponse(Integer status, String fields, List<String> messages, OffsetDateTime dateTime){}
+
 }

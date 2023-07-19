@@ -12,7 +12,7 @@ public class TMDBInternalGenreMapperTest {
 
     @Test
     @DisplayName("When mapping movie genres to TMDB genre IDs, it should return the expected IDs")
-    void mapToMovieIds_validGenres_shouldReturnExpectedIds() {
+    void mapToMovieIdsValidGenresShouldReturnExpectedIds() {
         // Given
         List<CineMenuGenres> genres = Arrays.asList(CineMenuGenres.values());
         List<Integer> expectedIds = Arrays.asList(
@@ -31,7 +31,7 @@ public class TMDBInternalGenreMapperTest {
 
     @Test
     @DisplayName("When mapping TV show genres to TMDB genre IDs, it should return the expected IDs")
-    void mapToTvShowIds_validGenres_shouldReturnExpectedIds() {
+    void mapToTvShowIdsValidGenresShouldReturnExpectedIds() {
         // Given
         List<CineMenuGenres> genres = Arrays.asList(CineMenuGenres.values());
         List<Integer> expectedIds = Arrays.asList(

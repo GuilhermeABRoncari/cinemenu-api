@@ -56,30 +56,33 @@ public class CineMenuUserServiceTest {
 
     @Test
     @DisplayName("Test login with valid credentials")
-    void testLogin_WithValidCredentials_ShouldReturnTokenResponseDto() throws AuthenticationException {
+    void testLoginWithValidCredentialsShouldReturnTokenResponseDto() throws AuthenticationException {
         // Given
-        userService = Mockito.mock(CineMenuUserService.class);
         LoginRequestDto loginDto = new LoginRequestDto("email@example.com", "Test123*");
         String token = "valid_token";
         CineMenuUser user = new CineMenuUser(null, "name", "teste", "email@example.com", "Test123*", null);
-        TokenResponseDto response = new TokenResponseDto(token);
         Authentication authentication = mock(Authentication.class);
 
-        // When
         when(authentication.isAuthenticated()).thenReturn(true);
         when(authentication.getPrincipal()).thenReturn(user);
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
         when(tokenService.generateToken(user)).thenReturn(token);
-        when(userService.login(loginDto)).thenReturn(response);
+        when(userRepository.getReferenceByEmail(loginDto.email())).thenReturn(user);
+
+        // When
+        var response = userService.login(loginDto);
 
         // Then
         assertNotNull(response);
         assertEquals(token, response.token());
+        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
+        verify(tokenService).generateToken(user);
+        verify(userRepository).getReferenceByEmail(loginDto.email());
     }
 
     @Test
     @DisplayName("Test login with invalid credentials")
-    void testLogin_WithInvalidCredentials_ShouldThrowIllegalArgumentException() {
+    void testLoginWithInvalidCredentialsShouldThrowIllegalArgumentException() {
         // Given
         LoginRequestDto loginDto = new LoginRequestDto("email@example.com", "password");
 
