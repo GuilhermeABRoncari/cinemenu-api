@@ -3,7 +3,6 @@ package br.com.cinemenu.cinemenuapi.rest.controller;
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.CineMenuUserRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.LoginRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.TokenResponseDto;
-import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserResponseDto;
 import br.com.cinemenu.cinemenuapi.rest.service.CineMenuUserService;
 import br.com.cinemenu.cinemenuapi.rest.service.SignupService;
 import jakarta.validation.Valid;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-public class CineMenuAuthenticationController {
+public class AuthenticationController {
 
     private CineMenuUserService cineMenuUserService;
     private SignupService signupService;

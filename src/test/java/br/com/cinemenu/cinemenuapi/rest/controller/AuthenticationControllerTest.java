@@ -17,9 +17,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class CineMenuAuthenticationControllerTest {
+class AuthenticationControllerTest {
 
-    private CineMenuAuthenticationController authenticationController;
+    private AuthenticationController authenticationController;
 
     @Mock
     private CineMenuUserService userService;
@@ -31,7 +31,7 @@ class CineMenuAuthenticationControllerTest {
     void setup() {
         userService = Mockito.mock(CineMenuUserService.class);
         signupService = Mockito.mock(SignupService.class);
-        authenticationController = new CineMenuAuthenticationController(userService, signupService);
+        authenticationController = new AuthenticationController(userService, signupService);
     }
 
     @Test
