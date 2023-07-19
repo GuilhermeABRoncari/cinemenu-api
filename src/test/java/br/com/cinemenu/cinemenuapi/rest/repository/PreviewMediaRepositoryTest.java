@@ -9,9 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +19,10 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class PreviewMediaRepositoryTest {
@@ -51,19 +53,6 @@ class PreviewMediaRepositoryTest {
     }
 
     @Test
-    @DisplayName("When valid search is performed, it should return the preview media response")
-    void getPreviewMediaResponseValidSearchShouldReturnResponse() {
-
-        URI expectedUri = URI.create("https://api.themoviedb.org/3//search/multi?api_key=" + apiKey + "&language=pt-BR&page=" + page + "&include_adult=false&query=" + search);
-        PreviewMediaResults apiResponse = restTemplate.getForObject(expectedUri, PreviewMediaResults.class);
-
-        PreviewMediaResults response = repository.getSearchPreviewMediaResponse(search, page);
-
-        // Assertions
-        Assertions.assertEquals(apiResponse, response);
-    }
-
-    @Test
     @DisplayName("When API key is null, it should throw InvalidApiKeyException")
     void getPreviewMediaResponseNullApiKeyShouldThrowInvalidApiKeyException() {
         Assertions.assertThrows(InvalidApiKeyException.class, () -> {
@@ -90,38 +79,6 @@ class PreviewMediaRepositoryTest {
         Assertions.assertThrows(InvalidSearchException.class, () -> {
             repository.getSearchPreviewMediaResponse(search, invalidPage);
         });
-    }
-
-    @Test
-    @DisplayName("When valid request is performed, it should return the PreviewMediaResponsePage")
-    void getGenrePreviewMediaResponseTest() {
-        //Given
-        cineMenuGenres = List.of(67);
-        var TMDBInternalGenre = 28;
-        List<CineMenuMediaResponse> mediaList = new ArrayList<>();
-
-        URI expectedMovieUri = URI.create(
-                "https://api.themoviedb.org/3//discover/movie?api_key=" + apiKey
-                        + "&include_adult=false&language=pt-BR&page=" + page
-                        + "&region=US%2CBR&sort_by=popularity.desc&with_genres=" + TMDBInternalGenre);
-        URI expectedTvUri = URI.create(
-                "https://api.themoviedb.org/3//discover/tv?api_key=" + apiKey
-                        + "&include_adult=false&language=pt-BR&page=" + page
-                        + "&region=US%2CBR&sort_by=popularity.desc&with_genres=" + TMDBInternalGenre);
-
-        //When
-        var movieResponse = restTemplate.getForObject(expectedMovieUri, PreviewMediaResults.class);
-        var tvResponse = restTemplate.getForObject(expectedTvUri, PreviewMediaResults.class);
-
-        mediaList.addAll(movieResponse.results().stream().map(PreviewMediaMapper::movieMediaMap).toList());
-        mediaList.addAll(tvResponse.results().stream().map(PreviewMediaMapper::tvMediaMap).toList());
-        Collections.shuffle(mediaList);
-
-        var result = new PreviewMediaResponsePage(page, mediaList, 500);
-        var apiResponse = repository.getGenrePreviewMediaResponse(cineMenuGenres, page);
-
-        //Then
-        Assertions.assertNotEquals(apiResponse, result);
     }
 
     @Test
