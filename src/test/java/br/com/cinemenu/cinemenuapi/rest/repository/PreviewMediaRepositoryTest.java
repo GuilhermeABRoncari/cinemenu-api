@@ -1,7 +1,6 @@
 package br.com.cinemenu.cinemenuapi.rest.repository;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.*;
-import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidApiKeyException;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.TMDBNotFoundException;
@@ -22,8 +21,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class PreviewMediaRepositoryTest {
@@ -77,7 +74,7 @@ class PreviewMediaRepositoryTest {
 
     @Test
     @DisplayName("When page is less than 1, it should throw InvalidSearchException")
-    void getPreviewMediaResponseInvalidPageShouldThrowInvalidSearchException() {
+    void testGetPreviewMediaResponseInvalidPage() {
         int invalidPage = 0;
 
         Assertions.assertThrows(InvalidSearchException.class, () -> {
