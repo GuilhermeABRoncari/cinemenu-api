@@ -19,8 +19,8 @@ import java.io.IOException;
 @Generated
 public class SecurityFilter extends OncePerRequestFilter {
 
-    private TokenService tokenService;
-    private UserRepository repository;
+    private final TokenService tokenService;
+    private final UserRepository repository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
