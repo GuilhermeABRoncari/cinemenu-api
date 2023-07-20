@@ -19,10 +19,10 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class CineMenuUserService {
 
-    private UserRepository repository;
-    private SecurityConfigurations securityConfigurations;
-    private TokenService tokenService;
-    private AuthenticationManager authenticationManager;
+    private final UserRepository repository;
+    private final SecurityConfigurations securityConfigurations;
+    private final TokenService tokenService;
+    private final AuthenticationManager authenticationManager;
 
     private static final String EMAIL_IN_USE = "This email is already in use";
     private static final String INVALID_LOGIN = "Email or password is invalid";

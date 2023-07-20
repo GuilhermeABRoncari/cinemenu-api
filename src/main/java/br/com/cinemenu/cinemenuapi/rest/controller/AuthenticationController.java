@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class AuthenticationController {
 
-    private CineMenuUserService cineMenuUserService;
-    private SignupService signupService;
+    private final CineMenuUserService cineMenuUserService;
+    private final SignupService signupService;
 
     @PostMapping("/signup")
     public ResponseEntity<TokenResponseDto> signup(@RequestBody @Valid CineMenuUserRequestDto userDto) {

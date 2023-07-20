@@ -48,13 +48,17 @@ public class PreviewMediaRepository {
     private static final String AND_URL = "%2C";
     private static final String ID_NOT_FOUND = "id not found: %d";
     private static final Integer MAX_PAGES = 500;
+    private static final String INVALID_API_KEY = "invalid api key";
+    private static final String PROVIDE_GENRE = "Genre id most be provided";
+    private static final String INVALID_SEARCH_MAX_PAGES = "search page cannot be less then 1 or more than %d";
+    private static final String INVALID_SEARCH_ACTOR_ID = "invalid search, actor id can not be null.";
     private static final RestTemplate restTemplate = new RestTemplate();
 
     public PreviewMediaResults getSearchPreviewMediaResponse(String search, Integer page) {
-        if (apiKey == null) throw new InvalidApiKeyException("invalid api key");
+        if (apiKey == null) throw new InvalidApiKeyException(INVALID_API_KEY);
         verifyPage(page);
 
-        String userQuery = StringUtils.stripAccents(search.trim().replaceAll(" ", "+").toLowerCase());
+        String userQuery = StringUtils.stripAccents(search.trim().replace(" ", "+").toLowerCase());
 
         URI uri = URI.create(
                 TMDB_BASE_URL
@@ -66,7 +70,7 @@ public class PreviewMediaRepository {
     }
 
     public PreviewMediaResponsePage getGenrePreviewMediaResponse(List<Integer> genreId, Integer page) {
-        if (genreId.isEmpty()) throw new InvalidSearchException("Genre id most be provided");
+        if (genreId.isEmpty()) throw new InvalidSearchException(PROVIDE_GENRE);
         verifyPage(page);
 
         List<CineMenuMediaResponse> mediaList = new ArrayList<>();
@@ -198,10 +202,10 @@ public class PreviewMediaRepository {
 
     private void verifyPage(Integer page) {
         if (page < 1 || page > MAX_PAGES)
-            throw new InvalidSearchException("search page cannot be less then 1 or more than %d".formatted(MAX_PAGES));
+            throw new InvalidSearchException(INVALID_SEARCH_MAX_PAGES.formatted(MAX_PAGES));
     }
 
     private void verifyId(Long id) {
-        if (id == null) throw new InvalidSearchException("invalid search, actor id can not be null.");
+        if (id == null) throw new InvalidSearchException(INVALID_SEARCH_ACTOR_ID);
     }
 }

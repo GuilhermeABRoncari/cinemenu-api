@@ -9,6 +9,7 @@ import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import java.util.Objects;
 
 public class PreviewMediaMapper {
+
     private PreviewMediaMapper() {
     }
 
