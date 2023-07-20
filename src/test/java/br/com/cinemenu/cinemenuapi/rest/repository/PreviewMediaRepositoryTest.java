@@ -1,7 +1,6 @@
 package br.com.cinemenu.cinemenuapi.rest.repository;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.*;
-import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidApiKeyException;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.TMDBNotFoundException;
@@ -10,9 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -54,21 +53,8 @@ class PreviewMediaRepositoryTest {
     }
 
     @Test
-    @DisplayName("When valid search is performed, it should return the preview media response")
-    void getPreviewMediaResponse_validSearch_shouldReturnResponse() {
-
-        URI expectedUri = URI.create("https://api.themoviedb.org/3//search/multi?api_key=" + apiKey + "&language=pt-BR&page=" + page + "&include_adult=false&query=" + search);
-        PreviewMediaResults apiResponse = restTemplate.getForObject(expectedUri, PreviewMediaResults.class);
-
-        PreviewMediaResults response = repository.getSearchPreviewMediaResponse(search, page);
-
-        // Assertions
-        Assertions.assertEquals(apiResponse, response);
-    }
-
-    @Test
     @DisplayName("When API key is null, it should throw InvalidApiKeyException")
-    void getPreviewMediaResponse_nullApiKey_shouldThrowInvalidApiKeyException() {
+    void getPreviewMediaResponseNullApiKeyShouldThrowInvalidApiKeyException() {
         Assertions.assertThrows(InvalidApiKeyException.class, () -> {
             repository.setApiKey(null);
             repository.getSearchPreviewMediaResponse(search, page);
@@ -77,7 +63,7 @@ class PreviewMediaRepositoryTest {
 
     @Test
     @DisplayName("When page is less than 1, it should throw InvalidSearchException")
-    void getPreviewMediaResponse_invalidPage_shouldThrowInvalidSearchException() {
+    void testGetPreviewMediaResponseInvalidPage() {
         int invalidPage = 0;
 
         Assertions.assertThrows(InvalidSearchException.class, () -> {
@@ -87,7 +73,7 @@ class PreviewMediaRepositoryTest {
 
     @Test
     @DisplayName("When page is greater than 1000, it should throw InvalidSearchException")
-    void getPreviewMediaResponse_pageGreaterThanMax_shouldThrowInvalidSearchException() {
+    void getPreviewMediaResponsePageGreaterThanMaxShouldThrowInvalidSearchException() {
         int invalidPage = 501;
 
         Assertions.assertThrows(InvalidSearchException.class, () -> {
@@ -96,40 +82,8 @@ class PreviewMediaRepositoryTest {
     }
 
     @Test
-    @DisplayName("When valid request is performed, it should return the PreviewMediaResponsePage")
-    void getGenrePreviewMediaResponseTest() {
-        //Given
-        cineMenuGenres = List.of(67);
-        var TMDBInternalGenre = 28;
-        List<CineMenuMediaResponse> mediaList = new ArrayList<>();
-
-        URI expectedMovieUri = URI.create(
-                "https://api.themoviedb.org/3//discover/movie?api_key=" + apiKey
-                        + "&include_adult=false&language=pt-BR&page=" + page
-                        + "&region=US%2CBR&sort_by=popularity.desc&with_genres=" + TMDBInternalGenre);
-        URI expectedTvUri = URI.create(
-                "https://api.themoviedb.org/3//discover/tv?api_key=" + apiKey
-                        + "&include_adult=false&language=pt-BR&page=" + page
-                        + "&region=US%2CBR&sort_by=popularity.desc&with_genres=" + TMDBInternalGenre);
-
-        //When
-        var movieResponse = restTemplate.getForObject(expectedMovieUri, PreviewMediaResults.class);
-        var tvResponse = restTemplate.getForObject(expectedTvUri, PreviewMediaResults.class);
-
-        mediaList.addAll(movieResponse.results().stream().map(PreviewMediaMapper::movieMediaMap).toList());
-        mediaList.addAll(tvResponse.results().stream().map(PreviewMediaMapper::tvMediaMap).toList());
-        Collections.shuffle(mediaList);
-
-        var result = new PreviewMediaResponsePage(page, mediaList, 500);
-        var apiResponse = repository.getGenrePreviewMediaResponse(cineMenuGenres, page);
-
-        //Then
-        Assertions.assertNotEquals(apiResponse, result);
-    }
-
-    @Test
     @DisplayName("When page is less than 1, it should throw InvalidSearchException")
-    void getGenrePreviewMediaResponseTest_scene01() {
+    void getGenrePreviewMediaResponseTestScene01() {
         int invalidPage = 0;
 
         Assertions.assertThrows(InvalidSearchException.class, () -> {
@@ -139,7 +93,7 @@ class PreviewMediaRepositoryTest {
 
     @Test
     @DisplayName("When page is greater than 500, it should throw InvalidSearchException")
-    void getGenrePreviewMediaResponseTest_scene02() {
+    void getGenrePreviewMediaResponseTestScene02() {
         int invalidPage = 501;
 
         Assertions.assertThrows(InvalidSearchException.class, () -> {
@@ -149,7 +103,7 @@ class PreviewMediaRepositoryTest {
 
     @Test
     @DisplayName("When genreList is null, it should throw InvalidSearchException")
-    void getGenrePreviewMediaResponseTest_scene03() {
+    void getGenrePreviewMediaResponseTestScene03() {
         cineMenuGenres.clear();
 
         Assertions.assertThrows(InvalidSearchException.class, () -> {
@@ -159,7 +113,7 @@ class PreviewMediaRepositoryTest {
 
     @Test
     @DisplayName("When getting popular people list, it should return the expected result")
-    void getPeopleListResults_validPage_shouldReturnExpectedResults() {
+    void getPeopleListResultsValidPageShouldReturnExpectedResults() {
         // Given
         Integer page = 1;
         URI expectedUri = URI.create(

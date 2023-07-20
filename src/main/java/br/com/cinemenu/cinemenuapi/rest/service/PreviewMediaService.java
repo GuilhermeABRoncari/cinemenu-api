@@ -20,6 +20,7 @@ import java.util.List;
 public class PreviewMediaService {
 
     PreviewMediaRepository previewMediaRepository;
+    private static final String INVALID_SEARCH_MEDIA = "invalid media type: %s";
 
     public PreviewMediaResponsePage getSearchResponse(String search, Integer page) {
         val previewMediaResponse = previewMediaRepository.getSearchPreviewMediaResponse(search, page);
@@ -77,6 +78,6 @@ public class PreviewMediaService {
             return new PreviewMediaResponsePage(page, list, similarMovieListById.total_pages());
         }
 
-        throw new InvalidSearchException("invalid media type: %s".formatted(media));
+        throw new InvalidSearchException(INVALID_SEARCH_MEDIA.formatted(media));
     }
 }

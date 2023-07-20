@@ -20,10 +20,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class CineMenuPreviewMediaControllerTest {
+class PreviewMediaControllerTest {
 
     @InjectMocks
-    private CineMenuPreviewMediaController controller;
+    private PreviewMediaController controller;
     private String search;
     @Mock
     private PreviewMediaService service;
@@ -33,7 +33,7 @@ class CineMenuPreviewMediaControllerTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        controller = new CineMenuPreviewMediaController(service);
+        controller = new PreviewMediaController(service);
         search = "Batman";
 
         CineMenuMediaResponse mediaResponse = new CineMenuMediaResponse(

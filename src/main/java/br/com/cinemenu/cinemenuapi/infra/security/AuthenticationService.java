@@ -13,7 +13,8 @@ import org.springframework.stereotype.Service;
 @Generated
 public class AuthenticationService implements UserDetailsService {
 
-    private UserRepository repository;
+    private final UserRepository repository;
+    private static final String USER_NOT_FOUND = "User not found";
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -23,7 +24,7 @@ public class AuthenticationService implements UserDetailsService {
         if (user != null) {
             return user;
         } else {
-            throw new UsernameNotFoundException("User not found");
+            throw new UsernameNotFoundException(USER_NOT_FOUND);
         }
     }
 }

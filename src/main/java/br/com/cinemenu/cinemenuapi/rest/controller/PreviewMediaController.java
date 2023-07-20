@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/cinemenu")
 @AllArgsConstructor
-public class CineMenuPreviewMediaController {
+public class PreviewMediaController {
 
     private final PreviewMediaService service;
 
