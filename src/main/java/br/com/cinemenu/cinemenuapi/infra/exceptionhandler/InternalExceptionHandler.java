@@ -8,10 +8,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Generated;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -59,6 +61,16 @@ public class InternalExceptionHandler {
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ExceptionResponse> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
         return ResponseEntity.badRequest().body(new ExceptionResponse(ex.getBody().getStatus(), ex.getParameterName(), List.of(ex.getMessage()), OffsetDateTime.now()));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ExceptionResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        return ResponseEntity.badRequest().body(new ExceptionResponse(HttpStatus.BAD_REQUEST.value(), null, List.of(ex.getMessage()), OffsetDateTime.now()));
+    }
+
+    @ExceptionHandler(HttpClientErrorException.class)
+    public ResponseEntity<ExceptionResponse> handleHttpClientErrorException(HttpClientErrorException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ExceptionResponse(HttpStatus.NOT_IMPLEMENTED.value(), ex.getStatusText(), List.of(ex.getMessage()), OffsetDateTime.now()));
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
