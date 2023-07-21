@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +23,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
+@SQLDelete(sql = "UPDATE cine_menu_user SET deleted = true, deleted_at = NOW() WHERE id=?")
+@Where(clause = "deleted = false")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class CineMenuUser implements UserDetails {
 
@@ -33,6 +37,9 @@ public class CineMenuUser implements UserDetails {
     String password;
     @Column(name = "registration_date")
     OffsetDateTime registrationDate;
+    Boolean deleted;
+    @Column(name = "deleted_at")
+    OffsetDateTime deletedAt;
 
     public CineMenuUser(CineMenuUserRequestDto userDto, String encodedPassword) {
         this.name = userDto.name();
@@ -40,6 +47,8 @@ public class CineMenuUser implements UserDetails {
         this.email = userDto.email();
         this.password = encodedPassword;
         this.registrationDate = OffsetDateTime.now();
+        this.deleted = Boolean.FALSE;
+        this.deletedAt = null;
     }
 
     @Override

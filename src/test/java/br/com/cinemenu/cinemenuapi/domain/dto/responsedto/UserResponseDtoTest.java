@@ -31,7 +31,7 @@ class UserResponseDtoTest {
         String id = "1L";
         String username = "johndoe";
         String name = "John Doe";
-        CineMenuUser cineMenuUser = new CineMenuUser(id, name, username, "johndoe@example.com", "password", OffsetDateTime.now());
+        CineMenuUser cineMenuUser = new CineMenuUser(id, name, username, "johndoe@example.com", "password", OffsetDateTime.now(), false, null);
 
         // When
         UserResponseDto responseDto = new UserResponseDto(cineMenuUser);
