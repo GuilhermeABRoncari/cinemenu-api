@@ -27,13 +27,18 @@ public class CineMenuUserService {
     private static final String EMAIL_IN_USE = "This email is already in use";
     private static final String INVALID_LOGIN = "Email or password is invalid";
     private static final String USERNAME_IN_USE = "This username is already in use";
+    private static final String EMAIL_DISABLE = "This email is disable";
 
     @Transactional
     public TokenResponseDto sign(CineMenuUserRequestDto userDto) {
+
         if (repository.existsByEmail(userDto.email())) throw new IllegalArgumentException(EMAIL_IN_USE);
+        if (repository.checkUserDisableEmail(userDto.email())) throw new IllegalArgumentException(EMAIL_DISABLE);
         if (repository.existsByUsername(userDto.username())) throw new IllegalArgumentException(USERNAME_IN_USE);
+        if (repository.checkUserDisableUsername(userDto.username())) throw new IllegalArgumentException(USERNAME_IN_USE);
 
         var user = new CineMenuUser(userDto, securityConfigurations.passwordEncoder().encode(userDto.password()));
+
         repository.save(user);
 
         return login(new LoginRequestDto(userDto.email(), userDto.password()));

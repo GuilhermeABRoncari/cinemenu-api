@@ -30,16 +30,16 @@ public class CineMenuUser implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    String id;
-    String name;
-    String username;
-    String email;
-    String password;
+    private String id;
+    private String name;
+    private String username;
+    private String email;
+    private String password;
     @Column(name = "registration_date")
-    OffsetDateTime registrationDate;
-    Boolean deleted;
+    private OffsetDateTime registrationDate;
+    private Boolean deleted;
     @Column(name = "deleted_at")
-    OffsetDateTime deletedAt;
+    private OffsetDateTime deletedAt;
 
     public CineMenuUser(CineMenuUserRequestDto userDto, String encodedPassword) {
         this.name = userDto.name();
