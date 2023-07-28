@@ -60,7 +60,7 @@ public class CineMenuUserServiceTest {
         // Given
         LoginRequestDto loginDto = new LoginRequestDto("email@example.com", "Test123*");
         String token = "valid_token";
-        CineMenuUser user = new CineMenuUser(null, "name", "teste", "email@example.com", "Test123*", null);
+        CineMenuUser user = new CineMenuUser(null, "name", "teste", "email@example.com", "Test123*", null, false, null);
         Authentication authentication = mock(Authentication.class);
 
         when(authentication.isAuthenticated()).thenReturn(true);

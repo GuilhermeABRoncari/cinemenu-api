@@ -20,7 +20,7 @@ class CineMenuUserTest {
         OffsetDateTime registrationDate = OffsetDateTime.now();
 
         // When
-        CineMenuUser cineMenuUser = new CineMenuUser(id, name, username, email, password, registrationDate);
+        CineMenuUser cineMenuUser = new CineMenuUser(id, name, username, email, password, registrationDate, false, null);
 
         // Then
         Assertions.assertEquals(id, cineMenuUser.getId());
@@ -49,8 +49,8 @@ class CineMenuUserTest {
         OffsetDateTime registrationDate = OffsetDateTime.now();
 
         // When
-        CineMenuUser cineMenuUser01 = new CineMenuUser(id, name, username, email, password, registrationDate);
-        CineMenuUser cineMenuUser02 = new CineMenuUser(id, name, username, email, password, registrationDate);
+        CineMenuUser cineMenuUser01 = new CineMenuUser(id, name, username, email, password, registrationDate, false, null);
+        CineMenuUser cineMenuUser02 = new CineMenuUser(id, name, username, email, password, registrationDate, false, null);
 
         int hashCode = cineMenuUser02.hashCode();
         boolean equals = cineMenuUser01.equals(cineMenuUser02);
@@ -73,8 +73,8 @@ class CineMenuUserTest {
         OffsetDateTime registrationDate = OffsetDateTime.now();
 
         // When
-        CineMenuUser cineMenuUser01 = new CineMenuUser(firstId, name, username, email, password, registrationDate);
-        CineMenuUser cineMenuUser02 = new CineMenuUser(secondId, name, username, email, password, registrationDate);
+        CineMenuUser cineMenuUser01 = new CineMenuUser(firstId, name, username, email, password, registrationDate, false, null);
+        CineMenuUser cineMenuUser02 = new CineMenuUser(secondId, name, username, email, password, registrationDate, false, null);
 
         boolean equals = cineMenuUser01.equals(cineMenuUser02);
 
