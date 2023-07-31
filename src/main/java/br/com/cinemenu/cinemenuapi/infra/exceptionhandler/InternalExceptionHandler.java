@@ -1,9 +1,6 @@
 package br.com.cinemenu.cinemenuapi.infra.exceptionhandler;
 
-import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidApiKeyException;
-import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
-import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.JWTCineMenuException;
-import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.TMDBNotFoundException;
+import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Generated;
 import org.springframework.http.HttpStatus;
@@ -71,6 +68,11 @@ public class InternalExceptionHandler {
     @ExceptionHandler(HttpClientErrorException.class)
     public ResponseEntity<ExceptionResponse> handleHttpClientErrorException(HttpClientErrorException ex) {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(new ExceptionResponse(HttpStatus.NOT_IMPLEMENTED.value(), ex.getStatusText(), List.of(ex.getMessage()), OffsetDateTime.now()));
+    }
+
+    @ExceptionHandler(CineMenuEntityNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleCineMenuEntityNotFoundException(CineMenuEntityNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionResponse(HttpStatus.NOT_FOUND.value(), null, List.of(ex.getMessage()), OffsetDateTime.now()));
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

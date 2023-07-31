@@ -2,6 +2,7 @@ package br.com.cinemenu.cinemenuapi.rest.controller;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.AccountDeleteRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.entity.CineMenuUser;
+import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
 import br.com.cinemenu.cinemenuapi.domain.repository.UserRepository;
 import br.com.cinemenu.cinemenuapi.infra.security.AuthenticationFacade;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -56,7 +58,7 @@ class UserControllerTest {
         String username = "username";
         String password = "password";
         AccountDeleteRequestDto dto = new AccountDeleteRequestDto(validEmail);
-        CineMenuUser validUser = new CineMenuUser(id, name, username, validEmail, password, OffsetDateTime.now(), false, null);
+        CineMenuUser validUser = new CineMenuUser(id, name, username, validEmail, password, OffsetDateTime.now(), false, null, List.of(new MediaList()));
 
         when(repository.findByUsername(username)).thenReturn(validUser);
         when(authenticationFacade.getAuthentication().getName()).thenReturn(username);
@@ -80,7 +82,7 @@ class UserControllerTest {
         String username = "username";
         String password = "password";
         AccountDeleteRequestDto dto = new AccountDeleteRequestDto(invalidEmail);
-        CineMenuUser validUser = new CineMenuUser(id, name, username, email, password, OffsetDateTime.now(), false, null);
+        CineMenuUser validUser = new CineMenuUser(id, name, username, email, password, OffsetDateTime.now(), false, null, List.of(new MediaList()));
 
         when(repository.findByUsername(username)).thenReturn(validUser);
         when(authenticationFacade.getAuthentication().getName()).thenReturn(username);

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 class CineMenuUserTest {
 
@@ -20,7 +21,7 @@ class CineMenuUserTest {
         OffsetDateTime registrationDate = OffsetDateTime.now();
 
         // When
-        CineMenuUser cineMenuUser = new CineMenuUser(id, name, username, email, password, registrationDate, false, null);
+        CineMenuUser cineMenuUser = new CineMenuUser(id, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
 
         // Then
         Assertions.assertEquals(id, cineMenuUser.getId());
@@ -49,8 +50,8 @@ class CineMenuUserTest {
         OffsetDateTime registrationDate = OffsetDateTime.now();
 
         // When
-        CineMenuUser cineMenuUser01 = new CineMenuUser(id, name, username, email, password, registrationDate, false, null);
-        CineMenuUser cineMenuUser02 = new CineMenuUser(id, name, username, email, password, registrationDate, false, null);
+        CineMenuUser cineMenuUser01 = new CineMenuUser(id, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+        CineMenuUser cineMenuUser02 = new CineMenuUser(id, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
 
         int hashCode = cineMenuUser02.hashCode();
         boolean equals = cineMenuUser01.equals(cineMenuUser02);
@@ -73,8 +74,8 @@ class CineMenuUserTest {
         OffsetDateTime registrationDate = OffsetDateTime.now();
 
         // When
-        CineMenuUser cineMenuUser01 = new CineMenuUser(firstId, name, username, email, password, registrationDate, false, null);
-        CineMenuUser cineMenuUser02 = new CineMenuUser(secondId, name, username, email, password, registrationDate, false, null);
+        CineMenuUser cineMenuUser01 = new CineMenuUser(firstId, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+        CineMenuUser cineMenuUser02 = new CineMenuUser(secondId, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
 
         boolean equals = cineMenuUser01.equals(cineMenuUser02);
 
