@@ -235,7 +235,9 @@ class MediaListServiceTest {
         MediaListResponseDto serviceResponse = service.editById(user, listId, privateRequestDto);
 
         // Then
-        assertEquals(privateResponseDto, serviceResponse);
+        assertNotEquals(privateResponseDto, serviceResponse);
+        assertEquals(publicMediaList.getVisibility(), serviceResponse.visibility());
+        assertEquals(publicMediaList.getLastChange(), serviceResponse.lastChange());
         verify(repository).findById(listId);
     }
 

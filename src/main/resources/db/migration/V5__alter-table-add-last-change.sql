@@ -1,0 +1,1 @@
+ALTER TABLE user_media_list ADD COLUMN last_change TIMESTAMP;

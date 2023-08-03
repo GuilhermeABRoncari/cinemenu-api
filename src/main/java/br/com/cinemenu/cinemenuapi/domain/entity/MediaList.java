@@ -30,6 +30,8 @@ public class MediaList {
     private Integer amountCopy;
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
+    @Column(name = "last_change")
+    private OffsetDateTime lastChange;
     @ManyToOne
     private CineMenuUser user;
 
@@ -47,5 +49,6 @@ public class MediaList {
         if (requestDto.title() != null) this.title = requestDto.title();
         this.description = requestDto.description();
         if (requestDto.visibility() != null) this.visibility = requestDto.visibility();
+        this.lastChange = OffsetDateTime.now();
     }
 }
