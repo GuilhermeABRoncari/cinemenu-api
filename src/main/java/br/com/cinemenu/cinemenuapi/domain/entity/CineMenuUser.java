@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -40,6 +41,8 @@ public class CineMenuUser implements UserDetails {
     private Boolean deleted;
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<MediaList> mediaLists = new ArrayList<>();
 
     public CineMenuUser(CineMenuUserRequestDto userDto, String encodedPassword) {
         this.name = userDto.name();
