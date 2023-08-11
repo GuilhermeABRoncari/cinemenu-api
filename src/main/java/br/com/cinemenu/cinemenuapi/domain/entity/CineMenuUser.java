@@ -88,4 +88,9 @@ public class CineMenuUser implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public MediaList getMediaListById(String mediaListId) {
+        return this.getMediaLists().stream().filter(mediaList -> mediaList.getId().equals(mediaListId)).findFirst().get();
+    }
+
 }
