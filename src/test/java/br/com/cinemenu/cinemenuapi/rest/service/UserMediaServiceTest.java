@@ -8,6 +8,7 @@ import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
 import br.com.cinemenu.cinemenuapi.domain.entity.UserMedia;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.ListVisibility;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
+import br.com.cinemenu.cinemenuapi.domain.repository.MediaListRepository;
 import br.com.cinemenu.cinemenuapi.domain.repository.UserMediaRepository;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.CineMenuEntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +36,8 @@ class UserMediaServiceTest {
     private UserMediaService service;
     @Mock
     private UserMediaRepository repository;
+    @Mock
+    private MediaListRepository mediaListRepository;
 
     private Pageable page;
     private UserMediaRequestDto requestDto;
@@ -51,7 +54,7 @@ class UserMediaServiceTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        service = new UserMediaService(repository);
+        service = new UserMediaService(repository, mediaListRepository);
 
         mediaListList = new ArrayList<>();
         userMediaList = new ArrayList<>();
@@ -237,6 +240,7 @@ class UserMediaServiceTest {
 
         // Then
         assertTrue(user.getMediaLists().get(0).getUserMedias().isEmpty());
+        verify(repository).findById(mediaId);
     }
 
     @Test
@@ -272,12 +276,14 @@ class UserMediaServiceTest {
         String mediaListId = mediaList.getId();
         mediaListList.add(mediaList);
         userMediaList.add(userMedia);
+        when(mediaListRepository.findById(mediaListId)).thenReturn(Optional.ofNullable(mediaList));
 
         // When
         Page<UserMediaResponseDto> serviceResponse = service.getUserMediaPagesFromListId(user, mediaListId, page);
 
         //Then
         assertEquals(1, serviceResponse.getContent().size());
+        verify(mediaListRepository).findById(mediaListId);
     }
 
     @Test

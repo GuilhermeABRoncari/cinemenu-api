@@ -6,6 +6,8 @@ import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserMediaResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.entity.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
 import br.com.cinemenu.cinemenuapi.domain.entity.UserMedia;
+import br.com.cinemenu.cinemenuapi.domain.enumeration.ListVisibility;
+import br.com.cinemenu.cinemenuapi.domain.repository.MediaListRepository;
 import br.com.cinemenu.cinemenuapi.domain.repository.UserMediaRepository;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.CineMenuEntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -24,6 +26,7 @@ import java.util.NoSuchElementException;
 public class UserMediaService {
 
     private final UserMediaRepository userMediaRepository;
+    private final MediaListRepository mediaListRepository;
     private static final String LIST_NOT_FOUND_WHIT_USER = "List whit id: %s not found for user: %s";
     private static final String MEDIA_NOT_FOUND_WHIT_USER = "Media whit id: %s not found for user: %s";
     private static final String INVALID_USER_MEDIA_REQUEST_DTO = "Fields 'id_tmdb' and 'media_type' is required";
@@ -70,17 +73,16 @@ public class UserMediaService {
     }
 
     public Page<UserMediaResponseDto> getUserMediaPagesFromListId(CineMenuUser user, String mediaListId, Pageable page) {
-        MediaList mediaList;
-        try {
-            mediaList = user.getMediaListById(mediaListId);
-        } catch (NoSuchElementException ex) {
-            throw new CineMenuEntityNotFoundException(LIST_NOT_FOUND_WHIT_USER.formatted(mediaListId, user.getUsername()));
+        var mediaList = mediaListRepository.findById(mediaListId).orElseThrow(() -> new CineMenuEntityNotFoundException(LIST_NOT_FOUND_WHIT_USER.formatted(mediaListId, user.getUsername())));
+
+        if (user.getMediaLists().contains(mediaList) || ListVisibility.PUBLIC.equals(mediaList.getVisibility())) {
+            List<UserMediaResponseDto> responseList = new ArrayList<>(mediaList.getUserMedias().stream().map(UserMediaResponseDto::new).toList());
+
+            int start = (int) page.getOffset();
+            int end = Math.min((start + page.getPageSize()), responseList.size());
+            return new PageImpl<>(responseList.subList(start, end), page, responseList.size());
         }
 
-        List<UserMediaResponseDto> responseList = new ArrayList<>(mediaList.getUserMedias().stream().map(UserMediaResponseDto::new).toList());
-
-        int start = (int) page.getOffset();
-        int end = Math.min((start + page.getPageSize()), responseList.size());
-        return new PageImpl<>(responseList.subList(start, end), page, responseList.size());
+        throw new CineMenuEntityNotFoundException(LIST_NOT_FOUND_WHIT_USER.formatted(mediaListId, user.getUsername()));
     }
 }
