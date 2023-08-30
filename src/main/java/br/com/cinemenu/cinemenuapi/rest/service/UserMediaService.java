@@ -59,6 +59,7 @@ public class UserMediaService {
             throw new CineMenuEntityNotFoundException(MEDIA_NOT_FOUND_WHIT_USER.formatted(mediaId, user.getUsername()));
 
         media.update(updateRequestDto);
+        userMediaRepository.save(media);
         return new UserMediaResponseDto(media);
     }
 
