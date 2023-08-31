@@ -30,7 +30,6 @@ public class UserMediaService {
     private final MediaListRepository mediaListRepository;
     private static final String LIST_NOT_FOUND_WHIT_USER = "List whit id: %s not found for user: %s";
     private static final String MEDIA_NOT_FOUND_WHIT_USER = "Media whit id: %s not found for user: %s";
-    private static final String INVALID_USER_MEDIA_REQUEST_DTO = "Fields 'id_tmdb' and 'media_type' is required";
     private static final String ALL_ELEMENTS_ALREADY_EXISTS = "All medias elements already exists in this list";
 
     @Transactional
@@ -41,11 +40,6 @@ public class UserMediaService {
         } catch (NoSuchElementException ex) {
             throw new CineMenuEntityNotFoundException(LIST_NOT_FOUND_WHIT_USER.formatted(mediaListId, user.getUsername()));
         }
-
-        requestDtoList.medias().forEach(userMediaRequestDto -> {
-            if (userMediaRequestDto.idTmdb() == null || userMediaRequestDto.mediaType() == null)
-                throw new IllegalArgumentException(INVALID_USER_MEDIA_REQUEST_DTO);
-        });
 
         List<UserMedia> requestMedias = new ArrayList<>(requestDtoList.medias().stream().map(UserMedia::new).toList());
 
