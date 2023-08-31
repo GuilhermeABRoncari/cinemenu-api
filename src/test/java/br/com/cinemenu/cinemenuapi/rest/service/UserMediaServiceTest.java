@@ -27,8 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @WithMockUser
 class UserMediaServiceTest {
@@ -119,9 +118,11 @@ class UserMediaServiceTest {
     @DisplayName("Test createNewUserMediaAndAddToMediaList() method whit valid signature")
     void testCreateNewUserMediaAndAddToMediaListScene01() {
         // Given
+        user = mock(CineMenuUser.class);
         String mediaListId = mediaList.getId();
         mediaListList.add(mediaList);
-        userMediaList.add(userMedia);
+        mediaList.getUserMedias().add(new UserMedia("new ID", 2, MediaType.MOVIE, "Gracefully note", 0.0, false));
+        when(user.getMediaListById(mediaListId)).thenReturn(mediaList);
         when(repository.saveAll(requestDto.medias().stream().map(UserMedia::new).toList())).thenReturn(userMediaList);
 
         // When
@@ -162,6 +163,22 @@ class UserMediaServiceTest {
             assertNull(serviceResponse);
         });
 
+    }
+
+    @Test
+    @DisplayName("Test createNewUserMediaAndAddToMediaList() method whit valid signature but whit  deduplicate UserMedias in current MediaList ")
+    void testCreateNewUserMediaAndAddToMediaListScene05() {
+        // Given
+        String mediaListId = mediaList.getId();
+        mediaListList.add(mediaList);
+        userMediaList.add(userMedia);
+        when(repository.saveAll(requestDto.medias().stream().map(UserMedia::new).toList())).thenReturn(userMediaList);
+
+        // When // Then
+        assertThrows(IllegalArgumentException.class, () -> {
+            List<UserMediaResponseDto> serviceResponse = service.createNewUserMediaAndAddToMediaList(user, mediaListId, requestDto);
+            verify(repository).saveAll(requestDto.medias().stream().map(UserMedia::new).toList());
+        });
     }
 
     @Test

@@ -89,6 +89,7 @@ public class MediaListService {
             throw new CineMenuEntityNotFoundException(LIST_NOT_FOUND_WHIT_USER.formatted(listId, user.getUsername()));
 
         mediaList.update(requestDto);
+        repository.save(mediaList);
         return new MediaListResponseDto(mediaList);
     }
 

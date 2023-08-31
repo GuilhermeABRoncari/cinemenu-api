@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -30,6 +31,7 @@ public class UserMediaService {
     private static final String LIST_NOT_FOUND_WHIT_USER = "List whit id: %s not found for user: %s";
     private static final String MEDIA_NOT_FOUND_WHIT_USER = "Media whit id: %s not found for user: %s";
     private static final String INVALID_USER_MEDIA_REQUEST_DTO = "Fields 'id_tmdb' and 'media_type' is required";
+    private static final String ALL_ELEMENTS_ALREADY_EXISTS = "All medias elements already exists in this list";
 
     @Transactional
     public List<UserMediaResponseDto> createNewUserMediaAndAddToMediaList(CineMenuUser user, String mediaListId, UserMediaRequestDto requestDtoList) {
@@ -45,7 +47,15 @@ public class UserMediaService {
                 throw new IllegalArgumentException(INVALID_USER_MEDIA_REQUEST_DTO);
         });
 
-        List<UserMedia> userMedia = userMediaRepository.saveAll(requestDtoList.medias().stream().map(UserMedia::new).toList());
+        List<UserMedia> requestMedias = new ArrayList<>(requestDtoList.medias().stream().map(UserMedia::new).toList());
+
+        mediaList.getUserMedias().forEach(userMedia -> {
+            requestMedias.removeIf(request -> request.getIdTmdb().equals(userMedia.getIdTmdb()) && request.getMediaType().equals(userMedia.getMediaType()));
+        });
+
+        if (requestMedias.isEmpty()) throw new IllegalArgumentException(ALL_ELEMENTS_ALREADY_EXISTS);
+
+        List<UserMedia> userMedia = userMediaRepository.saveAll(requestMedias);
         mediaList.getUserMedias().addAll(userMedia);
 
         return List.copyOf(userMedia.stream().map(UserMediaResponseDto::new).toList());
