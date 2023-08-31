@@ -3,13 +3,14 @@ package br.com.cinemenu.cinemenuapi.domain.dto.requestdto;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
 public record UserMediaRequestDto(
         @Valid
-        @NotNull
+        @NotEmpty
         List<UserMediaElementsDto> medias
 ) {
     public record UserMediaElementsDto(
