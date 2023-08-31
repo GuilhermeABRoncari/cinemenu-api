@@ -9,6 +9,7 @@ import java.util.List;
 
 public record UserMediaRequestDto(
         @Valid
+        @NotNull
         List<UserMediaElementsDto> medias
 ) {
     public record UserMediaElementsDto(
