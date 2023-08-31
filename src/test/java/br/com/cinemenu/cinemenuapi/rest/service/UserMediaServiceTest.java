@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -158,7 +159,7 @@ class UserMediaServiceTest {
         var invalidRequestDto = new UserMediaRequestDto(List.of(new UserMediaRequestDto.UserMediaElementsDto(null, MediaType.MOVIE, "Gracefully note", 0.0, false)));
 
         // When // Then
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             List<UserMediaResponseDto> serviceResponse = service.createNewUserMediaAndAddToMediaList(user, mediaListId, invalidRequestDto);
             assertNull(serviceResponse);
         });
@@ -191,7 +192,7 @@ class UserMediaServiceTest {
         var invalidRequestDto = new UserMediaRequestDto(List.of(new UserMediaRequestDto.UserMediaElementsDto(1, null, "Gracefully note", 0.0, false)));
 
         // When // Then
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             List<UserMediaResponseDto> serviceResponse = service.createNewUserMediaAndAddToMediaList(user, mediaListId, invalidRequestDto);
             assertNull(serviceResponse);
         });
