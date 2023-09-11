@@ -25,6 +25,7 @@ public class UserMedia {
     @Column(name = "id_tmdb")
     private Integer idTmdb;
     @Column(name = "media_type")
+    @Enumerated(EnumType.STRING)
     private MediaType mediaType;
     private String note;
     @Column(name = "user_rating")
