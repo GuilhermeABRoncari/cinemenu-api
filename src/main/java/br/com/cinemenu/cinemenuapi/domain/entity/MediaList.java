@@ -29,6 +29,7 @@ public class MediaList {
     private String description;
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<UserMedia> userMedias = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
     private ListVisibility visibility;
     private Integer amountLike;
     private Integer amountCopy;
