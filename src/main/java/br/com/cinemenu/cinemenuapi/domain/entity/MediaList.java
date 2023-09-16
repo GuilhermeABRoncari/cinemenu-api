@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "MediaList")
 @Table(name = "user_media_list")
@@ -25,6 +27,9 @@ public class MediaList {
     private String id;
     private String title;
     private String description;
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private List<UserMedia> userMedias = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
     private ListVisibility visibility;
     private Integer amountLike;
     private Integer amountCopy;
