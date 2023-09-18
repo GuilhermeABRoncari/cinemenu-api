@@ -1,6 +1,8 @@
 package br.com.cinemenu.cinemenuapi.rest.controller;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.AccountDeleteRequestDto;
+import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserProfileRequestDto;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserProfileResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
 import br.com.cinemenu.cinemenuapi.domain.entity.user.UserProfile;
@@ -41,6 +43,8 @@ class UserControllerTest {
     private CineMenuUserService service;
     private CineMenuUser validUser;
     private AccountDeleteRequestDto validAccountDeleteRequestDto;
+    private UserProfileRequestDto userProfileRequestDto;
+    private UserProfileResponseDto userProfileResponseDto;
 
     @BeforeEach
     void setup() {
@@ -61,6 +65,47 @@ class UserControllerTest {
         validAccountDeleteRequestDto = new AccountDeleteRequestDto(validEmail);
         UserProfile userProfile = new UserProfile("validBiography");
         validUser = new CineMenuUser(id, userProfile,name, username, validEmail, password, OffsetDateTime.now(), false, null, List.of(new MediaList()));
+
+        userProfileRequestDto = new UserProfileRequestDto("new name", "newUsername", "bio");
+        userProfileResponseDto = new UserProfileResponseDto(validUser);
+    }
+
+    @Test
+    @DisplayName("Test method getUserProfile() from UserController")
+    void testGetUserProfile() {
+        // Given
+        when(service.getUserProfile(validUser)).thenReturn(userProfileResponseDto);
+
+        // When
+        ResponseEntity<UserProfileResponseDto> controllerResponse = controller.getUserProfile();
+
+        // Then
+        assertEquals(HttpStatus.OK, controllerResponse.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Test method getUserProfileById() from UserController")
+    void testGetUserProfileById() {
+        // Given
+        when(service.getUserProfileById(validUser.getId())).thenReturn(userProfileResponseDto);
+
+        // Then
+        ResponseEntity<UserProfileResponseDto> controllerResponse = controller.getUserProfileById(validUser.getId());
+
+        // Then
+        assertEquals(HttpStatus.OK, controllerResponse.getStatusCode());
+        verify(service).getUserProfileById(validUser.getId());
+    }
+
+    @Test
+    @DisplayName("Test method updateUserProfile from UserController")
+    void testUpdateUserProfile() {
+        // Given
+        // When
+        ResponseEntity<UserProfileResponseDto> controllerResponse = controller.updateUserProfile(userProfileRequestDto);
+
+        // Then
+        assertEquals(HttpStatus.OK, controllerResponse.getStatusCode());
     }
 
     @Test
