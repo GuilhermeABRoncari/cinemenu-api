@@ -4,6 +4,7 @@ import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.MediaListRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.MediaListResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.UserProfile;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.ListVisibility;
 import br.com.cinemenu.cinemenuapi.domain.repository.MediaListRepository;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.CineMenuEntityNotFoundException;
@@ -47,7 +48,8 @@ class MediaListServiceTest {
         MockitoAnnotations.openMocks(this);
         service = new MediaListService(repository);
         listOfMediaLists = new ArrayList<>();
-        user = new CineMenuUser("id", "name", "username", "example@email.com", "password", OffsetDateTime.now(), false, null, listOfMediaLists);
+        UserProfile userProfile = new UserProfile("bio");
+        user = new CineMenuUser("id", userProfile,"name", "username", "example@email.com", "password", OffsetDateTime.now(), false, null, listOfMediaLists);
 
         publicRequestDto = new MediaListRequestDto("title", "description", ListVisibility.PUBLIC);
         privateRequestDto = new MediaListRequestDto("title", "description", ListVisibility.PRIVATE);

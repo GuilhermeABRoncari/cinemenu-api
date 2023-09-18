@@ -2,6 +2,7 @@ package br.com.cinemenu.cinemenuapi.domain.dto.responsedto;
 
 import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.UserProfile;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,8 @@ class UserResponseDtoTest {
         String id = "1L";
         String username = "johndoe";
         String name = "John Doe";
-        CineMenuUser cineMenuUser = new CineMenuUser(id, name, username, "johndoe@example.com", "password", OffsetDateTime.now(), false, null, List.of(new MediaList()));
+        UserProfile userProfile = new UserProfile("bio");
+        CineMenuUser cineMenuUser = new CineMenuUser(id, userProfile, name, username, "johndoe@example.com", "password", OffsetDateTime.now(), false, null, List.of(new MediaList()));
 
         // When
         UserResponseDto responseDto = new UserResponseDto(cineMenuUser);

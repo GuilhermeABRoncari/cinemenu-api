@@ -1,6 +1,7 @@
 package br.com.cinemenu.cinemenuapi.domain.entity.user;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.CineMenuUserRequestDto;
+import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserProfileRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -97,4 +98,9 @@ public class CineMenuUser implements UserDetails {
         return this.getMediaLists().stream().filter(mediaList -> mediaList.getId().equals(mediaListId)).findFirst().get();
     }
 
+    public void updateProfile(UserProfileRequestDto dto) {
+        this.name = dto.name();
+        this.username = dto.username();
+        this.profile.update(dto);
+    }
 }

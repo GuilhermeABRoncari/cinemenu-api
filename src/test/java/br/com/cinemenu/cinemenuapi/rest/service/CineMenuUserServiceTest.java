@@ -4,6 +4,7 @@ import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.CineMenuUserRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.LoginRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.UserProfile;
 import br.com.cinemenu.cinemenuapi.domain.repository.UserRepository;
 import br.com.cinemenu.cinemenuapi.infra.security.SecurityConfigurations;
 import br.com.cinemenu.cinemenuapi.infra.security.TokenService;
@@ -62,7 +63,8 @@ public class CineMenuUserServiceTest {
         // Given
         LoginRequestDto loginDto = new LoginRequestDto("email@example.com", "Test123*");
         String token = "valid_token";
-        CineMenuUser user = new CineMenuUser(null, "name", "teste", "email@example.com", "Test123*", null, false, null, List.of(new MediaList()));
+        UserProfile userProfile = new UserProfile("bio");
+        CineMenuUser user = new CineMenuUser(null, userProfile, "name", "teste", "email@example.com", "Test123*", null, false, null, List.of(new MediaList()));
         Authentication authentication = mock(Authentication.class);
 
         when(authentication.isAuthenticated()).thenReturn(true);

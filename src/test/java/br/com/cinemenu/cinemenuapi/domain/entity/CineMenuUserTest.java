@@ -1,6 +1,7 @@
 package br.com.cinemenu.cinemenuapi.domain.entity;
 
 import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.UserProfile;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,12 +21,14 @@ class CineMenuUserTest {
         String email = "johndoe@example.com";
         String password = "password";
         OffsetDateTime registrationDate = OffsetDateTime.now();
+        UserProfile userProfile = new UserProfile("bio");
 
         // When
-        CineMenuUser cineMenuUser = new CineMenuUser(id, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+        CineMenuUser cineMenuUser = new CineMenuUser(id, userProfile,name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
 
         // Then
         Assertions.assertEquals(id, cineMenuUser.getId());
+        Assertions.assertEquals(userProfile, cineMenuUser.getProfile());
         Assertions.assertEquals(name, cineMenuUser.getName());
         Assertions.assertEquals(username, cineMenuUser.getUsername());
         Assertions.assertEquals(email, cineMenuUser.getEmail());
@@ -49,10 +52,11 @@ class CineMenuUserTest {
         String email = "johndoe@example.com";
         String password = "password";
         OffsetDateTime registrationDate = OffsetDateTime.now();
+        UserProfile userProfile = new UserProfile("bio");
 
         // When
-        CineMenuUser cineMenuUser01 = new CineMenuUser(id, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
-        CineMenuUser cineMenuUser02 = new CineMenuUser(id, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+        CineMenuUser cineMenuUser01 = new CineMenuUser(id, userProfile, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+        CineMenuUser cineMenuUser02 = new CineMenuUser(id, userProfile, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
 
         int hashCode = cineMenuUser02.hashCode();
         boolean equals = cineMenuUser01.equals(cineMenuUser02);
@@ -73,10 +77,11 @@ class CineMenuUserTest {
         String email = "johndoe@example.com";
         String password = "password";
         OffsetDateTime registrationDate = OffsetDateTime.now();
+        UserProfile userProfile = new UserProfile("bio");
 
         // When
-        CineMenuUser cineMenuUser01 = new CineMenuUser(firstId, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
-        CineMenuUser cineMenuUser02 = new CineMenuUser(secondId, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+        CineMenuUser cineMenuUser01 = new CineMenuUser(firstId, userProfile, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+        CineMenuUser cineMenuUser02 = new CineMenuUser(secondId, userProfile, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
 
         boolean equals = cineMenuUser01.equals(cineMenuUser02);
 

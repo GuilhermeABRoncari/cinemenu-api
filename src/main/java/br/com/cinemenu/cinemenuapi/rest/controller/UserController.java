@@ -1,35 +1,50 @@
 package br.com.cinemenu.cinemenuapi.rest.controller;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.AccountDeleteRequestDto;
+import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserProfileRequestDto;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserProfileResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.UserProfile;
 import br.com.cinemenu.cinemenuapi.domain.repository.UserRepository;
 import br.com.cinemenu.cinemenuapi.infra.security.AuthenticationFacade;
+import br.com.cinemenu.cinemenuapi.rest.service.CineMenuUserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/user")
 @AllArgsConstructor
 public class UserController {
 
     private final UserRepository repository;
     private final AuthenticationFacade authenticationFacade;
-    private static final String INVALID_EMAIL = "The email address provided must be the same as the one registered by the account owner";
+    private final CineMenuUserService service;
 
-    @DeleteMapping
+    @GetMapping("/details")
+    public ResponseEntity<UserProfileResponseDto> getUserProfile() {
+        return ResponseEntity.ok(service.getUserProfile(getUser()));
+    }
+
+    @GetMapping("/details_bio")
+    public ResponseEntity<UserProfileResponseDto> getUserProfileById(@RequestParam(name = "id") String id) {
+        return ResponseEntity.ok(service.getUserProfileById(id));
+    }
+
+    @PutMapping("/details_bio")
+    public ResponseEntity<UserProfileResponseDto> updateUserProfile(@RequestBody @Valid UserProfileRequestDto dto) {
+        return ResponseEntity.ok(service.updateUserProfile(getUser(), dto));
+    }
+
+    @DeleteMapping("/account")
     public ResponseEntity<HttpStatus> delete(@RequestBody @Valid AccountDeleteRequestDto dto) {
-        String username = authenticationFacade.getAuthentication().getName();
-        CineMenuUser user = (CineMenuUser) repository.findByUsername(username);
-
-        if (user.getEmail().equals(dto.email())) {
-            repository.delete(user);
-        } else throw new IllegalArgumentException(INVALID_EMAIL);
+        service.deleteUserAccount(getUser(), dto);
         return ResponseEntity.noContent().build();
+    }
+
+    private CineMenuUser getUser() {
+        return (CineMenuUser) repository.findByUsername(authenticationFacade.getAuthentication().getName());
     }
 }
