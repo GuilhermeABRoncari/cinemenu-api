@@ -1,6 +1,7 @@
 package br.com.cinemenu.cinemenuapi.domain.entity;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.MediaListRequestDto;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.ListVisibility;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;

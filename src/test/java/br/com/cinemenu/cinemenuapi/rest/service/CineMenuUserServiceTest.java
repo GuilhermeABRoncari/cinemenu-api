@@ -2,8 +2,7 @@ package br.com.cinemenu.cinemenuapi.rest.service;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.CineMenuUserRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.LoginRequestDto;
-import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.TokenResponseDto;
-import br.com.cinemenu.cinemenuapi.domain.entity.CineMenuUser;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
 import br.com.cinemenu.cinemenuapi.domain.repository.UserRepository;
 import br.com.cinemenu.cinemenuapi.infra.security.SecurityConfigurations;

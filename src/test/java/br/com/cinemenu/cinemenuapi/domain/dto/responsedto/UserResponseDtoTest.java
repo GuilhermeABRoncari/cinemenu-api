@@ -1,6 +1,6 @@
 package br.com.cinemenu.cinemenuapi.domain.dto.responsedto;
 
-import br.com.cinemenu.cinemenuapi.domain.entity.CineMenuUser;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

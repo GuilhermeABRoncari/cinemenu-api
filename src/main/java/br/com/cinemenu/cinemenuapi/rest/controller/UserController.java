@@ -1,7 +1,7 @@
 package br.com.cinemenu.cinemenuapi.rest.controller;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.AccountDeleteRequestDto;
-import br.com.cinemenu.cinemenuapi.domain.entity.CineMenuUser;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.repository.UserRepository;
 import br.com.cinemenu.cinemenuapi.infra.security.AuthenticationFacade;
 import jakarta.validation.Valid;

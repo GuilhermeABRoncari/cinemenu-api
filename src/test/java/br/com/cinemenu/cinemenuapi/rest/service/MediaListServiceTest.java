@@ -2,7 +2,7 @@ package br.com.cinemenu.cinemenuapi.rest.service;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.MediaListRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.MediaListResponseDto;
-import br.com.cinemenu.cinemenuapi.domain.entity.CineMenuUser;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.ListVisibility;
 import br.com.cinemenu.cinemenuapi.domain.repository.MediaListRepository;
