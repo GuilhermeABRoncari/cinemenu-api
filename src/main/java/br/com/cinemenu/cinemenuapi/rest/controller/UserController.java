@@ -4,7 +4,6 @@ import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.AccountDeleteRequestDto
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserProfileRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserProfileResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
-import br.com.cinemenu.cinemenuapi.domain.entity.user.UserProfile;
 import br.com.cinemenu.cinemenuapi.domain.repository.UserRepository;
 import br.com.cinemenu.cinemenuapi.infra.security.AuthenticationFacade;
 import br.com.cinemenu.cinemenuapi.rest.service.CineMenuUserService;
