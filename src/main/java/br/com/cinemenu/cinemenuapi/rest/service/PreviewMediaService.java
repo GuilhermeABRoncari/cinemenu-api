@@ -1,15 +1,13 @@
 package br.com.cinemenu.cinemenuapi.rest.service;
 
-import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.CineMenuMediaResponse;
-import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewActorCreditsListResults;
-import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResponsePage;
-import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResults;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.*;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
 import br.com.cinemenu.cinemenuapi.rest.mapper.PreviewMediaMapper;
 import br.com.cinemenu.cinemenuapi.rest.repository.PreviewMediaRepository;
 import lombok.AllArgsConstructor;
 import lombok.val;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -79,5 +77,9 @@ public class PreviewMediaService {
         }
 
         throw new InvalidSearchException(INVALID_SEARCH_MEDIA.formatted(media));
+    }
+
+    public ResponseEntity<MediaDetailResultResponseDto> getMediaDetail(MediaType media, Long id) {
+        return null;
     }
 }

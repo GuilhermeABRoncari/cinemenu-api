@@ -1,5 +1,6 @@
 package br.com.cinemenu.cinemenuapi.rest.controller;
 
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.MediaDetailResultResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResponsePage;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import br.com.cinemenu.cinemenuapi.rest.service.PreviewMediaService;
@@ -48,5 +49,10 @@ public class PreviewMediaController {
     public ResponseEntity<PreviewMediaResponsePage> similarByIdAndMedia(
             @RequestParam("id") Long id, @RequestParam("media") MediaType media, @RequestParam("page") Integer page) {
         return ResponseEntity.ok(service.getSimilarByIdAndMedia(id, media, page));
+    }
+
+    @GetMapping("/media_detail")
+    public ResponseEntity<MediaDetailResultResponseDto> mediaDetail(@RequestParam("media") MediaType media, @RequestParam("id") Long id) {
+        return service.getMediaDetail(media, id);
     }
 }
