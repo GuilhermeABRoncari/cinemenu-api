@@ -21,7 +21,7 @@ public class TMDBInternalGenreMapperTest {
         );
 
         // When
-        List<Integer> result = TMDBInternalGenreMapper.mapToMovieIds(genres);
+        List<Integer> result = TMDBInternalGenreMapper.mapToTMDBMovieIds(genres);
 
         // Then
         Assertions.assertNotNull(result);
@@ -39,7 +39,7 @@ public class TMDBInternalGenreMapperTest {
         );
 
         // When
-        List<Integer> result = TMDBInternalGenreMapper.mapToTvShowIds(genres);
+        List<Integer> result = TMDBInternalGenreMapper.mapToTMDBTvShowIds(genres);
 
         // Then
         Assertions.assertNotNull(result);

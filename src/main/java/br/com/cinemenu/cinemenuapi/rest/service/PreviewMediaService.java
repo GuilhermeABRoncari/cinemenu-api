@@ -7,7 +7,6 @@ import br.com.cinemenu.cinemenuapi.rest.mapper.PreviewMediaMapper;
 import br.com.cinemenu.cinemenuapi.rest.repository.PreviewMediaRepository;
 import lombok.AllArgsConstructor;
 import lombok.val;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -79,7 +78,25 @@ public class PreviewMediaService {
         throw new InvalidSearchException(INVALID_SEARCH_MEDIA.formatted(media));
     }
 
-    public ResponseEntity<MediaDetailResultResponseDto> getMediaDetail(MediaType media, Long id) {
-        return null;
+    public MediaDetailsResultResponseDto getMediaDetail(MediaType media, Long id) {
+        if (media.equals(MediaType.TV)) {
+            PreviewTvShowDetailsResultDto tvShowDetails = previewMediaRepository.getTvShowDetailsById(id);
+            PreviewTvShowCreditsResultDto tvShowCredits = previewMediaRepository.getTvShowCreditsById(id);
+            PreviewTvShowWatchProvidersResultDto tvShowWatchProviders = previewMediaRepository.getTvShowWatchProvidersById(id);
+            PreviewTvShowVideoResultDto tvShowVideos = previewMediaRepository.getTvShowVideosById(id);
+
+            return PreviewMediaMapper.mediaDetails(tvShowDetails, tvShowCredits, tvShowWatchProviders, tvShowVideos);
+        }
+
+        if (media.equals(MediaType.MOVIE)) {
+            PreviewMovieDetailsResultDto movieDetails = previewMediaRepository.getMovieDetailsById(id);
+            PreviewMovieCreditsResultDto movieCredits = previewMediaRepository.getMovieCreditsById(id);
+            PreviewMovieWatchProvidersResultDto movieWatchProviders = previewMediaRepository.getMovieWatchProvidersById(id);
+            PreviewMovieVideoResultDto movieVideos = previewMediaRepository.getMovieVideosById(id);
+
+            return PreviewMediaMapper.mediaDetails(movieDetails, movieCredits, movieWatchProviders, movieVideos);
+        }
+
+        throw new InvalidSearchException(INVALID_SEARCH_MEDIA.formatted(media));
     }
 }

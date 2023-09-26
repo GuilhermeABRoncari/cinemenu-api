@@ -1,5 +1,8 @@
 package br.com.cinemenu.cinemenuapi.rest.mapper;
 
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.MediaDetailsResultResponseDto.Genres;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMovieDetailsResultDto;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewTvShowDetailsResultDto;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.CineMenuGenres;
 
 import java.util.*;
@@ -10,7 +13,7 @@ public class TMDBInternalGenreMapper {
         throw new IllegalStateException("Utility class");
     }
 
-    private static Map<CineMenuGenres, Integer> movieGenreIdMap() {
+    private static Map<CineMenuGenres, Integer> movieGenreTMDBIdMap() {
         EnumMap<CineMenuGenres, Integer> map = new EnumMap<>(CineMenuGenres.class);
         map.put(CineMenuGenres.ACTION, 28);
         map.put(CineMenuGenres.ADVENTURE, 12);
@@ -31,7 +34,7 @@ public class TMDBInternalGenreMapper {
         return map;
     }
 
-    private static Map<CineMenuGenres, Integer> tvShowGenreIdMap() {
+    private static Map<CineMenuGenres, Integer> tvShowGenreTMDBIdMap() {
         EnumMap<CineMenuGenres, Integer> map = new EnumMap<>(CineMenuGenres.class);
         map.put(CineMenuGenres.ACTION, 10759);
         map.put(CineMenuGenres.ADVENTURE, 10759);
@@ -48,12 +51,12 @@ public class TMDBInternalGenreMapper {
         return map;
     }
 
-    public static List<Integer> mapToMovieIds(List<CineMenuGenres> genre) {
-        return mapForIds(genre, movieGenreIdMap());
+    public static List<Integer> mapToTMDBMovieIds(List<CineMenuGenres> genre) {
+        return mapForIds(genre, movieGenreTMDBIdMap());
     }
 
-    public static List<Integer> mapToTvShowIds(List<CineMenuGenres> genre) {
-        return mapForIds(genre, tvShowGenreIdMap());
+    public static List<Integer> mapToTMDBTvShowIds(List<CineMenuGenres> genre) {
+        return mapForIds(genre, tvShowGenreTMDBIdMap());
     }
 
     private static List<Integer> mapForIds(List<CineMenuGenres> genres, Map<CineMenuGenres, Integer> cineMenuGenresIntegerMap) {
@@ -69,5 +72,15 @@ public class TMDBInternalGenreMapper {
         }
 
         return genreIds;
+    }
+
+    public static List<Genres> tvTMDBIdsMapToCineMenuGenres(List<PreviewTvShowDetailsResultDto.Genre> genres) {
+        List<CineMenuGenres> list = genres.stream().map(genre -> CineMenuGenres.fromString(genre.name())).toList();
+        return list.stream().map(Genres::new).toList();
+    }
+
+    public static List<Genres> movieTMDBIdsMapToCineMenuGenres(List<PreviewMovieDetailsResultDto.Genre> genres) {
+        List<CineMenuGenres> list = genres.stream().map(genre -> CineMenuGenres.fromString(genre.name())).toList();
+        return list.stream().map(Genres::new).toList();
     }
 }
