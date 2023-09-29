@@ -2,43 +2,58 @@ package br.com.cinemenu.cinemenuapi.domain.dto.responsedto;
 
 import br.com.cinemenu.cinemenuapi.domain.enumeration.CineMenuGenres;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
-import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public record MediaDetailsResultResponseDto(
+
+        @JsonProperty(index = 0)
         Long id,
-        @JsonAlias("poster_path")
+        @JsonProperty(value = "poster_path", index = 1)
         String posterPath,
-        @JsonAlias("backdrop_path")
+        @JsonProperty(value = "backdrop_path", index = 2)
         String backdropPath,
+        @JsonProperty(index = 3)
         String title,
-        @JsonAlias("original_title")
+        @JsonProperty(value = "original_title", index = 4)
         String originalTitle,
+        @JsonProperty(index = 5)
         String description,
-        @JsonAlias("release_date")
+        @JsonProperty(value = "release_date", index = 6)
         String releaseDate,
-        @JsonAlias("media_type")
+        @JsonProperty(value = "media_type", index = 7)
         MediaType mediaType,
-        @JsonAlias("vote_average_tmdb")
+        @JsonProperty(value = "vote_average_tmdb", index = 8)
         Double voteAverageTMDB,
+        @JsonProperty(index = 9)
         BigDecimal budget,
+        @JsonProperty(index = 10)
         BigDecimal revenue,
-        @JsonAlias("production_companies")
+        @JsonProperty(value = "production_companies", index = 11)
         List<ProductionCompanyPreview> productionCompanies,
+        @JsonProperty(index = 12)
         List<Genres> genres,
+        @JsonProperty(index = 13)
         List<CastPreview> cast,
+        @JsonProperty(index = 14)
         List<DirectorPreview> directors,
-        @JsonAlias("stream_providers")
+        @JsonProperty(value = "stream_providers", index = 15)
         List<StreamProviderPreview> streamProviders,
+        @JsonProperty(index = 16)
         List<VideoPreview> videos
 ) {
 
     public record ProductionCompanyPreview(
+
+            @JsonProperty(index = 0)
             Long id,
+            @JsonProperty(value = "logo_path", index = 1)
             String logoPath,
+            @JsonProperty(index = 2)
             String name,
+            @JsonProperty(value = "original_country", index = 3)
             String originalCountry
     ) {
         public ProductionCompanyPreview(PreviewTvShowDetailsResultDto.ProductionCompany productionCompany) {
@@ -51,17 +66,21 @@ public record MediaDetailsResultResponseDto(
     }
 
     public record Genres(
+
             Long id,
             String name
-    ){
+    ) {
         public Genres(CineMenuGenres genre) {
             this(Long.valueOf(genre.cineMenuGenreId()), genre.name());
         }
     }
 
     public record CastPreview(
+            @JsonProperty(index = 0)
             Long id,
+            @JsonProperty(index = 1)
             String title,
+            @JsonProperty(value = "poster_path", index = 2)
             String posterPath
     ) {
         public CastPreview(PreviewTvShowCreditsResultDto.CastMember castMember) {
@@ -74,8 +93,12 @@ public record MediaDetailsResultResponseDto(
     }
 
     public record DirectorPreview(
+
+            @JsonProperty(index = 0)
             Long id,
+            @JsonProperty(index = 1)
             String title,
+            @JsonProperty(value = "poster_path", index = 2)
             String posterPath
     ) {
         public DirectorPreview(PreviewTvShowCreditsResultDto.CrewMember crewMember) {
@@ -88,8 +111,12 @@ public record MediaDetailsResultResponseDto(
     }
 
     public record StreamProviderPreview(
+
+            @JsonProperty(index = 0)
             Long id,
+            @JsonProperty(index = 1)
             String name,
+            @JsonProperty(value = "logo_path", index = 2)
             String logoPath
     ) {
         public StreamProviderPreview(PreviewTvShowWatchProvidersResultDto.Flatrate provider) {
@@ -100,13 +127,14 @@ public record MediaDetailsResultResponseDto(
             this((long) provider.providerId(), provider.providerName(), provider.logoPath());
         }
     }
+
     public record VideoPreview(
             String key,
             String name,
             String site,
             Integer size,
             String type
-    ){
+    ) {
         public VideoPreview(PreviewTvShowVideoResultDto.VideoResult videoResult) {
             this(videoResult.key(), videoResult.name(), videoResult.site(), videoResult.size(), videoResult.type());
         }

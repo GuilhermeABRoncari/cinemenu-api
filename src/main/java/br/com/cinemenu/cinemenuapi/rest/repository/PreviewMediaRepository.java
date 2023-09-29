@@ -26,14 +26,14 @@ public class PreviewMediaRepository {
     @Value("${api.key.from.tmdb}")
     private String apiKey;
     private static final String TMDB_BASE_URL = "https://api.themoviedb.org/3/";
-    private static final String TMDB_MOVIE_DETAIL = "/movie/%d";
-    private static final String TMDB_MOVIE_CREDITS = "/movie/%d/credits?";
-    private static final String TMDB_MOVIE_WATCH_PROVIDERS = "/movie/%d/watch/providers";
-    private static final String TMDB_MOVIE_VIDEO = "/movie/%d/videos?";
+    private static final String TMDB_MOVIE_DETAIL = "/movie/%d?api_key=";
+    private static final String TMDB_MOVIE_CREDITS = "/movie/%d/credits?api_key=";
+    private static final String TMDB_MOVIE_WATCH_PROVIDERS = "/movie/%d/watch/providers?api_key=";
+    private static final String TMDB_MOVIE_VIDEO = "/movie/%d/videos?api_key=";
     private static final String TMDB_TV_DETAIL = "/tv/%d?api_key=";
     private static final String TMDB_TV_CREDITS = "/tv/%d/credits?api_key=";
-    private static final String TMDB_TV_WATCH_PROVIDERS = "/tv/%d/watch/providers";
-    private static final String TMDB_TV_VIDEO = "/tv/%d/videos?";
+    private static final String TMDB_TV_WATCH_PROVIDERS = "/tv/%d/watch/providers?api_key=";
+    private static final String TMDB_TV_VIDEO = "/tv/%d/videos?api_key=";
     private static final String TMBD_MULTI_SEARCH_BASE_URL = "/search/multi?api_key=";
     private static final String TMBD_POPULAR_PERSON = "/person/popular?api_key=";
     private static final String TMDB_DISCOVERY_MOVIE_BASE_URL = "/discover/movie?api_key=";
@@ -220,8 +220,9 @@ public class PreviewMediaRepository {
     public PreviewMovieDetailsResultDto getMovieDetailsById(Long id) {
         URI uri = URI.create(
                 TMDB_BASE_URL
-                        + TMDB_MOVIE_DETAIL.formatted(id)
-                        + TMDB_LANGUAGE_PT_BR.replace("&", "?")
+                        + TMDB_MOVIE_DETAIL.formatted(id) + apiKey
+                        + TMDB_LANGUAGE_PT_BR
+                        + TMDB_ADULT_FALSE
         );
 
         try {
@@ -264,7 +265,7 @@ public class PreviewMediaRepository {
     public PreviewTvShowWatchProvidersResultDto getTvShowWatchProvidersById(Long id) {
         URI uri = URI.create(
                 TMDB_BASE_URL
-                        + TMDB_TV_WATCH_PROVIDERS.formatted(id)
+                        + TMDB_TV_WATCH_PROVIDERS.formatted(id) + apiKey
                         + TMDB_ADULT_FALSE
         );
 
@@ -278,7 +279,7 @@ public class PreviewMediaRepository {
     public PreviewMovieWatchProvidersResultDto getMovieWatchProvidersById(Long id) {
         URI uri = URI.create(
                 TMDB_BASE_URL
-                        + TMDB_MOVIE_WATCH_PROVIDERS.formatted(id)
+                        + TMDB_MOVIE_WATCH_PROVIDERS.formatted(id) + apiKey
                         + TMDB_ADULT_FALSE
         );
 
@@ -292,7 +293,7 @@ public class PreviewMediaRepository {
     public PreviewTvShowVideoResultDto getTvShowVideosById(Long id) {
         URI uri = URI.create(
                 TMDB_BASE_URL
-                        + TMDB_TV_VIDEO.formatted(id)
+                        + TMDB_TV_VIDEO.formatted(id) + apiKey
                         + TMDB_LANGUAGE_PT_BR
                         + TMDB_ADULT_FALSE
         );
@@ -307,7 +308,7 @@ public class PreviewMediaRepository {
     public PreviewMovieVideoResultDto getMovieVideosById(Long id) {
         URI uri = URI.create(
                 TMDB_BASE_URL
-                        + TMDB_MOVIE_VIDEO.formatted(id)
+                        + TMDB_MOVIE_VIDEO.formatted(id) + apiKey
                         + TMDB_LANGUAGE_PT_BR
                         + TMDB_ADULT_FALSE
         );

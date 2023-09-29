@@ -32,16 +32,4 @@ public enum CineMenuGenres {
         throw new IllegalArgumentException("Invalid genre id: " + cineMenuGenreId);
     }
 
-    public static CineMenuGenres fromString(String genreName) {
-        for (CineMenuGenres genre : CineMenuGenres.values()) {
-            if (genre.toString().equals(genreName.toUpperCase())) {
-                return genre;
-            }
-        }
-        throw new IllegalArgumentException("Invalid genre: " + genreName);
-    }
-
-    public Integer cineMenuGenreId() {
-        return this.cineMenuGenreId;
-    }
 }

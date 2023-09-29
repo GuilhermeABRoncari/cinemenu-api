@@ -6,6 +6,7 @@ import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -103,15 +104,15 @@ public class PreviewMediaMapper {
                 getListOfTvDirectors(tvShowCredits.crew()),
                 getListOfTvWatchProviders(tvShowWatchProviders),
                 getListOfTvVideos(previewTvShowVideoResultDto)
-                );
+        );
     }
 
     public static MediaDetailsResultResponseDto mediaDetails(
-            PreviewMovieDetailsResultDto movieDetails, 
-            PreviewMovieCreditsResultDto movieCredits, 
-            PreviewMovieWatchProvidersResultDto movieWatchProviders, 
+            PreviewMovieDetailsResultDto movieDetails,
+            PreviewMovieCreditsResultDto movieCredits,
+            PreviewMovieWatchProvidersResultDto movieWatchProviders,
             PreviewMovieVideoResultDto movieVideos) {
-        return  new MediaDetailsResultResponseDto(
+        return new MediaDetailsResultResponseDto(
                 movieDetails.id(),
                 movieDetails.posterPath(),
                 movieDetails.backdropPath(),
@@ -137,6 +138,9 @@ public class PreviewMediaMapper {
     }
 
     private static List<MediaDetailsResultResponseDto.StreamProviderPreview> getListOfMovieWatchProviders(PreviewMovieWatchProvidersResultDto movieWatchProviders) {
+
+
+
         return movieWatchProviders.results().get("BR").flatrate().stream().map(MediaDetailsResultResponseDto.StreamProviderPreview::new).toList();
     }
 
@@ -157,10 +161,12 @@ public class PreviewMediaMapper {
     }
 
     private static List<MediaDetailsResultResponseDto.ProductionCompanyPreview> getListOfMovieProductionCompanies(List<PreviewMovieDetailsResultDto.ProductionCompany> movieProductionCompanies) {
+        if (movieProductionCompanies == null) return Collections.emptyList();
         return movieProductionCompanies.stream().map(MediaDetailsResultResponseDto.ProductionCompanyPreview::new).toList();
     }
 
     private static List<MediaDetailsResultResponseDto.ProductionCompanyPreview> getListOfTvProductionCompanies(List<PreviewTvShowDetailsResultDto.ProductionCompany> productionCompanies) {
+        if (productionCompanies == null) return Collections.emptyList();
         return productionCompanies.stream().map(MediaDetailsResultResponseDto.ProductionCompanyPreview::new).toList();
     }
 
@@ -174,7 +180,7 @@ public class PreviewMediaMapper {
 
 
     private static List<MediaDetailsResultResponseDto.StreamProviderPreview> getListOfTvWatchProviders(PreviewTvShowWatchProvidersResultDto tvShowWatchProviders) {
-        return tvShowWatchProviders.results().get("BR").flatrate().stream().map(MediaDetailsResultResponseDto.StreamProviderPreview::new).toList();
+        return tvShowWatchProviders.results().get("TW").flatrate().stream().map(MediaDetailsResultResponseDto.StreamProviderPreview::new).toList();
     }
 
     private static List<DirectorPreview> getListOfTvDirectors(List<PreviewTvShowCreditsResultDto.CrewMember> crew) {

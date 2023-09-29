@@ -3,9 +3,9 @@ package br.com.cinemenu.cinemenuapi.domain.dto.responsedto;
 import java.util.List;
 
 public record PreviewMovieCreditsResultDto(
+        int id,
         List<CastMember> cast,
-        List<CrewMember> crew,
-        int id
+        List<CrewMember> crew
 ) {
     public record CastMember(
             boolean adult,
