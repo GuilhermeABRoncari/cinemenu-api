@@ -93,8 +93,8 @@ class CineMenuUserTest {
     }
 
     @Test
-    @DisplayName("")
-    void testUpdate() {
+    @DisplayName("Test CineMenuUser internal update methods")
+    void testUpdate01() {
         // Given
         String id = "1L";
         String name = "John Doe";
@@ -113,5 +113,28 @@ class CineMenuUserTest {
         assertEquals("new name", cineMenuUser.getName());
         assertEquals("new username", cineMenuUser.getUsername());
         assertEquals("new bio", cineMenuUser.getProfile().getBiography());
+    }
+
+    @Test
+    @DisplayName("Test CineMenuUser internal update methods")
+    void testUpdateScene02() {
+        // Given
+        String id = "1L";
+        String name = "John Doe";
+        String username = "johndoe";
+        String email = "johndoe@example.com";
+        String password = "password";
+        OffsetDateTime registrationDate = OffsetDateTime.now();
+
+        var userProfileRequest = new UserProfileRequestDto(null, null, null);
+        CineMenuUser cineMenuUser = new CineMenuUser(id, new UserProfile("bio"),name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+
+        // When
+        cineMenuUser.updateProfile(userProfileRequest);
+
+        // Then
+        assertEquals("John Doe", cineMenuUser.getName());
+        assertEquals("johndoe", cineMenuUser.getUsername());
+        assertEquals("bio", cineMenuUser.getProfile().getBiography());
     }
 }
