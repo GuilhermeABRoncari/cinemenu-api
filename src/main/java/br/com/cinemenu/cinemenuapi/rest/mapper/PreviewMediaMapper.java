@@ -1,7 +1,6 @@
 package br.com.cinemenu.cinemenuapi.rest.mapper;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.*;
-import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.MediaDetailsResultResponseDto.DirectorPreview;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 
 import java.math.BigDecimal;
@@ -10,7 +9,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import static br.com.cinemenu.cinemenuapi.domain.dto.responsedto.MediaDetailsResultResponseDto.*;
+
 public class PreviewMediaMapper {
+
+    private static final String DIRECTOR = "Director";
 
     private PreviewMediaMapper() {
     }
@@ -133,21 +136,32 @@ public class PreviewMediaMapper {
         );
     }
 
-    private static List<MediaDetailsResultResponseDto.VideoPreview> getListOfMovieVideos(PreviewMovieVideoResultDto movieVideos) {
-        return movieVideos.results().stream().map(MediaDetailsResultResponseDto.VideoPreview::new).toList();
+    private static List<VideoPreview> getListOfMovieVideos(PreviewMovieVideoResultDto movieVideos) {
+        return movieVideos.results().stream().map(VideoPreview::new).toList();
     }
 
-    private static List<MediaDetailsResultResponseDto.StreamProviderPreview> getListOfMovieWatchProviders(PreviewMovieWatchProvidersResultDto movieWatchProviders) {
+    private static List<StreamProviderPreview> getListOfMovieWatchProviders(PreviewMovieWatchProvidersResultDto movieWatchProviders) {
+        List<StreamProviderPreview> providersList = new ArrayList<>();
+        List<StreamProviderPreview> countryProvidersList = new ArrayList<>();
 
+        for (String country : movieWatchProviders.results().keySet()) {
+            if (movieWatchProviders.results().get(country) != null && movieWatchProviders.results().get(country).flatrate() != null) {
+                countryProvidersList = movieWatchProviders.results().get(country).flatrate().stream().map(StreamProviderPreview::new).toList();
+            }
+            for (StreamProviderPreview provider : countryProvidersList) {
+                if (!providersList.contains(provider)) {
+                    providersList.add(provider);
+                }
+            }
+        }
 
-
-        return movieWatchProviders.results().get("BR").flatrate().stream().map(MediaDetailsResultResponseDto.StreamProviderPreview::new).toList();
+        return providersList;
     }
 
     private static List<DirectorPreview> getListOfMovieDirectors(List<PreviewMovieCreditsResultDto.CrewMember> crew) {
         List<DirectorPreview> directorsList = new ArrayList<>();
         crew.stream().map(crewMember -> {
-            if (crewMember.job().equals("Director")) {
+            if (crewMember.job().equals(DIRECTOR)) {
                 directorsList.add(new DirectorPreview(crewMember));
             }
             return null;
@@ -156,37 +170,51 @@ public class PreviewMediaMapper {
         return directorsList;
     }
 
-    private static List<MediaDetailsResultResponseDto.CastPreview> getListOfMovieCast(List<PreviewMovieCreditsResultDto.CastMember> cast) {
-        return cast.stream().map(MediaDetailsResultResponseDto.CastPreview::new).toList();
+    private static List<CastPreview> getListOfMovieCast(List<PreviewMovieCreditsResultDto.CastMember> cast) {
+        return cast.stream().map(CastPreview::new).toList();
     }
 
-    private static List<MediaDetailsResultResponseDto.ProductionCompanyPreview> getListOfMovieProductionCompanies(List<PreviewMovieDetailsResultDto.ProductionCompany> movieProductionCompanies) {
+    private static List<ProductionCompanyPreview> getListOfMovieProductionCompanies(List<PreviewMovieDetailsResultDto.ProductionCompany> movieProductionCompanies) {
         if (movieProductionCompanies == null) return Collections.emptyList();
-        return movieProductionCompanies.stream().map(MediaDetailsResultResponseDto.ProductionCompanyPreview::new).toList();
+        return movieProductionCompanies.stream().map(ProductionCompanyPreview::new).toList();
     }
 
-    private static List<MediaDetailsResultResponseDto.ProductionCompanyPreview> getListOfTvProductionCompanies(List<PreviewTvShowDetailsResultDto.ProductionCompany> productionCompanies) {
+    private static List<ProductionCompanyPreview> getListOfTvProductionCompanies(List<PreviewTvShowDetailsResultDto.ProductionCompany> productionCompanies) {
         if (productionCompanies == null) return Collections.emptyList();
-        return productionCompanies.stream().map(MediaDetailsResultResponseDto.ProductionCompanyPreview::new).toList();
+        return productionCompanies.stream().map(ProductionCompanyPreview::new).toList();
     }
 
-    private static List<MediaDetailsResultResponseDto.CastPreview> getListOfTvCast(List<PreviewTvShowCreditsResultDto.CastMember> cast) {
-        return cast.stream().map(MediaDetailsResultResponseDto.CastPreview::new).toList();
+    private static List<CastPreview> getListOfTvCast(List<PreviewTvShowCreditsResultDto.CastMember> cast) {
+        return cast.stream().map(CastPreview::new).toList();
     }
 
-    private static List<MediaDetailsResultResponseDto.VideoPreview> getListOfTvVideos(PreviewTvShowVideoResultDto previewTvShowVideoResultDto) {
-        return previewTvShowVideoResultDto.results().stream().map(MediaDetailsResultResponseDto.VideoPreview::new).toList();
+    private static List<VideoPreview> getListOfTvVideos(PreviewTvShowVideoResultDto previewTvShowVideoResultDto) {
+        return previewTvShowVideoResultDto.results().stream().map(VideoPreview::new).toList();
     }
 
 
-    private static List<MediaDetailsResultResponseDto.StreamProviderPreview> getListOfTvWatchProviders(PreviewTvShowWatchProvidersResultDto tvShowWatchProviders) {
-        return tvShowWatchProviders.results().get("TW").flatrate().stream().map(MediaDetailsResultResponseDto.StreamProviderPreview::new).toList();
+    private static List<StreamProviderPreview> getListOfTvWatchProviders(PreviewTvShowWatchProvidersResultDto tvShowWatchProviders) {
+        List<StreamProviderPreview> providersList = new ArrayList<>();
+        List<StreamProviderPreview> countryProvidersList = new ArrayList<>();
+
+        for (String country : tvShowWatchProviders.results().keySet()) {
+            if (tvShowWatchProviders.results().get(country) != null && tvShowWatchProviders.results().get(country).flatrate() != null) {
+                countryProvidersList = tvShowWatchProviders.results().get(country).flatrate().stream().map(StreamProviderPreview::new).toList();
+            }
+            for (StreamProviderPreview provider : countryProvidersList) {
+                if (!providersList.contains(provider)) {
+                    providersList.add(provider);
+                }
+            }
+        }
+
+        return providersList;
     }
 
     private static List<DirectorPreview> getListOfTvDirectors(List<PreviewTvShowCreditsResultDto.CrewMember> crew) {
         List<DirectorPreview> directorsList = new ArrayList<>();
         crew.stream().map(crewMember -> {
-            if (crewMember.job().equals("Director")) {
+            if (crewMember.job().equals(DIRECTOR)) {
                 directorsList.add(new DirectorPreview(crewMember));
             }
             return null;

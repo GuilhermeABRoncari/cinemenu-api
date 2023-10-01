@@ -2,6 +2,7 @@ package br.com.cinemenu.cinemenuapi.domain.dto.responsedto;
 
 import br.com.cinemenu.cinemenuapi.domain.enumeration.CineMenuGenres;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
@@ -38,6 +39,7 @@ public record MediaDetailsResultResponseDto(
         @JsonProperty(index = 13)
         List<CastPreview> cast,
         @JsonProperty(index = 14)
+        @JsonInclude(JsonInclude.Include.NON_EMPTY)
         List<DirectorPreview> directors,
         @JsonProperty(value = "stream_providers", index = 15)
         List<StreamProviderPreview> streamProviders,
@@ -71,7 +73,7 @@ public record MediaDetailsResultResponseDto(
             String name
     ) {
         public Genres(CineMenuGenres genre) {
-            this(Long.valueOf(genre.cineMenuGenreId()), genre.name());
+            this((long) genre.getId(), genre.name());
         }
     }
 

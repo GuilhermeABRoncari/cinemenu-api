@@ -37,6 +37,7 @@ public class TMDBInternalGenreMapper {
     private static Map<Integer, CineMenuGenres> movieCineMenuGenreMap() {
         Map<Integer, CineMenuGenres> map = new HashMap<>();
         map.put(28, CineMenuGenres.ACTION);
+        map.put(53, CineMenuGenres.THRILLER);
         map.put(12, CineMenuGenres.ADVENTURE);
         map.put(16, CineMenuGenres.ANIMATION);
         map.put(35, CineMenuGenres.COMEDY);
@@ -127,6 +128,7 @@ public class TMDBInternalGenreMapper {
     public static List<Genres> tvTMDBIdsMapToCineMenuGenres(List<PreviewTvShowDetailsResultDto.Genre> genres) {
         List<Integer> tmdbTvShowGenreIdList = genres.stream().map(PreviewTvShowDetailsResultDto.Genre::id).toList();
         List<CineMenuGenres> cineMenuGenres = mapTMDBTvShowIdsToCineMenuGenres(tmdbTvShowGenreIdList);
+        cineMenuGenres.remove(null);
 
         return cineMenuGenres.stream().map(Genres::new).toList();
     }
@@ -134,6 +136,7 @@ public class TMDBInternalGenreMapper {
     public static List<Genres> movieTMDBIdsMapToCineMenuGenres(List<PreviewMovieDetailsResultDto.Genre> genres) {
         List<Integer> tmdbMovieIdList = genres.stream().map(PreviewMovieDetailsResultDto.Genre::id).toList();
         List<CineMenuGenres> cineMenuGenres = mapTMDBMovieIdsToCineMenuGenres(tmdbMovieIdList);
+        cineMenuGenres.remove(null);
 
         return cineMenuGenres.stream().map(Genres::new).toList();
     }
