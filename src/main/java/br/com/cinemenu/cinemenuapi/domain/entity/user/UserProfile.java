@@ -17,6 +17,6 @@ public class UserProfile {
     private String biography;
 
     public void update(UserProfileRequestDto dto) {
-        this.biography = dto.biography();
+        if (dto.biography() != null) this.biography = dto.biography();
     }
 }

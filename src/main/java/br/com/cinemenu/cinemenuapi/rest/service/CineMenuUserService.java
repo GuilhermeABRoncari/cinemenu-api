@@ -80,6 +80,7 @@ public class CineMenuUserService {
         );
     }
 
+    @Transactional
     public UserProfileResponseDto updateUserProfile(CineMenuUser user, UserProfileRequestDto dto) {
         if (repository.existsByUsername(dto.username())) throw new IllegalArgumentException(USERNAME_IN_USE);
         user.updateProfile(dto);

@@ -99,8 +99,8 @@ public class CineMenuUser implements UserDetails {
     }
 
     public void updateProfile(UserProfileRequestDto dto) {
-        this.name = dto.name();
-        this.username = dto.username();
+        if(dto.name() != null) this.name = dto.name();
+        if(dto.username() != null) this.username = dto.username();
         this.profile.update(dto);
     }
 }
