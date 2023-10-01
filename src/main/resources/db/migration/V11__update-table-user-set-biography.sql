@@ -1,0 +1,1 @@
+UPDATE cine_menu_user SET biography = '' WHERE biography IS NULL;

@@ -51,7 +51,7 @@ public class CineMenuUser implements UserDetails {
     public CineMenuUser(CineMenuUserRequestDto userDto, String encodedPassword) {
         this.name = userDto.name();
         this.username = userDto.username();
-        this.profile = new UserProfile();
+        this.profile = new UserProfile("");
         this.email = userDto.email();
         this.password = encodedPassword;
         this.registrationDate = OffsetDateTime.now();
