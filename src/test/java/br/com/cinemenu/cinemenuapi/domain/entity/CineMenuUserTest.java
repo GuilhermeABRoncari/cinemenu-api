@@ -1,11 +1,16 @@
 package br.com.cinemenu.cinemenuapi.domain.entity;
 
+import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserProfileRequestDto;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.UserProfile;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CineMenuUserTest {
 
@@ -19,17 +24,19 @@ class CineMenuUserTest {
         String email = "johndoe@example.com";
         String password = "password";
         OffsetDateTime registrationDate = OffsetDateTime.now();
+        UserProfile userProfile = new UserProfile("bio");
 
         // When
-        CineMenuUser cineMenuUser = new CineMenuUser(id, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+        CineMenuUser cineMenuUser = new CineMenuUser(id, userProfile,name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
 
         // Then
-        Assertions.assertEquals(id, cineMenuUser.getId());
-        Assertions.assertEquals(name, cineMenuUser.getName());
-        Assertions.assertEquals(username, cineMenuUser.getUsername());
-        Assertions.assertEquals(email, cineMenuUser.getEmail());
-        Assertions.assertEquals(password, cineMenuUser.getPassword());
-        Assertions.assertEquals(registrationDate, cineMenuUser.getRegistrationDate());
+        assertEquals(id, cineMenuUser.getId());
+        assertEquals(userProfile, cineMenuUser.getProfile());
+        assertEquals(name, cineMenuUser.getName());
+        assertEquals(username, cineMenuUser.getUsername());
+        assertEquals(email, cineMenuUser.getEmail());
+        assertEquals(password, cineMenuUser.getPassword());
+        assertEquals(registrationDate, cineMenuUser.getRegistrationDate());
         Assertions.assertTrue(cineMenuUser.getAuthorities().stream()
                 .anyMatch(authority -> authority.getAuthority().equals("ROLE_USER")));
         Assertions.assertTrue(cineMenuUser.isAccountNonExpired());
@@ -48,16 +55,17 @@ class CineMenuUserTest {
         String email = "johndoe@example.com";
         String password = "password";
         OffsetDateTime registrationDate = OffsetDateTime.now();
+        UserProfile userProfile = new UserProfile("bio");
 
         // When
-        CineMenuUser cineMenuUser01 = new CineMenuUser(id, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
-        CineMenuUser cineMenuUser02 = new CineMenuUser(id, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+        CineMenuUser cineMenuUser01 = new CineMenuUser(id, userProfile, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+        CineMenuUser cineMenuUser02 = new CineMenuUser(id, userProfile, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
 
         int hashCode = cineMenuUser02.hashCode();
         boolean equals = cineMenuUser01.equals(cineMenuUser02);
 
         // Then
-        Assertions.assertEquals(hashCode, cineMenuUser02.hashCode());
+        assertEquals(hashCode, cineMenuUser02.hashCode());
         Assertions.assertTrue(equals);
     }
 
@@ -72,14 +80,61 @@ class CineMenuUserTest {
         String email = "johndoe@example.com";
         String password = "password";
         OffsetDateTime registrationDate = OffsetDateTime.now();
+        UserProfile userProfile = new UserProfile("bio");
 
         // When
-        CineMenuUser cineMenuUser01 = new CineMenuUser(firstId, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
-        CineMenuUser cineMenuUser02 = new CineMenuUser(secondId, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+        CineMenuUser cineMenuUser01 = new CineMenuUser(firstId, userProfile, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+        CineMenuUser cineMenuUser02 = new CineMenuUser(secondId, userProfile, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
 
         boolean equals = cineMenuUser01.equals(cineMenuUser02);
 
         // Then
         Assertions.assertFalse(equals);
+    }
+
+    @Test
+    @DisplayName("Test CineMenuUser internal update methods")
+    void testUpdate01() {
+        // Given
+        String id = "1L";
+        String name = "John Doe";
+        String username = "johndoe";
+        String email = "johndoe@example.com";
+        String password = "password";
+        OffsetDateTime registrationDate = OffsetDateTime.now();
+
+        var userProfileRequest = new UserProfileRequestDto("new name", "new username", "new bio");
+        CineMenuUser cineMenuUser = new CineMenuUser(id, new UserProfile("bio"),name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+
+        // When
+        cineMenuUser.updateProfile(userProfileRequest);
+
+        // Then
+        assertEquals("new name", cineMenuUser.getName());
+        assertEquals("new username", cineMenuUser.getUsername());
+        assertEquals("new bio", cineMenuUser.getProfile().getBiography());
+    }
+
+    @Test
+    @DisplayName("Test CineMenuUser internal update methods")
+    void testUpdateScene02() {
+        // Given
+        String id = "1L";
+        String name = "John Doe";
+        String username = "johndoe";
+        String email = "johndoe@example.com";
+        String password = "password";
+        OffsetDateTime registrationDate = OffsetDateTime.now();
+
+        var userProfileRequest = new UserProfileRequestDto(null, null, null);
+        CineMenuUser cineMenuUser = new CineMenuUser(id, new UserProfile("bio"),name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+
+        // When
+        cineMenuUser.updateProfile(userProfileRequest);
+
+        // Then
+        assertEquals("John Doe", cineMenuUser.getName());
+        assertEquals("johndoe", cineMenuUser.getUsername());
+        assertEquals("bio", cineMenuUser.getProfile().getBiography());
     }
 }

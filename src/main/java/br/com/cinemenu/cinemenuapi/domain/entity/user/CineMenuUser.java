@@ -1,6 +1,8 @@
-package br.com.cinemenu.cinemenuapi.domain.entity;
+package br.com.cinemenu.cinemenuapi.domain.entity.user;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.CineMenuUserRequestDto;
+import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserProfileRequestDto;
+import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,6 +34,8 @@ public class CineMenuUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+    @Embedded
+    private UserProfile profile;
     private String name;
     private String username;
     private String email;
@@ -47,6 +51,7 @@ public class CineMenuUser implements UserDetails {
     public CineMenuUser(CineMenuUserRequestDto userDto, String encodedPassword) {
         this.name = userDto.name();
         this.username = userDto.username();
+        this.profile = new UserProfile("");
         this.email = userDto.email();
         this.password = encodedPassword;
         this.registrationDate = OffsetDateTime.now();
@@ -93,4 +98,9 @@ public class CineMenuUser implements UserDetails {
         return this.getMediaLists().stream().filter(mediaList -> mediaList.getId().equals(mediaListId)).findFirst().get();
     }
 
+    public void updateProfile(UserProfileRequestDto dto) {
+        if(dto.name() != null) this.name = dto.name();
+        if(dto.username() != null) this.username = dto.username();
+        this.profile.update(dto);
+    }
 }

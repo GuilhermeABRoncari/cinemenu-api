@@ -3,9 +3,10 @@ package br.com.cinemenu.cinemenuapi.rest.service;
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserMediaRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserMediaUpdateMethodRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserMediaResponseDto;
-import br.com.cinemenu.cinemenuapi.domain.entity.CineMenuUser;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
 import br.com.cinemenu.cinemenuapi.domain.entity.UserMedia;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.UserProfile;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.ListVisibility;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import br.com.cinemenu.cinemenuapi.domain.repository.MediaListRepository;
@@ -20,7 +21,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ class UserMediaServiceTest {
         userMedia = new UserMedia(elementsDto);
         anotherUserMedia = new UserMedia(elementsDto);
         mediaList = new MediaList("ID", "Title", "Gracefully description", userMediaList, ListVisibility.PUBLIC, 0, 0, OffsetDateTime.now(), null, user);
-        user = new CineMenuUser("ID", "name", "username", "email", "password", OffsetDateTime.now(), false, null, mediaListList);
+        user = new CineMenuUser("ID", new UserProfile("bio"),"name", "username", "email", "password", OffsetDateTime.now(), false, null, mediaListList);
 
         page = new Pageable() {
             @Override

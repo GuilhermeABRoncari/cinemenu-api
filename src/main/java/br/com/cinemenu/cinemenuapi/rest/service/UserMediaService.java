@@ -3,7 +3,7 @@ package br.com.cinemenu.cinemenuapi.rest.service;
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserMediaRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserMediaUpdateMethodRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserMediaResponseDto;
-import br.com.cinemenu.cinemenuapi.domain.entity.CineMenuUser;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
 import br.com.cinemenu.cinemenuapi.domain.entity.UserMedia;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.ListVisibility;
@@ -18,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 

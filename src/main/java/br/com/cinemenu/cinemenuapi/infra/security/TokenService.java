@@ -1,6 +1,6 @@
 package br.com.cinemenu.cinemenuapi.infra.security;
 
-import br.com.cinemenu.cinemenuapi.domain.entity.CineMenuUser;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.JWTCineMenuException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

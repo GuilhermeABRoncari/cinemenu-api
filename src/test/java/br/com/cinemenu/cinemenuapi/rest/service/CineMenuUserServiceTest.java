@@ -1,11 +1,15 @@
 package br.com.cinemenu.cinemenuapi.rest.service;
 
+import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.AccountDeleteRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.CineMenuUserRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.LoginRequestDto;
-import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.TokenResponseDto;
-import br.com.cinemenu.cinemenuapi.domain.entity.CineMenuUser;
+import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserProfileRequestDto;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserProfileResponseDto;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.UserProfile;
 import br.com.cinemenu.cinemenuapi.domain.repository.UserRepository;
+import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.CineMenuEntityNotFoundException;
 import br.com.cinemenu.cinemenuapi.infra.security.SecurityConfigurations;
 import br.com.cinemenu.cinemenuapi.infra.security.TokenService;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,11 +24,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.naming.AuthenticationException;
 
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class CineMenuUserServiceTest {
@@ -45,6 +50,9 @@ public class CineMenuUserServiceTest {
 
     @Mock
     private AuthenticationManager authenticationManager;
+    private CineMenuUser validUser;
+    private UserProfile userProfile;
+    private AccountDeleteRequestDto accountDeleteRequestDto;
 
     @BeforeEach
     void setup() {
@@ -55,6 +63,11 @@ public class CineMenuUserServiceTest {
         authenticationManager = Mockito.mock(AuthenticationManager.class);
         userService = new CineMenuUserService(userRepository, securityConfigurations, tokenService, authenticationManager);
         when(securityConfigurations.passwordEncoder()).thenReturn(passwordEncoder);
+
+        userProfile = new UserProfile("Bio");
+        validUser = new CineMenuUser(
+                "Id", userProfile, "Name", "Username", "example@email.com",
+                "password", OffsetDateTime.now(), false, null, List.of());
     }
 
     @Test
@@ -63,7 +76,8 @@ public class CineMenuUserServiceTest {
         // Given
         LoginRequestDto loginDto = new LoginRequestDto("email@example.com", "Test123*");
         String token = "valid_token";
-        CineMenuUser user = new CineMenuUser(null, "name", "teste", "email@example.com", "Test123*", null, false, null, List.of(new MediaList()));
+        UserProfile userProfile = new UserProfile("bio");
+        CineMenuUser user = new CineMenuUser(null, userProfile, "name", "teste", "email@example.com", "Test123*", null, false, null, List.of(new MediaList()));
         Authentication authentication = mock(Authentication.class);
 
         when(authentication.isAuthenticated()).thenReturn(true);
@@ -120,5 +134,103 @@ public class CineMenuUserServiceTest {
         assertThrows(IllegalArgumentException.class, () -> userService.sign(userDto));
         verify(userRepository).existsByEmail(anyString());
         verify(userRepository, never()).save(any(CineMenuUser.class));
+    }
+
+    @Test
+    @DisplayName("Test  deleteUserAccount method with valid user and email")
+    void testDeleteUserAccountScene01() {
+        // Given
+        accountDeleteRequestDto = new AccountDeleteRequestDto("example@email.com");
+
+        // When
+        userService.deleteUserAccount(validUser, accountDeleteRequestDto);
+
+        // Then
+        verify(userRepository, times(1)).delete(validUser);
+    }
+
+    @Test
+    @DisplayName("Test  deleteUserAccount method with invalid user and email")
+    void testDeleteUserAccountScene02() {
+        // Given
+        accountDeleteRequestDto = new AccountDeleteRequestDto("invalidEmail@example.com");
+
+        // When // Then
+        assertThrows(IllegalArgumentException.class, () -> {
+            userService.deleteUserAccount(validUser, accountDeleteRequestDto);
+        });
+        verify(userRepository, times(0)).delete(validUser);
+    }
+
+    @Test
+    @DisplayName("Test getUserProfile method")
+    void testGetUserProfile() {
+        // Given
+        // When
+        var serviceResponse = userService.getUserProfile(validUser);
+        // Then
+        assertEquals(UserProfileResponseDto.class, serviceResponse.getClass());
+        assertEquals("Name", serviceResponse.name());
+    }
+
+    @Test
+    @DisplayName("Test getUserProfileById method with valid Id")
+    void testGetUserProfileByIdScene01() {
+        // Given
+        String id = "Id";
+        when(userRepository.findById(id)).thenReturn(Optional.ofNullable(validUser));
+
+        // When
+        var serviceResponse = userService.getUserProfileById(id);
+
+        // Then
+        assertEquals(UserProfileResponseDto.class, serviceResponse.getClass());
+        assertEquals("Name", serviceResponse.name());
+    }
+
+    @Test
+    @DisplayName("Test getUserProfileById method with invalid Id")
+    void testGetUserProfileByIdScene02() {
+        // Given
+        String invalidId = "invalidId";
+
+        // When // Then
+        assertThrows(CineMenuEntityNotFoundException.class, () -> {
+            userService.getUserProfileById(invalidId);
+        });
+
+        verify(userRepository, times(1)).findById(invalidId);
+    }
+
+    @Test
+    @DisplayName("Test updateUserProfile method whit valid credentials")
+    void testUpdateUserProfileScene01() {
+        // Given
+        UserProfileRequestDto requestDto = new UserProfileRequestDto("NewName", "NewUsername", "NewBio");
+        when(userRepository.save(validUser)).thenReturn(validUser);
+
+        // When
+        var serviceResponse = userService.updateUserProfile(validUser, requestDto);
+
+        // Then
+        assertEquals(UserProfileResponseDto.class, serviceResponse.getClass());
+        assertNotEquals("Name", validUser.getName());
+        assertNotEquals("Username", validUser.getUsername());
+        assertNotEquals("Bio", validUser.getProfile().getBiography());
+    }
+
+    @Test
+    @DisplayName("Test updateUserProfile method whit invalid credentials")
+    void testUpdateUserProfileScene02() {
+        // Given
+        UserProfileRequestDto invalidRequestDto = new UserProfileRequestDto(null, "Username", "NewBio");
+        when(userRepository.existsByUsername(invalidRequestDto.username())).thenReturn(true);
+
+        // When // Then
+        assertThrows(IllegalArgumentException.class, () -> {
+            userService.updateUserProfile(validUser, invalidRequestDto);
+        });
+
+        verify(userRepository, times(1)).existsByUsername(invalidRequestDto.username());
     }
 }

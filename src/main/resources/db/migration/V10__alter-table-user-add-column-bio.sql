@@ -1,0 +1,1 @@
+ALTER TABLE cine_menu_user ADD COLUMN biography VARCHAR(1000);

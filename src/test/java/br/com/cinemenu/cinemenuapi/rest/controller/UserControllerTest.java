@@ -1,10 +1,14 @@
 package br.com.cinemenu.cinemenuapi.rest.controller;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.AccountDeleteRequestDto;
-import br.com.cinemenu.cinemenuapi.domain.entity.CineMenuUser;
+import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserProfileRequestDto;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserProfileResponseDto;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.UserProfile;
 import br.com.cinemenu.cinemenuapi.domain.repository.UserRepository;
 import br.com.cinemenu.cinemenuapi.infra.security.AuthenticationFacade;
+import br.com.cinemenu.cinemenuapi.rest.service.CineMenuUserService;
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,6 +39,12 @@ class UserControllerTest {
     private AuthenticationFacade authenticationFacade;
     @Mock
     private Authentication authentication;
+    @Mock
+    private CineMenuUserService service;
+    private CineMenuUser validUser;
+    private AccountDeleteRequestDto validAccountDeleteRequestDto;
+    private UserProfileRequestDto userProfileRequestDto;
+    private UserProfileResponseDto userProfileResponseDto;
 
     @BeforeEach
     void setup() {
@@ -45,54 +55,72 @@ class UserControllerTest {
                 return authentication;
             }
         };
-        controller = new UserController(repository, authenticationFacade);
+        controller = new UserController(repository, authenticationFacade, service);
+
+        String id = "validId";
+        String name = "name";
+        String validEmail = "validEmail@example.com";
+        String username = "username";
+        String password = "password";
+        validAccountDeleteRequestDto = new AccountDeleteRequestDto(validEmail);
+        UserProfile userProfile = new UserProfile("validBiography");
+        validUser = new CineMenuUser(id, userProfile,name, username, validEmail, password, OffsetDateTime.now(), false, null, List.of(new MediaList()));
+
+        userProfileRequestDto = new UserProfileRequestDto("new name", "newUsername", "bio");
+        userProfileResponseDto = new UserProfileResponseDto(validUser);
+    }
+
+    @Test
+    @DisplayName("Test method getUserProfile() from UserController")
+    void testGetUserProfile() {
+        // Given
+        when(service.getUserProfile(validUser)).thenReturn(userProfileResponseDto);
+
+        // When
+        ResponseEntity<UserProfileResponseDto> controllerResponse = controller.getUserProfile();
+
+        // Then
+        assertEquals(HttpStatus.OK, controllerResponse.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Test method getUserProfileById() from UserController")
+    void testGetUserProfileById() {
+        // Given
+        when(service.getUserProfileById(validUser.getId())).thenReturn(userProfileResponseDto);
+
+        // Then
+        ResponseEntity<UserProfileResponseDto> controllerResponse = controller.getUserProfileById(validUser.getId());
+
+        // Then
+        assertEquals(HttpStatus.OK, controllerResponse.getStatusCode());
+        verify(service).getUserProfileById(validUser.getId());
+    }
+
+    @Test
+    @DisplayName("Test method updateUserProfile from UserController")
+    void testUpdateUserProfile() {
+        // Given
+        // When
+        ResponseEntity<UserProfileResponseDto> controllerResponse = controller.updateUserProfile(userProfileRequestDto);
+
+        // Then
+        assertEquals(HttpStatus.OK, controllerResponse.getStatusCode());
     }
 
     @Test
     @DisplayName("Test method delete from UserController whit valid credentials")
     void testAccountDelete() {
         // Given
-        String id = "validId";
-        String name = "name";
-        String validEmail = "validEmail@example.com";
-        String username = "username";
-        String password = "password";
-        AccountDeleteRequestDto dto = new AccountDeleteRequestDto(validEmail);
-        CineMenuUser validUser = new CineMenuUser(id, name, username, validEmail, password, OffsetDateTime.now(), false, null, List.of(new MediaList()));
-
-        when(repository.findByUsername(username)).thenReturn(validUser);
-        when(authenticationFacade.getAuthentication().getName()).thenReturn(username);
+        when(repository.findByUsername(validUser.getUsername())).thenReturn(validUser);
+        when(authenticationFacade.getAuthentication().getName()).thenReturn(validUser.getUsername());
 
         // When
-        ResponseEntity<HttpStatus> response = controller.delete(dto);
+        ResponseEntity<HttpStatus> response = controller.delete(validAccountDeleteRequestDto);
 
         // Then
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-        verify(repository).findByUsername(username);
-    }
-
-    @Test
-    @DisplayName("Test method delete from UserController whit invalid credentials")
-    void testAccountDelete02() {
-        // Given
-        String id = "validId";
-        String name = "name";
-        String invalidEmail = "InvalidEmail@example.com";
-        String email = "email@example.com";
-        String username = "username";
-        String password = "password";
-        AccountDeleteRequestDto dto = new AccountDeleteRequestDto(invalidEmail);
-        CineMenuUser validUser = new CineMenuUser(id, name, username, email, password, OffsetDateTime.now(), false, null, List.of(new MediaList()));
-
-        when(repository.findByUsername(username)).thenReturn(validUser);
-        when(authenticationFacade.getAuthentication().getName()).thenReturn(username);
-
-        // When // Then
-        assertThrows(IllegalArgumentException.class, () -> {
-            ResponseEntity<HttpStatus> response = controller.delete(dto);
-            assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        });
-
+        verify(repository).findByUsername(validUser.getUsername());
     }
 
 }

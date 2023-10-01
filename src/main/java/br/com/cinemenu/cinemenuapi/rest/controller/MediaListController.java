@@ -5,7 +5,7 @@ import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserMediaRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserMediaUpdateMethodRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.MediaListResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserMediaResponseDto;
-import br.com.cinemenu.cinemenuapi.domain.entity.CineMenuUser;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.repository.UserRepository;
 import br.com.cinemenu.cinemenuapi.infra.security.AuthenticationFacade;
 import br.com.cinemenu.cinemenuapi.rest.service.MediaListService;

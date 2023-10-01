@@ -5,9 +5,10 @@ import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserMediaRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserMediaUpdateMethodRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.MediaListResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserMediaResponseDto;
-import br.com.cinemenu.cinemenuapi.domain.entity.CineMenuUser;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
 import br.com.cinemenu.cinemenuapi.domain.entity.UserMedia;
+import br.com.cinemenu.cinemenuapi.domain.entity.user.UserProfile;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.ListVisibility;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import br.com.cinemenu.cinemenuapi.domain.repository.UserRepository;
@@ -29,7 +30,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -73,7 +73,9 @@ class MediaListControllerTest {
         };
         controller = new MediaListController(repository, mediaListService, userMediaService, authenticationFacade);
 
-        user = new CineMenuUser("Id", "Name", "Username", "example@email.com", "password", OffsetDateTime.now(), false, null, List.of(new MediaList()));
+        UserProfile userProfile = new UserProfile("bio");
+
+        user = new CineMenuUser("Id", userProfile,"Name", "Username", "example@email.com", "password", OffsetDateTime.now(), false, null, List.of(new MediaList()));
         mediaListRequestDto = new MediaListRequestDto("Title", "Description", ListVisibility.PUBLIC);
         mediaList = new MediaList(mediaListRequestDto, user);
         mediaListResponseDto = new MediaListResponseDto(mediaList);
