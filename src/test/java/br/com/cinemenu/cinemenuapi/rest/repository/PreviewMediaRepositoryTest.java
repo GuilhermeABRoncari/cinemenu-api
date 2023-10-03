@@ -13,6 +13,7 @@ import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 
@@ -245,4 +246,307 @@ class PreviewMediaRepositoryTest {
         });
     }
 
+    @Test
+    @DisplayName("Test getTvShowDetailsById() method whit valid id")
+    void getTvShowDetailsByIdScene01() {
+        // Given
+        Long breakingBadId = 1396L;
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/tv/%d?api_key=".formatted(breakingBadId) + apiKey + "&language=pt-BR&include_adult=false"
+        );
+
+        PreviewTvShowDetailsResultDto expectedResult = restTemplate.getForObject(expectedUri, PreviewTvShowDetailsResultDto.class);
+
+        // When
+        PreviewTvShowDetailsResultDto result = repository.getTvShowDetailsById(breakingBadId);
+
+        // Then
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    @DisplayName("Test getTvShowDetailsById() method whit invalid id")
+    void getTvShowDetailsByIdScene02() {
+        // Given
+        Long invalidId = 9999999999L;
+
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/tv/%d?api_key=".formatted(invalidId) + apiKey + "&language=pt-BR&include_adult=false"
+        );
+
+        // When // Then
+        assertThrows(TMDBNotFoundException.class, () -> {
+            repository.getTvShowDetailsById(invalidId);
+        });
+
+        assertThrows(HttpClientErrorException.class, () -> {
+            restTemplate.getForObject(expectedUri, PreviewTvShowDetailsResultDto.class);
+        });
+    }
+
+    @Test
+    @DisplayName("Test getMovieDetailsById() method whit valid id")
+    void getMovieDetailsByIdScene01() {
+        // Given
+        Long findingNemoId = 1396L;
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/movie/%d?api_key=".formatted(findingNemoId) + apiKey + "&language=pt-BR&include_adult=false"
+        );
+
+        PreviewMovieDetailsResultDto expectedResult = restTemplate.getForObject(expectedUri, PreviewMovieDetailsResultDto.class);
+
+        // When
+        PreviewMovieDetailsResultDto result = repository.getMovieDetailsById(findingNemoId);
+
+        // Then
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    @DisplayName("Test getMovieDetailsById() method whit invalid id")
+    void getMovieDetailsByIdScene02() {
+        // Given
+        Long invalidId = 9999999999L;
+
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/movie/%d?api_key=".formatted(invalidId) + apiKey + "&language=pt-BR&include_adult=false"
+        );
+
+        // When // Then
+        assertThrows(TMDBNotFoundException.class, () -> {
+            repository.getMovieDetailsById(invalidId);
+        });
+
+        assertThrows(HttpClientErrorException.class, () -> {
+            restTemplate.getForObject(expectedUri, PreviewMovieDetailsResultDto.class);
+        });
+    }
+
+    @Test
+    @DisplayName("Test getTvShowCreditsById() method whit valid id")
+    void getTvShowCreditsByIdScene01() {
+        // Given
+        Long findingNemoId = 1396L;
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/tv/%d/credits?api_key=".formatted(findingNemoId) + apiKey + "&language=pt-BR&include_adult=false"
+        );
+
+        PreviewTvShowCreditsResultDto expectedResult = restTemplate.getForObject(expectedUri, PreviewTvShowCreditsResultDto.class);
+
+        // When
+        PreviewTvShowCreditsResultDto result = repository.getTvShowCreditsById(findingNemoId);
+
+        // Then
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    @DisplayName("Test getTvShowCreditsById() method whit invalid id")
+    void getTvShowCreditsByIdScene02() {
+        // Given
+        Long invalidId = 9999999999L;
+
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/tv/%d/credits?api_key=".formatted(invalidId) + apiKey + "&language=pt-BR&include_adult=false"
+        );
+
+        // When // Then
+        assertThrows(TMDBNotFoundException.class, () -> {
+            repository.getTvShowCreditsById(invalidId);
+        });
+
+        assertThrows(HttpClientErrorException.class, () -> {
+            restTemplate.getForObject(expectedUri, PreviewTvShowCreditsResultDto.class);
+        });
+    }
+
+    @Test
+    @DisplayName("Test getMovieCreditsById() method whit valid id")
+    void getMovieCreditsByIdScene01() {
+        // Given
+        Long findingNemoId = 1396L;
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/movie/%d/credits?api_key=".formatted(findingNemoId) + apiKey + "&language=pt-BR&include_adult=false"
+        );
+
+        PreviewMovieCreditsResultDto expectedResult = restTemplate.getForObject(expectedUri, PreviewMovieCreditsResultDto.class);
+
+        // When
+        PreviewMovieCreditsResultDto result = repository.getMovieCreditsById(findingNemoId);
+
+        // Then
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    @DisplayName("Test getMovieCreditsById() method whit invalid id")
+    void getMovieCreditsByIdScene02() {
+        // Given
+        Long invalidId = 9999999999L;
+
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/movie/%d/credits?api_key=".formatted(invalidId) + apiKey + "&language=pt-BR&include_adult=false"
+        );
+
+        // When // Then
+        assertThrows(TMDBNotFoundException.class, () -> {
+            repository.getMovieCreditsById(invalidId);
+        });
+
+        assertThrows(HttpClientErrorException.class, () -> {
+            restTemplate.getForObject(expectedUri, PreviewMovieCreditsResultDto.class);
+        });
+    }
+
+    @Test
+    @DisplayName("Test getMovieWatchProvidersById() method whit valid id")
+    void getMovieWatchProvidersByIdScene01() {
+        // Given
+        Long findingNemoId = 1396L;
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/movie/%d/watch/providers?api_key=".formatted(findingNemoId) + apiKey + "&language=pt-BR&include_adult=false"
+        );
+
+        PreviewMovieWatchProvidersResultDto expectedResult = restTemplate.getForObject(expectedUri, PreviewMovieWatchProvidersResultDto.class);
+
+        // When
+        PreviewMovieWatchProvidersResultDto result = repository.getMovieWatchProvidersById(findingNemoId);
+
+        // Then
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    @DisplayName("Test getMovieWatchProvidersById() method whit invalid id")
+    void getMovieWatchProvidersByIdScene02() {
+        // Given
+        Long invalidId = 9999999999L;
+
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/movie/%d/watch/providers?api_key=".formatted(invalidId) + apiKey + "&language=pt-BR&include_adult=false"
+        );
+
+        // When // Then
+        assertThrows(TMDBNotFoundException.class, () -> {
+            repository.getMovieWatchProvidersById(invalidId);
+        });
+
+        assertThrows(HttpClientErrorException.class, () -> {
+            restTemplate.getForObject(expectedUri, PreviewMovieWatchProvidersResultDto.class);
+        });
+    }
+
+    @Test
+    @DisplayName("Test getTvShowWatchProvidersById() method whit valid id")
+    void getTvShowWatchProvidersByIdScene01() {
+        // Given
+        Long findingNemoId = 1396L;
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/tv/%d/watch/providers?api_key=".formatted(findingNemoId) + apiKey + "&language=pt-BR&include_adult=false"
+        );
+
+        PreviewTvShowWatchProvidersResultDto expectedResult = restTemplate.getForObject(expectedUri, PreviewTvShowWatchProvidersResultDto.class);
+
+        // When
+        PreviewTvShowWatchProvidersResultDto result = repository.getTvShowWatchProvidersById(findingNemoId);
+
+        // Then
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    @DisplayName("Test getTvShowWatchProvidersById() method whit invalid id")
+    void getTvShowWatchProvidersByIdScene02() {
+        // Given
+        Long invalidId = 9999999999L;
+
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/tv/%d/watch/providers?api_key=".formatted(invalidId) + apiKey + "&language=pt-BR&include_adult=false"
+        );
+
+        // When // Then
+        assertThrows(TMDBNotFoundException.class, () -> {
+            repository.getTvShowWatchProvidersById(invalidId);
+        });
+
+        assertThrows(HttpClientErrorException.class, () -> {
+            restTemplate.getForObject(expectedUri, PreviewTvShowWatchProvidersResultDto.class);
+        });
+    }
+
+    @Test
+    @DisplayName("Test getTvShowVideosById() method whit valid id")
+    void getTvShowVideosByIdScene01() {
+        // Given
+        Long findingNemoId = 1396L;
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/tv/%d/videos?api_key=".formatted(findingNemoId) + apiKey + "&language=pt-BR&include_adult=false"
+        );
+
+        PreviewTvShowVideoResultDto expectedResult = restTemplate.getForObject(expectedUri, PreviewTvShowVideoResultDto.class);
+
+        // When
+        PreviewTvShowVideoResultDto result = repository.getTvShowVideosById(findingNemoId);
+
+        // Then
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    @DisplayName("Test getTvShowVideosById() method whit invalid id")
+    void getTvShowVideosByIdScene02() {
+        // Given
+        Long invalidId = 9999999999L;
+
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/tv/%d/videos?api_key=".formatted(invalidId) + apiKey + "&language=pt-BR&include_adult=false"
+        );
+
+        // When // Then
+        assertThrows(TMDBNotFoundException.class, () -> {
+            repository.getTvShowVideosById(invalidId);
+        });
+
+        assertThrows(HttpClientErrorException.class, () -> {
+            restTemplate.getForObject(expectedUri, PreviewTvShowVideoResultDto.class);
+        });
+    }
+
+    @Test
+    @DisplayName("Test getMovieVideosById() method whit valid id")
+    void getMovieVideosByIdScene01() {
+        // Given
+        Long findingNemoId = 1396L;
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/movie/%d/videos?api_key=".formatted(findingNemoId) + apiKey + "&language=pt-BR&include_adult=false"
+        );
+
+        PreviewMovieVideoResultDto expectedResult = restTemplate.getForObject(expectedUri, PreviewMovieVideoResultDto.class);
+
+        // When
+        PreviewMovieVideoResultDto result = repository.getMovieVideosById(findingNemoId);
+
+        // Then
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    @DisplayName("Test getMovieVideosById() method whit invalid id")
+    void getMovieVideosByIdScene02() {
+        // Given
+        Long invalidId = 9999999999L;
+
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/movie/%d/videos?api_key=".formatted(invalidId) + apiKey + "&language=pt-BR&include_adult=false"
+        );
+
+        // When // Then
+        assertThrows(TMDBNotFoundException.class, () -> {
+            repository.getMovieVideosById(invalidId);
+        });
+
+        assertThrows(HttpClientErrorException.class, () -> {
+            restTemplate.getForObject(expectedUri, PreviewMovieVideoResultDto.class);
+        });
+    }
 }

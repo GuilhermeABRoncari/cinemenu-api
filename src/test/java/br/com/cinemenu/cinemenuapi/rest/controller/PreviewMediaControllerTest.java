@@ -1,6 +1,7 @@
 package br.com.cinemenu.cinemenuapi.rest.controller;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.CineMenuMediaResponse;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.MediaDetailsResultResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResponsePage;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import br.com.cinemenu.cinemenuapi.rest.service.PreviewMediaService;
@@ -121,6 +122,34 @@ class PreviewMediaControllerTest {
 
         // When
         var responseEntity = controller.similarByIdAndMedia(id, media, page);
+
+        // Then
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Test mediaDetail methid whit valid media id and genre 'MOVIE'")
+    void mediaDetailScene01() {
+        // Given
+        Long id = 12L;
+        MediaType media = MediaType.MOVIE;
+
+        // When
+        ResponseEntity<MediaDetailsResultResponseDto> responseEntity = controller.mediaDetail(media, id);
+
+        // Then
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Test mediaDetail methid whit valid media id and genre 'TV'")
+    void mediaDetailScene02() {
+        // Given
+        Long id = 1396L;
+        MediaType media = MediaType.TV;
+
+        // When
+        ResponseEntity<MediaDetailsResultResponseDto> responseEntity = controller.mediaDetail(media, id);
 
         // Then
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
