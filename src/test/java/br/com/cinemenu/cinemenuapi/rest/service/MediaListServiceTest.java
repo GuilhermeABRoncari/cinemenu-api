@@ -2,11 +2,14 @@ package br.com.cinemenu.cinemenuapi.rest.service;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.MediaListRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.MediaListResponseDto;
+import br.com.cinemenu.cinemenuapi.domain.entity.UserMedia;
 import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
 import br.com.cinemenu.cinemenuapi.domain.entity.user.UserProfile;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.ListVisibility;
+import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import br.com.cinemenu.cinemenuapi.domain.repository.MediaListRepository;
+import br.com.cinemenu.cinemenuapi.domain.repository.UserRepository;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.CineMenuEntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +33,9 @@ class MediaListServiceTest {
 
     private MediaListService service;
     @Mock
-    private MediaListRepository repository;
+    private MediaListRepository mediaListRepository;
+    @Mock
+    private UserRepository userRepository;
 
     private Pageable page;
     private MediaListRequestDto publicRequestDto;
@@ -46,7 +51,7 @@ class MediaListServiceTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        service = new MediaListService(repository);
+        service = new MediaListService(mediaListRepository, userRepository);
         listOfMediaLists = new ArrayList<>();
         UserProfile userProfile = new UserProfile("bio");
         user = new CineMenuUser("id", userProfile,"name", "username", "example@email.com", "password", OffsetDateTime.now(), false, null, listOfMediaLists);
@@ -111,7 +116,7 @@ class MediaListServiceTest {
     @DisplayName("Test method create() in service class whit valid credentials")
     void testCreateMethod01() {
         // Given
-        when(repository.save(publicMediaList)).thenReturn(publicMediaList);
+        when(mediaListRepository.save(publicMediaList)).thenReturn(publicMediaList);
 
         // When
         MediaListResponseDto serviceResponse = service.create(user, publicRequestDto);
@@ -120,7 +125,7 @@ class MediaListServiceTest {
         assertEquals(publicResponseDto, serviceResponse);
         assertEquals(1, user.getMediaLists().size());
         assertTrue(user.getMediaLists().contains(publicMediaList));
-        verify(repository).save(publicMediaList);
+        verify(mediaListRepository).save(publicMediaList);
     }
 
     @Test
@@ -152,14 +157,14 @@ class MediaListServiceTest {
     void testGetListByIdMethod01() {
         // Given
         String listId = publicMediaList.getId();
-        when(repository.findById(listId)).thenReturn(Optional.ofNullable(publicMediaList));
+        when(mediaListRepository.findById(listId)).thenReturn(Optional.ofNullable(publicMediaList));
 
         // When
         MediaListResponseDto serviceResponse = service.getListById(user, listId);
 
         // Then
         assertEquals(publicResponseDto, serviceResponse);
-        verify(repository).findById(listId);
+        verify(mediaListRepository).findById(listId);
     }
 
     @Test
@@ -167,14 +172,14 @@ class MediaListServiceTest {
     void testGetListByIdMethod02() {
         // Given
         String listId = privateMediaList.getId();
-        when(repository.findById(listId)).thenReturn(Optional.ofNullable(privateMediaList));
+        when(mediaListRepository.findById(listId)).thenReturn(Optional.ofNullable(privateMediaList));
 
         // When // Then
         assertThrows(CineMenuEntityNotFoundException.class, () -> {
             MediaListResponseDto serviceResponse = service.getListById(user, listId);
             assertNull(serviceResponse);
         });
-        verify(repository).findById(listId);
+        verify(mediaListRepository).findById(listId);
     }
 
     @Test
@@ -182,14 +187,14 @@ class MediaListServiceTest {
     void testGetListByIdMethod03() {
         // Given
         String invalidListId = "invalidId";
-        when(repository.findById(invalidListId)).thenThrow(CineMenuEntityNotFoundException.class);
+        when(mediaListRepository.findById(invalidListId)).thenThrow(CineMenuEntityNotFoundException.class);
 
         // When // Then
         assertThrows(CineMenuEntityNotFoundException.class, () -> {
             MediaListResponseDto serviceResponse = service.getListById(user, invalidListId);
             assertNull(serviceResponse);
         });
-        verify(repository).findById(invalidListId);
+        verify(mediaListRepository).findById(invalidListId);
     }
 
     @Test
@@ -199,7 +204,7 @@ class MediaListServiceTest {
         String query = "title";
         listOfMediaLists.add(publicMediaList);
         listOfMediaLists.add(privateMediaList);
-        when(repository.findAllByTitleLikeIgnoreCase("%" + query + "%")).thenReturn(listOfMediaLists);
+        when(mediaListRepository.findAllByTitleLikeIgnoreCase("%" + query + "%")).thenReturn(listOfMediaLists);
 
         // When
         Page<MediaListResponseDto> serviceResponse = service.getUserMediaListsBySearch(user, query, page);
@@ -207,7 +212,7 @@ class MediaListServiceTest {
         // Then
         assertEquals(2, serviceResponse.getContent().size());
         assertTrue(serviceResponse.getContent().contains(privateResponseDto));
-        verify(repository).findAllByTitleLikeIgnoreCase("%" + query + "%");
+        verify(mediaListRepository).findAllByTitleLikeIgnoreCase("%" + query + "%");
     }
 
     @Test
@@ -215,14 +220,14 @@ class MediaListServiceTest {
     void testGetUserMediaListsBySearchMethod02() {
         // Given
         String invalidQuery = "123456789NotFoundTest";
-        when(repository.findAllByTitleLikeIgnoreCase("%" + invalidQuery + "%")).thenReturn(listOfMediaLists);
+        when(mediaListRepository.findAllByTitleLikeIgnoreCase("%" + invalidQuery + "%")).thenReturn(listOfMediaLists);
 
         // When // Then
         assertThrows(CineMenuEntityNotFoundException.class, () -> {
             Page<MediaListResponseDto> serviceResponse = service.getUserMediaListsBySearch(user, invalidQuery, page);
             assertNull(serviceResponse);
         });
-        verify(repository).findAllByTitleLikeIgnoreCase("%" + invalidQuery + "%");
+        verify(mediaListRepository).findAllByTitleLikeIgnoreCase("%" + invalidQuery + "%");
     }
 
     @Test
@@ -231,7 +236,7 @@ class MediaListServiceTest {
         // Given
         String listId = publicMediaList.getId();
         listOfMediaLists.add(publicMediaList);
-        when(repository.findById(listId)).thenReturn(Optional.ofNullable(publicMediaList));
+        when(mediaListRepository.findById(listId)).thenReturn(Optional.ofNullable(publicMediaList));
 
         // When
         MediaListResponseDto serviceResponse = service.editById(user, listId, privateRequestDto);
@@ -240,7 +245,7 @@ class MediaListServiceTest {
         assertNotEquals(privateResponseDto, serviceResponse);
         assertEquals(publicMediaList.getVisibility(), serviceResponse.visibility());
         assertEquals(publicMediaList.getLastChange(), serviceResponse.lastChange());
-        verify(repository).findById(listId);
+        verify(mediaListRepository).findById(listId);
     }
 
     @Test
@@ -248,14 +253,14 @@ class MediaListServiceTest {
     void testEditByIdMethod02() {
         // Given
         String invalidListId = "invalidId";
-        when(repository.findById(invalidListId)).thenThrow(CineMenuEntityNotFoundException.class);
+        when(mediaListRepository.findById(invalidListId)).thenThrow(CineMenuEntityNotFoundException.class);
 
         // When // Then
         assertThrows(CineMenuEntityNotFoundException.class, () -> {
             MediaListResponseDto serviceResponse = service.editById(user, invalidListId, privateRequestDto);
             assertNull(serviceResponse);
         });
-        verify(repository).findById(invalidListId);
+        verify(mediaListRepository).findById(invalidListId);
     }
 
     @Test
@@ -263,7 +268,7 @@ class MediaListServiceTest {
     void testEditByIdMethod03() {
         // Given
         String listId = publicMediaList.getId();
-        when(repository.findById(listId)).thenReturn(Optional.ofNullable(publicMediaList));
+        when(mediaListRepository.findById(listId)).thenReturn(Optional.ofNullable(publicMediaList));
 
         // When // Then
         assertThrows(CineMenuEntityNotFoundException.class, () -> {
@@ -271,7 +276,7 @@ class MediaListServiceTest {
             assertNull(serviceResponse);
             assertTrue(user.getMediaLists().isEmpty());
         });
-        verify(repository).findById(listId);
+        verify(mediaListRepository).findById(listId);
     }
 
     @Test
@@ -280,14 +285,14 @@ class MediaListServiceTest {
         // Given
         String listId = publicMediaList.getId();
         listOfMediaLists.add(publicMediaList);
-        when(repository.findById(listId)).thenReturn(Optional.ofNullable(publicMediaList));
+        when(mediaListRepository.findById(listId)).thenReturn(Optional.ofNullable(publicMediaList));
 
         // When
         service.deleteById(user, listId);
 
         // Then
         assertTrue(listOfMediaLists.isEmpty());
-        verify(repository).findById(listId);
+        verify(mediaListRepository).findById(listId);
     }
 
     @Test
@@ -295,13 +300,13 @@ class MediaListServiceTest {
     void testDeleteByIdMethod02() {
         // Given
         String invalidListId = "invalidId";
-        when(repository.findById(invalidListId)).thenThrow(CineMenuEntityNotFoundException.class);
+        when(mediaListRepository.findById(invalidListId)).thenThrow(CineMenuEntityNotFoundException.class);
 
         // When // Then
         assertThrows(CineMenuEntityNotFoundException.class, () -> {
             service.deleteById(user, invalidListId);
         });
-        verify(repository).findById(invalidListId);
+        verify(mediaListRepository).findById(invalidListId);
     }
 
     @Test
@@ -310,14 +315,14 @@ class MediaListServiceTest {
         // Given
         String listId = publicMediaList.getId();
         anotherUserListOfMediaLists.add(publicMediaList);
-        when(repository.findById(listId)).thenReturn(Optional.ofNullable(publicMediaList));
+        when(mediaListRepository.findById(listId)).thenReturn(Optional.ofNullable(publicMediaList));
 
         // When // Then
         assertThrows(CineMenuEntityNotFoundException.class, () -> {
             service.deleteById(user, listId);
             assertNotNull(anotherUserListOfMediaLists);
         });
-        verify(repository).findById(listId);
+        verify(mediaListRepository).findById(listId);
     }
 
     @Test
@@ -327,7 +332,7 @@ class MediaListServiceTest {
         String query = "tit";
         anotherUserListOfMediaLists.add(publicMediaList);
         anotherUserListOfMediaLists.add(privateMediaList);
-        when(repository.findAllByTitleLikeIgnoreCase("%" + query + "%")).thenReturn(anotherUserListOfMediaLists);
+        when(mediaListRepository.findAllByTitleLikeIgnoreCase("%" + query + "%")).thenReturn(anotherUserListOfMediaLists);
 
         // When
         Page<MediaListResponseDto> serviceResponse = service.getPublicMediaListsBySearch(query, page);
@@ -335,7 +340,7 @@ class MediaListServiceTest {
         // Then
         assertEquals(1, serviceResponse.getContent().size());
         assertFalse(serviceResponse.getContent().contains(privateResponseDto));
-        verify(repository).findAllByTitleLikeIgnoreCase("%" + query + "%");
+        verify(mediaListRepository).findAllByTitleLikeIgnoreCase("%" + query + "%");
     }
 
     @Test
@@ -343,13 +348,13 @@ class MediaListServiceTest {
     void testGetPublicPublicMediaListsBySearchMethod02() {
         // Given
         String invalidQuery = "invalidQuery";
-        when(repository.findAllByTitleLikeIgnoreCase("%" + invalidQuery + "%")).thenReturn(listOfMediaLists);
+        when(mediaListRepository.findAllByTitleLikeIgnoreCase("%" + invalidQuery + "%")).thenReturn(listOfMediaLists);
 
         // When // Then
         assertThrows(CineMenuEntityNotFoundException.class, () -> {
             service.getPublicMediaListsBySearch(invalidQuery, page);
         });
-        verify(repository).findAllByTitleLikeIgnoreCase("%" + invalidQuery + "%");
+        verify(mediaListRepository).findAllByTitleLikeIgnoreCase("%" + invalidQuery + "%");
     }
 
     @Test
@@ -358,12 +363,43 @@ class MediaListServiceTest {
         // Given
         String query = "tit";
         listOfMediaLists.add(privateMediaList);
-        when(repository.findAllByTitleLikeIgnoreCase("%" + query + "%")).thenReturn(listOfMediaLists);
+        when(mediaListRepository.findAllByTitleLikeIgnoreCase("%" + query + "%")).thenReturn(listOfMediaLists);
 
         // When // Then
         assertThrows(CineMenuEntityNotFoundException.class, () -> {
             service.getPublicMediaListsBySearch(query, page);
         });
-        verify(repository).findAllByTitleLikeIgnoreCase("%" + query + "%");
+        verify(mediaListRepository).findAllByTitleLikeIgnoreCase("%" + query + "%");
+    }
+
+    @Test
+    @DisplayName("Test copyListById() method whit valid MediaList id")
+    void testCopyListByIdScene01() {
+        // Given
+        String validId = publicMediaList.getId();
+        publicMediaList.getUserMedias().add(new UserMedia("id", 12, MediaType.MOVIE, "note", 10.0, true));
+        when(mediaListRepository.findById(validId)).thenReturn(Optional.ofNullable(publicMediaList));
+
+        // When
+        MediaListResponseDto serviceResponse = service.copyListById(user, validId);
+
+        // Then
+        assertNotEquals(publicMediaList.getAmountCopy(), serviceResponse.amountCopy());
+        assertEquals(0, serviceResponse.amountCopy());
+        assertEquals(publicMediaList.getTitle(), serviceResponse.title());
+
+        verify(mediaListRepository).findById(validId);
+    }
+
+    @Test
+    @DisplayName("Test copyListById() method whit invalid MediaList id and expecting CineMenuEntityNotFoundException")
+    void testCopyListByIdScene02() {
+        // Given
+        String invalidId = "invalidIdString";
+
+        // When // Then
+        assertThrows(CineMenuEntityNotFoundException.class, () -> {
+            service.copyListById(user, invalidId);
+        });
     }
 }

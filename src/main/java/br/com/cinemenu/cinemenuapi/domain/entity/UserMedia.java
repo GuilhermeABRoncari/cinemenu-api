@@ -40,6 +40,14 @@ public class UserMedia {
         this.watched = requestDto.watched();
     }
 
+    public UserMedia(UserMedia userMedia) {
+        this.idTmdb = userMedia.getIdTmdb();
+        this.mediaType = userMedia.getMediaType();
+        this.note = "";
+        this.userRating = 0.0;
+        this.watched = false;
+    }
+
     public void update(UserMediaUpdateMethodRequestDto updateMethodRequestDto) {
         if (updateMethodRequestDto.note() != null) this.note = updateMethodRequestDto.note();
         if (updateMethodRequestDto.userRating() != null) this.userRating = updateMethodRequestDto.userRating();

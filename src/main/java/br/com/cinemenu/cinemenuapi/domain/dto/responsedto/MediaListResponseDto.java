@@ -30,7 +30,7 @@ public record MediaListResponseDto(
 ) {
     public MediaListResponseDto(MediaList previewMediaList) {
         this(
-                previewMediaList.getId(), previewMediaList.getTitle(), previewMediaList.getDescription(), 0,
+                previewMediaList.getId(), previewMediaList.getTitle(), previewMediaList.getDescription(), previewMediaList.getUserMedias().size(),
                 previewMediaList.getVisibility(), previewMediaList.getAmountLike(), previewMediaList.getAmountCopy(),
                 previewMediaList.getUser().getId(), previewMediaList.getLastChange()
         );

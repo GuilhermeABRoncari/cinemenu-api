@@ -5,6 +5,7 @@ import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserMediaRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserMediaUpdateMethodRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.MediaListResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserMediaResponseDto;
+import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
 import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.repository.UserRepository;
 import br.com.cinemenu.cinemenuapi.infra.security.AuthenticationFacade;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -40,6 +42,11 @@ public class MediaListController {
     @PostMapping("/user_media")
     public ResponseEntity<List<UserMediaResponseDto>> createNewUserMedia(@RequestParam(name = "id_list") String mediaListId, @RequestBody @Valid UserMediaRequestDto requestDtoList) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userMediaService.createNewUserMediaAndAddToMediaList(getUser(), mediaListId, requestDtoList));
+    }
+
+    @PostMapping("/fork")
+    public ResponseEntity<MediaListResponseDto> copyListById(@RequestParam("id") String id) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(mediaListService.copyListById(getUser(), id));
     }
 
     @GetMapping
