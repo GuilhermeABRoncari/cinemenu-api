@@ -291,7 +291,6 @@ public class PreviewMediaRepository {
         }
     }
 
-    @Generated
     public PreviewTvShowVideoResultDto getTvShowVideosById(Long id) {
         URI uri = URI.create(
                 TMDB_BASE_URL

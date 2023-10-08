@@ -474,23 +474,24 @@ class PreviewMediaRepositoryTest {
         });
     }
 
-//    @Test
-//    @DisplayName("Test getTvShowVideosById() method whit valid id")
-//    void getTvShowVideosByIdScene01() {
-//        // Given
-//        Long onePieceId = 111110L;
-//        URI expectedUri = URI.create(
-//                "http://api.themoviedb.org/3/tv/%d/videos?api_key=".formatted(onePieceId) + apiKey + "&language=pt-BR&include_adult=false"
-//        );
-//
-//        PreviewTvShowVideoResultDto expectedResult = restTemplate.getForObject(expectedUri, PreviewTvShowVideoResultDto.class);
-//
-//        // When
-//        PreviewTvShowVideoResultDto result = repository.getTvShowVideosById(onePieceId);
-//
-//        // Then
-//        assertEquals(expectedResult, result);
-//    }
+    @Test
+    @DisplayName("Test getTvShowVideosById() method whit valid id")
+    void getTvShowVideosByIdScene01() {
+        // Given
+        //Long onePieceId = 111110L;
+        Long onePieceId = 12L;
+        URI expectedUri = URI.create(
+                "http://api.themoviedb.org/3/tv/%d/videos?api_key=".formatted(onePieceId) + apiKey + "&language=pt-BR&include_adult=false"
+        );
+
+        PreviewTvShowVideoResultDto expectedResult = restTemplate.getForObject(expectedUri, PreviewTvShowVideoResultDto.class);
+
+        // When
+        PreviewTvShowVideoResultDto result = repository.getTvShowVideosById(onePieceId);
+
+        // Then
+        assertEquals(expectedResult, result);
+    }
 
     @Test
     @DisplayName("Test getTvShowVideosById() method whit invalid id")
@@ -516,7 +517,7 @@ class PreviewMediaRepositoryTest {
     @DisplayName("Test getMovieVideosById() method whit valid id")
     void getMovieVideosByIdScene01() {
         // Given
-        Long findingNemoId = 1396L;
+        Long findingNemoId = 12L;
         URI expectedUri = URI.create(
                 "http://api.themoviedb.org/3/movie/%d/videos?api_key=".formatted(findingNemoId) + apiKey + "&language=pt-BR&include_adult=false"
         );
