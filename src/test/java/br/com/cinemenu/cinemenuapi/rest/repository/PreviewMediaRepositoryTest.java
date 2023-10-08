@@ -496,7 +496,7 @@ class PreviewMediaRepositoryTest {
     @DisplayName("Test getTvShowVideosById() method whit invalid id")
     void getTvShowVideosByIdScene02() {
         // Given
-        Long invalidId = 9999999999L;
+        Long invalidId = 999999999999L;
 
         URI expectedUri = URI.create(
                 "http://api.themoviedb.org/3/tv/%d/videos?api_key=".formatted(invalidId) + apiKey + "&language=pt-BR&include_adult=false"
