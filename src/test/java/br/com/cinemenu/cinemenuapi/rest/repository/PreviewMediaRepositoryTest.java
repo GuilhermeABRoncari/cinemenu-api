@@ -478,15 +478,15 @@ class PreviewMediaRepositoryTest {
     @DisplayName("Test getTvShowVideosById() method whit valid id")
     void getTvShowVideosByIdScene01() {
         // Given
-        Long findingNemoId = 1396L;
+        Long breakingBadId = 1396L;
         URI expectedUri = URI.create(
-                "http://api.themoviedb.org/3/tv/%d/videos?api_key=".formatted(findingNemoId) + apiKey + "&language=pt-BR&include_adult=false"
+                "http://api.themoviedb.org/3/tv/%d/videos?api_key=".formatted(breakingBadId) + apiKey + "&language=pt-BR&include_adult=false"
         );
 
         PreviewTvShowVideoResultDto expectedResult = restTemplate.getForObject(expectedUri, PreviewTvShowVideoResultDto.class);
 
         // When
-        PreviewTvShowVideoResultDto result = repository.getTvShowVideosById(findingNemoId);
+        PreviewTvShowVideoResultDto result = repository.getTvShowVideosById(breakingBadId);
 
         // Then
         assertEquals(expectedResult, result);
