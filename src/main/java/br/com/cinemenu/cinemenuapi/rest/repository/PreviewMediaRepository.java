@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Repository
+@Generated
 public class PreviewMediaRepository {
 
     @Value("${api.key.from.tmdb}")
