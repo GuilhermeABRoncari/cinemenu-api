@@ -7,6 +7,7 @@ import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearc
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.TMDBNotFoundException;
 import br.com.cinemenu.cinemenuapi.rest.mapper.PreviewMediaMapper;
 import br.com.cinemenu.cinemenuapi.rest.mapper.TMDBInternalGenreMapper;
+import lombok.Generated;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -290,6 +291,7 @@ public class PreviewMediaRepository {
         }
     }
 
+    @Generated
     public PreviewTvShowVideoResultDto getTvShowVideosById(Long id) {
         URI uri = URI.create(
                 TMDB_BASE_URL
