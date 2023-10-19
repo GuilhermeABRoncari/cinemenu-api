@@ -243,44 +243,4 @@ public class CineMenuUserServiceTest {
 
         verify(userRepository, times(1)).existsByUsername(invalidRequestDto.username());
     }
-
-//    @Test
-//    @DisplayName("Test method setUserPreferences whit valid user and UserPreferencesRequestDto")
-//    void testSetUserPreferencesScene01() {
-//        // Given
-//        List<UserPreferencesRequestDto.CineMenuGenresId> genresIdList = new ArrayList<>();
-//        genresIdList.add(new UserPreferencesRequestDto.CineMenuGenresId(CineMenuGenres.ANIMATION.getCineMenuGenreId()));
-//
-//        List<UserPreferencesRequestDto.UserTMDBMediaRequestReference> mapReference = new ArrayList<>();
-//        mapReference.add(new UserPreferencesRequestDto.UserTMDBMediaRequestReference(12L, MediaType.MOVIE));
-//
-//        UserPreferencesRequestDto requestDto = new UserPreferencesRequestDto(genresIdList, mapReference);
-//        when(userRepository.save(validUser)).thenReturn(validUser);
-//
-//        // When
-//        UserPreferencesResponseDto userPreferencesResponseDto = userService.setUserPreferences(validUser, requestDto);
-//
-//        // Then
-//        assertEquals(CineMenuGenres.ANIMATION, userPreferencesResponseDto.genrePreferences().get(0));
-//    }
-
-//    @Test
-//    @DisplayName("")
-//    void testGetRecommendations() {
-//        // Given
-//        Integer page = 1;
-//        List<Integer> genreId = new ArrayList<>();
-//        genreId.add(63);
-//        PreviewMediaResponsePage responsePage = new PreviewMediaResponsePage(page, List.of(), page);
-//
-//
-//        when(mediaService.getGenreResponse(genreId, page)).thenReturn(responsePage);
-//        when(mediaService.getSimilarByIdAndMedia(12L, MediaType.MOVIE, page)).thenReturn(responsePage);
-//
-//        // When
-//        PreviewMediaResponsePage recommendations = userService.getRecommendations(validUser, page);
-//
-//        // Then
-//        assertEquals(1, recommendations.page());
-//    }
 }
