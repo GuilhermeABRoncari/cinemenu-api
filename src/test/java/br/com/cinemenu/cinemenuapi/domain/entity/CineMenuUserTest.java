@@ -180,4 +180,35 @@ class CineMenuUserTest {
         assertEquals(2, cineMenuUser.getProfile().getGenrePreferences().size());
         assertEquals(2, cineMenuUser.getProfile().getTmdbMediaReferences().size());
     }
+
+    @Test
+    @DisplayName("Test setPreferences method whit existing requestDto")
+    void testSetPreferencesScene02() {
+        // Given
+        String id = "1L";
+        String name = "John Doe";
+        String username = "johndoe";
+        String email = "johndoe@example.com";
+        String password = "password";
+        OffsetDateTime registrationDate = OffsetDateTime.now();
+        List<CineMenuGenres> genreList = new ArrayList<>();
+        genreList.add(CineMenuGenres.ACTION);
+        Map<Long, MediaType> mapReference = new HashMap<>();
+        mapReference.put(12L, MediaType.MOVIE);
+        UserProfile userProfile = new UserProfile("bio", genreList, mapReference);
+        CineMenuUser cineMenuUser = new CineMenuUser(id, userProfile,name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+        List<UserPreferencesRequestDto.CineMenuGenresId> genresIdList = new ArrayList<>();
+        genresIdList.add(new UserPreferencesRequestDto.CineMenuGenresId(CineMenuGenres.ACTION.getCineMenuGenreId()));
+        List<UserPreferencesRequestDto.UserTMDBMediaRequestReference> mapReferenceRequest = new ArrayList<>();
+        mapReferenceRequest.add(new UserPreferencesRequestDto.UserTMDBMediaRequestReference(12L, MediaType.MOVIE));
+
+        UserPreferencesRequestDto requestDto = new UserPreferencesRequestDto(genresIdList, mapReferenceRequest);
+
+        // When
+        cineMenuUser.setPreferences(requestDto);
+
+        // Then
+        assertEquals(1, cineMenuUser.getProfile().getGenrePreferences().size());
+        assertEquals(1, cineMenuUser.getProfile().getTmdbMediaReferences().size());
+    }
 }
