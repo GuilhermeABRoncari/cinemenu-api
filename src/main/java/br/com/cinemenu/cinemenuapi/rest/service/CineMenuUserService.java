@@ -15,8 +15,6 @@ import br.com.cinemenu.cinemenuapi.infra.security.TokenService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Generated;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -52,7 +50,8 @@ public class CineMenuUserService {
         if (repository.existsByEmail(userDto.email())) throw new IllegalArgumentException(EMAIL_IN_USE);
         if (repository.checkUserDisableEmail(userDto.email())) throw new IllegalArgumentException(EMAIL_DISABLE);
         if (repository.existsByUsername(userDto.username())) throw new IllegalArgumentException(USERNAME_IN_USE);
-        if (repository.checkUserDisableUsername(userDto.username())) throw new IllegalArgumentException(USERNAME_IN_USE);
+        if (repository.checkUserDisableUsername(userDto.username()))
+            throw new IllegalArgumentException(USERNAME_IN_USE);
 
         var user = new CineMenuUser(userDto, securityConfigurations.passwordEncoder().encode(userDto.password()));
 
@@ -110,7 +109,9 @@ public class CineMenuUserService {
     public PreviewMediaResponsePage getRecommendations(CineMenuUser user, Integer pageNumber) {
         Integer byGender = 0;
         Integer byTMDBIdReference = 1;
-        Integer randomInt = new Random().nextInt(2);
+        Long seed = 9999999L;
+        Random random = new Random(seed);
+        Integer randomInt = random.nextInt(2);
 
         if (randomInt.equals(byGender) && !user.getProfile().getGenrePreferences().isEmpty()) {
             return mediaService.getGenreResponse(user.getProfile().getGenrePreferences().stream().map(CineMenuGenres::getCineMenuGenreId).toList(), pageNumber);
@@ -120,7 +121,7 @@ public class CineMenuUserService {
             Map<Long, MediaType> tmdbMediaReferences = user.getProfile().getTmdbMediaReferences();
             ArrayList<Long> keys = new ArrayList<>(tmdbMediaReferences.keySet());
 
-            Long randomId = keys.get(new Random().nextInt(keys.size()));
+            Long randomId = keys.get(random.nextInt(keys.size()));
 
             return mediaService.getSimilarByIdAndMedia(randomId, tmdbMediaReferences.get(randomId), pageNumber);
         }

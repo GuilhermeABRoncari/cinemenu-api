@@ -1,11 +1,12 @@
 package br.com.cinemenu.cinemenuapi.domain.dto.requestdto;
 
-import br.com.cinemenu.cinemenuapi.domain.enumeration.CineMenuGenres;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import com.fasterxml.jackson.annotation.JsonAlias;
+import lombok.Generated;
 
 import java.util.List;
 
+@Generated
 public record UserPreferencesRequestDto(
         List<CineMenuGenresId> genres,
         List<UserTMDBMediaRequestReference> medias) {

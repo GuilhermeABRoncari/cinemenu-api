@@ -4,10 +4,12 @@ import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.CineMenuGenres;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Generated;
 
 import java.util.List;
 import java.util.Map;
 
+@Generated
 public record UserPreferencesResponseDto(
         @JsonProperty(index = 0, value = "user_id")
         String userId,
