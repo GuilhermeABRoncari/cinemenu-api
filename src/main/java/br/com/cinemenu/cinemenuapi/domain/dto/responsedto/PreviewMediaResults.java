@@ -1,9 +1,11 @@
 package br.com.cinemenu.cinemenuapi.domain.dto.responsedto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Generated;
 
 import java.util.List;
 
+@Generated
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record PreviewMediaResults(Integer page, List<PreviewMediaResultResponse> results, Integer total_pages) {
 
