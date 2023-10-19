@@ -53,8 +53,6 @@ public class CineMenuUserServiceTest {
     @Mock
     private AuthenticationManager authenticationManager;
     private CineMenuUser validUser;
-    @Mock
-    private CineMenuUser regularUser;
     private UserProfile userProfile;
     @Mock
     private PreviewMediaService mediaService;
@@ -68,15 +66,12 @@ public class CineMenuUserServiceTest {
         tokenService = Mockito.mock(TokenService.class);
         authenticationManager = Mockito.mock(AuthenticationManager.class);
         mediaService = Mockito.mock(PreviewMediaService.class);
-        regularUser = Mockito.mock(CineMenuUser.class);
         userService = new CineMenuUserService(userRepository, securityConfigurations, tokenService, authenticationManager, mediaService);
         when(securityConfigurations.passwordEncoder()).thenReturn(passwordEncoder);
 
-        userProfile = new UserProfile("Bio", List.of(CineMenuGenres.ADVENTURE), Map.of(12L, MediaType.MOVIE));
+        userProfile = new UserProfile("Bio", List.of(), Map.of());
         validUser = new CineMenuUser(
                 "Id", userProfile, "Name", "Username", "example@email.com",
-                "password", OffsetDateTime.now(), false, null, List.of());
-        regularUser = new CineMenuUser("Id", userProfile, "Name", "Username", "example@email.com",
                 "password", OffsetDateTime.now(), false, null, List.of());
     }
 
@@ -243,4 +238,18 @@ public class CineMenuUserServiceTest {
 
         verify(userRepository, times(1)).existsByUsername(invalidRequestDto.username());
     }
+
+    @Test
+    @DisplayName("Test getRecommendations() method whit a empty preferences profile from a valid user")
+    void testGetRecommendationsScene01() {
+        // Given
+        Integer page = 1;
+
+        // When // Then
+        assertThrows(IllegalArgumentException.class, () -> {
+            userService.getRecommendations(validUser, page);
+        });
+    }
+
+
 }
