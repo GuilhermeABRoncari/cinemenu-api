@@ -1,23 +1,30 @@
 package br.com.cinemenu.cinemenuapi.rest.service;
 
-import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.AccountDeleteRequestDto;
-import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.CineMenuUserRequestDto;
-import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.LoginRequestDto;
-import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserProfileRequestDto;
+import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.*;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResponsePage;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.TokenResponseDto;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserPreferencesResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserProfileResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
+import br.com.cinemenu.cinemenuapi.domain.enumeration.CineMenuGenres;
+import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import br.com.cinemenu.cinemenuapi.domain.repository.UserRepository;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.CineMenuEntityNotFoundException;
 import br.com.cinemenu.cinemenuapi.infra.security.SecurityConfigurations;
 import br.com.cinemenu.cinemenuapi.infra.security.TokenService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Random;
 
 @Service
 @AllArgsConstructor
@@ -28,12 +35,15 @@ public class CineMenuUserService {
     private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
 
+    private final PreviewMediaService mediaService;
+
     private static final String EMAIL_IN_USE = "This email is already in use";
     private static final String INVALID_LOGIN = "Email or password is invalid";
     private static final String USERNAME_IN_USE = "This username is already in use";
     private static final String EMAIL_DISABLE = "This email is disable";
     private static final String INVALID_EMAIL = "The email address provided must be the same as the one registered by the account owner";
     private static final String USER_NOT_FOUND = "User not found by id: %s";
+    private static final String EMPTY_PREFERENCES = "User: %s preferences is empty, try providing preferences on the endpoint: POST:user/preference";
 
     @Transactional
     public TokenResponseDto sign(CineMenuUserRequestDto userDto) {
@@ -85,5 +95,33 @@ public class CineMenuUserService {
         if (repository.existsByUsername(dto.username())) throw new IllegalArgumentException(USERNAME_IN_USE);
         user.updateProfile(dto);
         return new UserProfileResponseDto(repository.save(user));
+    }
+
+    @Transactional
+    public UserPreferencesResponseDto setUserPreferences(CineMenuUser user, UserPreferencesRequestDto userPreferencesRequestDto) {
+        user.setPreferences(userPreferencesRequestDto);
+        repository.save(user);
+        return new UserPreferencesResponseDto(user);
+    }
+
+    public PreviewMediaResponsePage getRecommendations(CineMenuUser user, Integer pageNumber) {
+        Integer byGender = 0;
+        Integer byTMDBIdReference = 1;
+        Integer randomInt = new Random().nextInt(2);
+
+        if (randomInt.equals(byGender) && !user.getProfile().getGenrePreferences().isEmpty()) {
+            return mediaService.getGenreResponse(user.getProfile().getGenrePreferences().stream().map(CineMenuGenres::getCineMenuGenreId).toList(), pageNumber);
+        }
+
+        if (randomInt.equals(byTMDBIdReference) && !user.getProfile().getTmdbMediaReferences().isEmpty()) {
+            Map<Long, MediaType> tmdbMediaReferences = user.getProfile().getTmdbMediaReferences();
+            ArrayList<Long> keys = new ArrayList<>(tmdbMediaReferences.keySet());
+
+            Long randomId = keys.get(new Random().nextInt(keys.size()));
+
+            return mediaService.getSimilarByIdAndMedia(randomId, tmdbMediaReferences.get(randomId), pageNumber);
+        }
+
+        throw new IllegalArgumentException(EMPTY_PREFERENCES.formatted(user.getUsername()));
     }
 }

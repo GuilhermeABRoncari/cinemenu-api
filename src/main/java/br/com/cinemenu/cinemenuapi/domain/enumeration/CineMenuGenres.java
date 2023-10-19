@@ -18,6 +18,9 @@ public enum CineMenuGenres {
     SCIENCE_FICTION(78);
 
     private final Integer cineMenuGenreId;
+    public Integer getCineMenuGenreId() {
+        return cineMenuGenreId;
+    }
 
     CineMenuGenres(int cineMenuGenreId) {
         this.cineMenuGenreId = cineMenuGenreId;

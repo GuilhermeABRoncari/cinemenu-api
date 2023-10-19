@@ -25,6 +25,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -65,7 +66,7 @@ class UserMediaServiceTest {
         userMedia = new UserMedia(elementsDto);
         anotherUserMedia = new UserMedia(elementsDto);
         mediaList = new MediaList("ID", "Title", "Gracefully description", userMediaList, ListVisibility.PUBLIC, 0, 0, OffsetDateTime.now(), null, user);
-        user = new CineMenuUser("ID", new UserProfile("bio"),"name", "username", "email", "password", OffsetDateTime.now(), false, null, mediaListList);
+        user = new CineMenuUser("ID", new UserProfile("bio", List.of(), Map.of()),"name", "username", "email", "password", OffsetDateTime.now(), false, null, mediaListList);
 
         page = new Pageable() {
             @Override

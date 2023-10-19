@@ -1,13 +1,15 @@
 package br.com.cinemenu.cinemenuapi.rest.service;
 
-import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.AccountDeleteRequestDto;
-import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.CineMenuUserRequestDto;
-import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.LoginRequestDto;
-import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserProfileRequestDto;
+import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.*;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.CineMenuMediaResponse;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResponsePage;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserPreferencesResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserProfileResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
 import br.com.cinemenu.cinemenuapi.domain.entity.user.UserProfile;
+import br.com.cinemenu.cinemenuapi.domain.enumeration.CineMenuGenres;
+import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import br.com.cinemenu.cinemenuapi.domain.repository.UserRepository;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.CineMenuEntityNotFoundException;
 import br.com.cinemenu.cinemenuapi.infra.security.SecurityConfigurations;
@@ -17,6 +19,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,8 +28,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.naming.AuthenticationException;
 
 import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,7 +53,11 @@ public class CineMenuUserServiceTest {
     @Mock
     private AuthenticationManager authenticationManager;
     private CineMenuUser validUser;
+    @Mock
+    private CineMenuUser regularUser;
     private UserProfile userProfile;
+    @Mock
+    private PreviewMediaService mediaService;
     private AccountDeleteRequestDto accountDeleteRequestDto;
 
     @BeforeEach
@@ -61,12 +67,16 @@ public class CineMenuUserServiceTest {
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
         tokenService = Mockito.mock(TokenService.class);
         authenticationManager = Mockito.mock(AuthenticationManager.class);
-        userService = new CineMenuUserService(userRepository, securityConfigurations, tokenService, authenticationManager);
+        mediaService = Mockito.mock(PreviewMediaService.class);
+        regularUser = Mockito.mock(CineMenuUser.class);
+        userService = new CineMenuUserService(userRepository, securityConfigurations, tokenService, authenticationManager, mediaService);
         when(securityConfigurations.passwordEncoder()).thenReturn(passwordEncoder);
 
-        userProfile = new UserProfile("Bio");
+        userProfile = new UserProfile("Bio", List.of(CineMenuGenres.ADVENTURE), Map.of(12L, MediaType.MOVIE));
         validUser = new CineMenuUser(
                 "Id", userProfile, "Name", "Username", "example@email.com",
+                "password", OffsetDateTime.now(), false, null, List.of());
+        regularUser = new CineMenuUser("Id", userProfile, "Name", "Username", "example@email.com",
                 "password", OffsetDateTime.now(), false, null, List.of());
     }
 
@@ -76,7 +86,7 @@ public class CineMenuUserServiceTest {
         // Given
         LoginRequestDto loginDto = new LoginRequestDto("email@example.com", "Test123*");
         String token = "valid_token";
-        UserProfile userProfile = new UserProfile("bio");
+        UserProfile userProfile = new UserProfile("bio", List.of(), Map.of());
         CineMenuUser user = new CineMenuUser(null, userProfile, "name", "teste", "email@example.com", "Test123*", null, false, null, List.of(new MediaList()));
         Authentication authentication = mock(Authentication.class);
 
@@ -233,4 +243,44 @@ public class CineMenuUserServiceTest {
 
         verify(userRepository, times(1)).existsByUsername(invalidRequestDto.username());
     }
+
+//    @Test
+//    @DisplayName("Test method setUserPreferences whit valid user and UserPreferencesRequestDto")
+//    void testSetUserPreferencesScene01() {
+//        // Given
+//        List<UserPreferencesRequestDto.CineMenuGenresId> genresIdList = new ArrayList<>();
+//        genresIdList.add(new UserPreferencesRequestDto.CineMenuGenresId(CineMenuGenres.ANIMATION.getCineMenuGenreId()));
+//
+//        List<UserPreferencesRequestDto.UserTMDBMediaRequestReference> mapReference = new ArrayList<>();
+//        mapReference.add(new UserPreferencesRequestDto.UserTMDBMediaRequestReference(12L, MediaType.MOVIE));
+//
+//        UserPreferencesRequestDto requestDto = new UserPreferencesRequestDto(genresIdList, mapReference);
+//        when(userRepository.save(validUser)).thenReturn(validUser);
+//
+//        // When
+//        UserPreferencesResponseDto userPreferencesResponseDto = userService.setUserPreferences(validUser, requestDto);
+//
+//        // Then
+//        assertEquals(CineMenuGenres.ANIMATION, userPreferencesResponseDto.genrePreferences().get(0));
+//    }
+
+//    @Test
+//    @DisplayName("")
+//    void testGetRecommendations() {
+//        // Given
+//        Integer page = 1;
+//        List<Integer> genreId = new ArrayList<>();
+//        genreId.add(63);
+//        PreviewMediaResponsePage responsePage = new PreviewMediaResponsePage(page, List.of(), page);
+//
+//
+//        when(mediaService.getGenreResponse(genreId, page)).thenReturn(responsePage);
+//        when(mediaService.getSimilarByIdAndMedia(12L, MediaType.MOVIE, page)).thenReturn(responsePage);
+//
+//        // When
+//        PreviewMediaResponsePage recommendations = userService.getRecommendations(validUser, page);
+//
+//        // Then
+//        assertEquals(1, recommendations.page());
+//    }
 }

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -24,7 +25,7 @@ class CineMenuUserTest {
         String email = "johndoe@example.com";
         String password = "password";
         OffsetDateTime registrationDate = OffsetDateTime.now();
-        UserProfile userProfile = new UserProfile("bio");
+        UserProfile userProfile = new UserProfile("bio", List.of(), Map.of());
 
         // When
         CineMenuUser cineMenuUser = new CineMenuUser(id, userProfile,name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
@@ -55,7 +56,7 @@ class CineMenuUserTest {
         String email = "johndoe@example.com";
         String password = "password";
         OffsetDateTime registrationDate = OffsetDateTime.now();
-        UserProfile userProfile = new UserProfile("bio");
+        UserProfile userProfile = new UserProfile("bio", List.of(), Map.of());
 
         // When
         CineMenuUser cineMenuUser01 = new CineMenuUser(id, userProfile, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
@@ -80,7 +81,7 @@ class CineMenuUserTest {
         String email = "johndoe@example.com";
         String password = "password";
         OffsetDateTime registrationDate = OffsetDateTime.now();
-        UserProfile userProfile = new UserProfile("bio");
+        UserProfile userProfile = new UserProfile("bio", List.of(), Map.of());
 
         // When
         CineMenuUser cineMenuUser01 = new CineMenuUser(firstId, userProfile, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
@@ -104,7 +105,7 @@ class CineMenuUserTest {
         OffsetDateTime registrationDate = OffsetDateTime.now();
 
         var userProfileRequest = new UserProfileRequestDto("new name", "new username", "new bio");
-        CineMenuUser cineMenuUser = new CineMenuUser(id, new UserProfile("bio"),name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+        CineMenuUser cineMenuUser = new CineMenuUser(id, new UserProfile("bio", List.of(), Map.of()),name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
 
         // When
         cineMenuUser.updateProfile(userProfileRequest);
@@ -127,7 +128,7 @@ class CineMenuUserTest {
         OffsetDateTime registrationDate = OffsetDateTime.now();
 
         var userProfileRequest = new UserProfileRequestDto(null, null, null);
-        CineMenuUser cineMenuUser = new CineMenuUser(id, new UserProfile("bio"),name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+        CineMenuUser cineMenuUser = new CineMenuUser(id, new UserProfile("bio", List.of(), Map.of()),name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
 
         // When
         cineMenuUser.updateProfile(userProfileRequest);

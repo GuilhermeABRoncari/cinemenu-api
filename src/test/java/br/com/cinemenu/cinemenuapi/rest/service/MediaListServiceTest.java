@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -48,7 +49,7 @@ class MediaListServiceTest {
         MockitoAnnotations.openMocks(this);
         service = new MediaListService(repository);
         listOfMediaLists = new ArrayList<>();
-        UserProfile userProfile = new UserProfile("bio");
+        UserProfile userProfile = new UserProfile("bio", List.of(), Map.of());
         user = new CineMenuUser("id", userProfile,"name", "username", "example@email.com", "password", OffsetDateTime.now(), false, null, listOfMediaLists);
 
         publicRequestDto = new MediaListRequestDto("title", "description", ListVisibility.PUBLIC);
