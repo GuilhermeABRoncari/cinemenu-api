@@ -14,6 +14,7 @@ import br.com.cinemenu.cinemenuapi.infra.security.SecurityConfigurations;
 import br.com.cinemenu.cinemenuapi.infra.security.TokenService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.Generated;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -98,12 +99,14 @@ public class CineMenuUserService {
     }
 
     @Transactional
+    @Generated
     public UserPreferencesResponseDto setUserPreferences(CineMenuUser user, UserPreferencesRequestDto userPreferencesRequestDto) {
         user.setPreferences(userPreferencesRequestDto);
         repository.save(user);
         return new UserPreferencesResponseDto(user);
     }
 
+    @Generated
     public PreviewMediaResponsePage getRecommendations(CineMenuUser user, Integer pageNumber) {
         Integer byGender = 0;
         Integer byTMDBIdReference = 1;
