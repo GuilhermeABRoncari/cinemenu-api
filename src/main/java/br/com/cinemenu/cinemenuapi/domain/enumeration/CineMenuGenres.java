@@ -15,9 +15,14 @@ public enum CineMenuGenres {
     MUSIC(91),
     MYSTERY(16),
     ROMANCE(38),
-    SCIENCE_FICTION(78);
+    SCIENCE_FICTION(78),
+    THRILLER(11);
 
     private final Integer cineMenuGenreId;
+
+    public int getId() {
+        return this.cineMenuGenreId;
+    }
 
     CineMenuGenres(int cineMenuGenreId) {
         this.cineMenuGenreId = cineMenuGenreId;
@@ -31,4 +36,5 @@ public enum CineMenuGenres {
         }
         throw new IllegalArgumentException("Invalid genre id: " + cineMenuGenreId);
     }
+
 }

@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -24,10 +25,109 @@ class PreviewMediaServiceTest {
 
     @Mock
     private PreviewMediaRepository previewMediaRepository;
+    PreviewMovieDetailsResultDto previewMovieDetailsResultDto;
+    PreviewMovieCreditsResultDto previewMovieCreditsResultDto;
+    PreviewMovieWatchProvidersResultDto previewMovieWatchProvidersResultDto;
+    PreviewMovieVideoResultDto previewMovieVideoResultDto;
+
+    PreviewTvShowDetailsResultDto previewTvShowDetailsResultDto;
+    PreviewTvShowCreditsResultDto previewTvShowCreditsResultDto;
+    PreviewTvShowWatchProvidersResultDto previewTvShowWatchProvidersResultDto;
+    PreviewTvShowVideoResultDto previewTvShowVideoResultDto;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        Boolean adult = false;
+        String backdropPath = "backdrop_path.com";
+        String posterPath = "poster_path.com";
+        String profilePath = "profile_path.com";
+        String logoPath = "logo_path.com";
+        String homePage = "home_page.com";
+        String link = "link.com";
+        String site = "site.com";
+        String name = "name";
+        String originalName = "Original Name";
+        String imdbId = "imdbId";
+        String originalLanguage = "pt-BR";
+        String country = "BR";
+        String title = "Title";
+        String originalTitle = "Original Title";
+        String originalCountry = "BR";
+        String overview = "Gracefully Overview";
+        String releaseDate = "0000-00-00";
+        String knowForDepartmentOf = "Acting";
+        String department = "Directing";
+        String job = "Director";
+        String character = "character";
+        String creditId = "credit_id";
+        String key = "key0001";
+        Double popularity = 10.0;
+        Double voteAverage = 10.0;
+        Integer id = 1;
+        Integer gender = 1;
+        Integer runtime = 60;
+        Integer voteCount = 10;
+        Integer order = 1;
+        Integer displayPriority = 0;
+        Integer episodeNumber = 1;
+        Integer seasonNumber = 1;
+        Long budget = 1000000L;
+        Long revenue = 10000000L;
+        String englishName = "Portuguese";
+        String status = "status";
+        String tagLine = "tagLine";
+        String type = "Trailer";
+        Boolean video = true;
+        Boolean official = true;
+        Boolean inProduction = false;
+
+
+        PreviewMovieWatchProvidersResultDto.Flatrate movieFlatrate = new PreviewMovieWatchProvidersResultDto.Flatrate(logoPath, id, name, displayPriority);
+        PreviewMovieWatchProvidersResultDto.Buy movieBuy = new PreviewMovieWatchProvidersResultDto.Buy(logoPath, id, name, displayPriority);
+        PreviewMovieWatchProvidersResultDto.Free movieFree = new PreviewMovieWatchProvidersResultDto.Free(logoPath, id, name, displayPriority);
+        PreviewTvShowWatchProvidersResultDto.Flatrate tvFlatrate = new PreviewTvShowWatchProvidersResultDto.Flatrate(logoPath, id, name, displayPriority);
+        PreviewTvShowWatchProvidersResultDto.Buy tvBuy = new PreviewTvShowWatchProvidersResultDto.Buy(logoPath, id, name, displayPriority);
+        PreviewTvShowWatchProvidersResultDto.Free tvFree = new PreviewTvShowWatchProvidersResultDto.Free(logoPath, id, name, displayPriority);
+
+        PreviewMovieDetailsResultDto.BelongsToCollection belongsToCollection = new PreviewMovieDetailsResultDto.BelongsToCollection(id, name, posterPath, backdropPath);
+        PreviewMovieDetailsResultDto.Genre movieGenre = new PreviewMovieDetailsResultDto.Genre(id, name);
+        PreviewTvShowDetailsResultDto.Genre tvGenre = new PreviewTvShowDetailsResultDto.Genre(id, name);
+        PreviewMovieDetailsResultDto.ProductionCompany movieProductionCompany = new PreviewMovieDetailsResultDto.ProductionCompany(id, logoPath, name, originalCountry);
+        PreviewTvShowDetailsResultDto.ProductionCompany tvShowProductionCompany = new PreviewTvShowDetailsResultDto.ProductionCompany(id, logoPath, name, originalCountry);
+        PreviewMovieDetailsResultDto.ProductionCountry productionCountry = new PreviewMovieDetailsResultDto.ProductionCountry("iso3166_1", name);
+        PreviewMovieDetailsResultDto.SpokenLanguage movieSpokenLanguage = new PreviewMovieDetailsResultDto.SpokenLanguage(englishName, "iso639_1", name);
+        PreviewTvShowDetailsResultDto.SpokenLanguage tvShowSpokenLanguage = new PreviewTvShowDetailsResultDto.SpokenLanguage(englishName, "iso639_1", name);
+        PreviewMovieCreditsResultDto.CastMember movieCastMember = new PreviewMovieCreditsResultDto.CastMember(adult, gender, id, knowForDepartmentOf, name, originalName, popularity, profilePath, character, creditId, order);
+        PreviewTvShowCreditsResultDto.CastMember tvCastMember = new PreviewTvShowCreditsResultDto.CastMember(adult, gender, id, knowForDepartmentOf, name, originalName, popularity, profilePath, character, creditId, order);
+        PreviewMovieCreditsResultDto.CrewMember movieCrewMember = new PreviewMovieCreditsResultDto.CrewMember(adult, gender, id, knowForDepartmentOf, name, originalName, popularity, profilePath, department, job, creditId);
+        PreviewTvShowCreditsResultDto.CrewMember tvCrewMember = new PreviewTvShowCreditsResultDto.CrewMember(adult, gender, (long) id, knowForDepartmentOf, name, originalName, popularity, profilePath, department, job, creditId);
+        PreviewMovieWatchProvidersResultDto.WatchProvider movieWatchProvider = new PreviewMovieWatchProvidersResultDto.WatchProvider(link, List.of(movieFlatrate), List.of(movieBuy), List.of(movieFree));
+        PreviewTvShowWatchProvidersResultDto.WatchProvider tvWatchProvider = new PreviewTvShowWatchProvidersResultDto.WatchProvider(link, List.of(tvFlatrate), List.of(tvBuy), List.of(tvFree));
+        PreviewMovieVideoResultDto.VideoResult movieVideoResult = new PreviewMovieVideoResultDto.VideoResult("iso_639_1", "iso_3166_1", name, key, site, 1, type, official, releaseDate, "id");
+        PreviewTvShowVideoResultDto.VideoResult tvVideoResult = new PreviewTvShowVideoResultDto.VideoResult("iso_639_1", "iso_3166_1", name, key, site, 1, type, official, releaseDate, "id");
+        PreviewTvShowDetailsResultDto.Episode episode = new PreviewTvShowDetailsResultDto.Episode(id, name, overview, voteAverage, voteCount, releaseDate, episodeNumber, type, status, runtime, 1, id, "path");
+        PreviewTvShowDetailsResultDto.Network network = new PreviewTvShowDetailsResultDto.Network(id, logoPath, name, originalCountry);
+        PreviewTvShowDetailsResultDto.Season season = new PreviewTvShowDetailsResultDto.Season(releaseDate, episodeNumber, id, name, overview, posterPath, seasonNumber, voteCount);
+
+        previewMovieDetailsResultDto = new PreviewMovieDetailsResultDto(
+                adult, backdropPath, belongsToCollection, budget, List.of(movieGenre), homePage, (long) id, imdbId, originalLanguage,
+                originalTitle, overview, popularity, posterPath, List.of(movieProductionCompany), List.of(productionCountry), releaseDate,
+                revenue, runtime, List.of(movieSpokenLanguage), status, tagLine, title, video, voteAverage, voteCount
+        );
+        previewMovieCreditsResultDto = new PreviewMovieCreditsResultDto(id, List.of(movieCastMember), List.of(movieCrewMember));
+        previewMovieWatchProvidersResultDto = new PreviewMovieWatchProvidersResultDto(id, Map.of(country, movieWatchProvider));
+        previewMovieVideoResultDto = new PreviewMovieVideoResultDto(id, List.of(movieVideoResult));
+
+        previewTvShowDetailsResultDto = new PreviewTvShowDetailsResultDto(
+                adult, backdropPath, List.of(), List.of(runtime), releaseDate, List.of(tvGenre), homePage, (long) id, inProduction,
+                List.of(originalLanguage), releaseDate, episode, name, 2, List.of(network), episodeNumber, seasonNumber,
+                List.of(originalCountry), originalLanguage, originalName, overview, popularity, posterPath, List.of(tvShowProductionCompany),
+                List.of(originalCountry), List.of(season), List.of(tvShowSpokenLanguage), status, tagLine, type, voteAverage, voteCount
+        );
+        previewTvShowCreditsResultDto = new PreviewTvShowCreditsResultDto(id, List.of(tvCastMember), List.of(tvCrewMember));
+        previewTvShowWatchProvidersResultDto = new PreviewTvShowWatchProvidersResultDto(id, Map.of(country, tvWatchProvider));
+        previewTvShowVideoResultDto = new PreviewTvShowVideoResultDto(id, List.of(tvVideoResult));
     }
 
     @Test
@@ -212,5 +312,73 @@ class PreviewMediaServiceTest {
 
         verify(previewMediaRepository, never()).getSimilarTVShowListById(anyLong(), anyInt());
         verify(previewMediaRepository, never()).getSimilarMovieListById(anyLong(), anyInt());
+    }
+
+    @Test
+    @DisplayName("Test getMediaDetail method whit valid MediaType(MOVIE) and Id")
+    void getMediaDetailTestScene01() {
+        // Given
+        Long validMovieId = 1L;
+        MediaType media = MediaType.MOVIE;
+        when(previewMediaRepository.getMovieDetailsById(validMovieId)).thenReturn(previewMovieDetailsResultDto);
+        when(previewMediaRepository.getMovieCreditsById(validMovieId)).thenReturn(previewMovieCreditsResultDto);
+        when(previewMediaRepository.getMovieWatchProvidersById(validMovieId)).thenReturn(previewMovieWatchProvidersResultDto);
+        when(previewMediaRepository.getMovieVideosById(validMovieId)).thenReturn(previewMovieVideoResultDto);
+
+        // When
+        MediaDetailsResultResponseDto mediaDetail = previewMediaService.getMediaDetail(media, validMovieId);
+
+        // Then
+        assertEquals("Title", mediaDetail.title());
+
+        verify(previewMediaRepository).getMovieDetailsById(validMovieId);
+        verify(previewMediaRepository).getMovieCreditsById(validMovieId);
+        verify(previewMediaRepository).getMovieWatchProvidersById(validMovieId);
+        verify(previewMediaRepository).getMovieVideosById(validMovieId);
+    }
+
+    @Test
+    @DisplayName("Test getMediaDetail method whit valid MediaType(TV) and Id")
+    void getMediaDetailTestScene02() {
+        // Given
+        Long validTvShowId = 1L;
+        MediaType media = MediaType.TV;
+        when(previewMediaRepository.getTvShowDetailsById(validTvShowId)).thenReturn(previewTvShowDetailsResultDto);
+        when(previewMediaRepository.getTvShowCreditsById(validTvShowId)).thenReturn(previewTvShowCreditsResultDto);
+        when(previewMediaRepository.getTvShowWatchProvidersById(validTvShowId)).thenReturn(previewTvShowWatchProvidersResultDto);
+        when(previewMediaRepository.getTvShowVideosById(validTvShowId)).thenReturn(previewTvShowVideoResultDto);
+
+        // When
+        MediaDetailsResultResponseDto mediaDetail = previewMediaService.getMediaDetail(media, validTvShowId);
+
+        // Then
+        assertEquals("name", mediaDetail.title());
+
+        verify(previewMediaRepository).getTvShowDetailsById(validTvShowId);
+        verify(previewMediaRepository).getTvShowCreditsById(validTvShowId);
+        verify(previewMediaRepository).getTvShowWatchProvidersById(validTvShowId);
+        verify(previewMediaRepository).getTvShowVideosById(validTvShowId);
+    }
+
+    @Test
+    @DisplayName("Test getMediaDetail whit invalid MediaType(PERSON)")
+    void getMediaDetailScene03() {
+        // Given
+        Long validId = 1L;
+        MediaType invalidMediaType = MediaType.PERSON;
+
+        // When // Then
+        assertThrows(InvalidSearchException.class, () -> {
+            previewMediaService.getMediaDetail(invalidMediaType, validId);
+        });
+
+        verify(previewMediaRepository, never()).getMovieDetailsById(validId);
+        verify(previewMediaRepository, never()).getTvShowDetailsById(validId);
+        verify(previewMediaRepository, never()).getMovieCreditsById(validId);
+        verify(previewMediaRepository, never()).getTvShowCreditsById(validId);
+        verify(previewMediaRepository, never()).getMovieWatchProvidersById(validId);
+        verify(previewMediaRepository, never()).getTvShowWatchProvidersById(validId);
+        verify(previewMediaRepository, never()).getMovieVideosById(validId);
+        verify(previewMediaRepository, never()).getTvShowVideosById(validId);
     }
 }

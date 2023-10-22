@@ -1,9 +1,6 @@
 package br.com.cinemenu.cinemenuapi.rest.service;
 
-import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.CineMenuMediaResponse;
-import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewActorCreditsListResults;
-import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResponsePage;
-import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResults;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.*;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.InvalidSearchException;
 import br.com.cinemenu.cinemenuapi.rest.mapper.PreviewMediaMapper;
@@ -76,6 +73,28 @@ public class PreviewMediaService {
             List<CineMenuMediaResponse> list = similarMovieListById.results().stream().map(PreviewMediaMapper::movieMediaMap).toList();
 
             return new PreviewMediaResponsePage(page, list, similarMovieListById.total_pages());
+        }
+
+        throw new InvalidSearchException(INVALID_SEARCH_MEDIA.formatted(media));
+    }
+
+    public MediaDetailsResultResponseDto getMediaDetail(MediaType media, Long id) {
+        if (media.equals(MediaType.TV)) {
+            PreviewTvShowDetailsResultDto tvShowDetails = previewMediaRepository.getTvShowDetailsById(id);
+            PreviewTvShowCreditsResultDto tvShowCredits = previewMediaRepository.getTvShowCreditsById(id);
+            PreviewTvShowWatchProvidersResultDto tvShowWatchProviders = previewMediaRepository.getTvShowWatchProvidersById(id);
+            PreviewTvShowVideoResultDto tvShowVideos = previewMediaRepository.getTvShowVideosById(id);
+
+            return PreviewMediaMapper.mediaDetails(tvShowDetails, tvShowCredits, tvShowWatchProviders, tvShowVideos);
+        }
+
+        if (media.equals(MediaType.MOVIE)) {
+            PreviewMovieDetailsResultDto movieDetails = previewMediaRepository.getMovieDetailsById(id);
+            PreviewMovieCreditsResultDto movieCredits = previewMediaRepository.getMovieCreditsById(id);
+            PreviewMovieWatchProvidersResultDto movieWatchProviders = previewMediaRepository.getMovieWatchProvidersById(id);
+            PreviewMovieVideoResultDto movieVideos = previewMediaRepository.getMovieVideosById(id);
+
+            return PreviewMediaMapper.mediaDetails(movieDetails, movieCredits, movieWatchProviders, movieVideos);
         }
 
         throw new InvalidSearchException(INVALID_SEARCH_MEDIA.formatted(media));
