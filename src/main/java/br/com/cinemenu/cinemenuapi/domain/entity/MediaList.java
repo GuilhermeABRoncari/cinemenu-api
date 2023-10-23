@@ -51,10 +51,24 @@ public class MediaList {
         this.user = user;
     }
 
+    public MediaList(MediaList mediaListReference, CineMenuUser user) {
+        this.title = mediaListReference.getTitle().trim();
+        this.description = mediaListReference.getDescription();
+        this.visibility = mediaListReference.getVisibility();
+        this.amountLike = 0;
+        this.amountCopy = 0;
+        this.createdAt = OffsetDateTime.now();
+        this.user = user;
+    }
+
     public void update(MediaListRequestDto requestDto) {
         if (requestDto.title() != null) this.title = requestDto.title();
         this.description = requestDto.description();
         if (requestDto.visibility() != null) this.visibility = requestDto.visibility();
         this.lastChange = OffsetDateTime.now();
+    }
+
+    public void incrementCopyCounter() {
+        this.amountCopy = this.amountCopy + 1;
     }
 }

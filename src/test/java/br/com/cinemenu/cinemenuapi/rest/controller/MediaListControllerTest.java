@@ -230,4 +230,17 @@ class MediaListControllerTest {
         // Then
         assertEquals(HttpStatus.NO_CONTENT, controllerResponse.getStatusCode());
     }
+
+    @Test
+    @DisplayName("Test copyListById() method expecting HttpStatus 201 CREATED")
+    void testCopyListByIdScene01() {
+        // Given
+        String validListId = mediaList.getId();
+
+        // When
+        ResponseEntity<MediaListResponseDto> controllerResponse = controller.copyListById(validListId);
+
+        // Then
+        assertEquals(HttpStatus.CREATED, controllerResponse.getStatusCode());
+    }
 }
