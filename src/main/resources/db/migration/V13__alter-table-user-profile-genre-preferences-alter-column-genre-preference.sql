@@ -1,0 +1,2 @@
+ALTER TABLE user_profile_genre_preferences DROP COLUMN genre_preference;
+ALTER TABLE user_profile_genre_preferences ADD COLUMN genre_preference INTEGER;

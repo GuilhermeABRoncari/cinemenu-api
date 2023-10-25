@@ -30,8 +30,8 @@ class CineMenuUserTest {
         String email = "johndoe@example.com";
         String password = "password";
         OffsetDateTime registrationDate = OffsetDateTime.now();
-        List<CineMenuGenres> genreList = new ArrayList<>();
-        genreList.add(CineMenuGenres.ACTION);
+        List<Integer> genreList = new ArrayList<>();
+        genreList.add(CineMenuGenres.ACTION.getCineMenuGenreId());
         Map<Long, MediaType> mapReference = new HashMap<>();
         mapReference.put(12L, MediaType.MOVIE);
         UserProfile userProfile = new UserProfile("bio", genreList, mapReference);
@@ -160,8 +160,8 @@ class CineMenuUserTest {
         String email = "johndoe@example.com";
         String password = "password";
         OffsetDateTime registrationDate = OffsetDateTime.now();
-        List<CineMenuGenres> genreList = new ArrayList<>();
-        genreList.add(CineMenuGenres.ACTION);
+        List<Integer> genreList = new ArrayList<>();
+        genreList.add(CineMenuGenres.ACTION.getCineMenuGenreId());
         Map<Long, MediaType> mapReference = new HashMap<>();
         mapReference.put(12L, MediaType.MOVIE);
         UserProfile userProfile = new UserProfile("bio", genreList, mapReference);
@@ -191,8 +191,8 @@ class CineMenuUserTest {
         String email = "johndoe@example.com";
         String password = "password";
         OffsetDateTime registrationDate = OffsetDateTime.now();
-        List<CineMenuGenres> genreList = new ArrayList<>();
-        genreList.add(CineMenuGenres.ACTION);
+        List<Integer> genreList = new ArrayList<>();
+        genreList.add(CineMenuGenres.ACTION.getCineMenuGenreId());
         Map<Long, MediaType> mapReference = new HashMap<>();
         mapReference.put(12L, MediaType.MOVIE);
         UserProfile userProfile = new UserProfile("bio", genreList, mapReference);
