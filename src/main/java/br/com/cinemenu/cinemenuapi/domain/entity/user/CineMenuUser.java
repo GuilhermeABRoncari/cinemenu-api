@@ -108,8 +108,8 @@ public class CineMenuUser implements UserDetails {
 
     public void setPreferences(UserPreferencesRequestDto userPreferencesRequestDto) {
         userPreferencesRequestDto.genres().forEach(cineMenuGenres -> {
-            if (!this.profile.getGenrePreferences().contains(CineMenuGenres.fromId(cineMenuGenres.id()))) {
-                this.profile.getGenrePreferences().add(CineMenuGenres.fromId(cineMenuGenres.id()));
+            if (!this.profile.getGenrePreferences().contains(CineMenuGenres.fromId(cineMenuGenres.id()).getCineMenuGenreId())) {
+                this.profile.getGenrePreferences().add(CineMenuGenres.fromId(cineMenuGenres.id()).getCineMenuGenreId());
             }
         });
 

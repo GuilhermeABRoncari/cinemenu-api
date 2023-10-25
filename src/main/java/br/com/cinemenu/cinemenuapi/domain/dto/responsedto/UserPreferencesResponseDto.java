@@ -21,6 +21,6 @@ public record UserPreferencesResponseDto(
         Map<Long, MediaType> tmdbReferences
 ) {
     public UserPreferencesResponseDto(CineMenuUser user) {
-        this(user.getId(), user.getUsername(), user.getProfile().getGenrePreferences(), user.getProfile().getTmdbMediaReferences());
+        this(user.getId(), user.getUsername(), user.getProfile().getGenrePreferences().stream().map(CineMenuGenres::fromId).toList(), user.getProfile().getTmdbMediaReferences());
     }
 }

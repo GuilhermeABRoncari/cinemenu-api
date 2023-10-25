@@ -109,12 +109,11 @@ public class CineMenuUserService {
     public PreviewMediaResponsePage getRecommendations(CineMenuUser user, Integer pageNumber) {
         Integer byGender = 0;
         Integer byTMDBIdReference = 1;
-        Long seed = 9999999L;
-        Random random = new Random(seed);
+        Random random = new Random();
         Integer randomInt = random.nextInt(2);
 
         if (randomInt.equals(byGender) && !user.getProfile().getGenrePreferences().isEmpty()) {
-            return mediaService.getGenreResponse(user.getProfile().getGenrePreferences().stream().map(CineMenuGenres::getCineMenuGenreId).toList(), pageNumber);
+            return mediaService.getGenreResponse(user.getProfile().getGenrePreferences(), pageNumber);
         }
 
         if (randomInt.equals(byTMDBIdReference) && !user.getProfile().getTmdbMediaReferences().isEmpty()) {

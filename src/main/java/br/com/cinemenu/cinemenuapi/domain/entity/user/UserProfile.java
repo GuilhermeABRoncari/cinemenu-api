@@ -1,7 +1,6 @@
 package br.com.cinemenu.cinemenuapi.domain.entity.user;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserProfileRequestDto;
-import br.com.cinemenu.cinemenuapi.domain.enumeration.CineMenuGenres;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,7 +23,7 @@ public class UserProfile {
     @CollectionTable(name = "user_profile_genre_preferences")
     @Enumerated(EnumType.STRING)
     @Column(name = "genre_preference")
-    private List<CineMenuGenres> genrePreferences;
+    private List<Integer> genrePreferences;
 
     @ElementCollection
     @CollectionTable(name = "user_profile_media_references")
