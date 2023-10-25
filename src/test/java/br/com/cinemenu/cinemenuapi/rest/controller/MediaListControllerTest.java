@@ -30,6 +30,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -73,7 +74,7 @@ class MediaListControllerTest {
         };
         controller = new MediaListController(repository, mediaListService, userMediaService, authenticationFacade);
 
-        UserProfile userProfile = new UserProfile("bio");
+        UserProfile userProfile = new UserProfile("bio", List.of(), Map.of());
 
         user = new CineMenuUser("Id", userProfile,"Name", "Username", "example@email.com", "password", OffsetDateTime.now(), false, null, List.of(new MediaList()));
         mediaListRequestDto = new MediaListRequestDto("Title", "Description", ListVisibility.PUBLIC);

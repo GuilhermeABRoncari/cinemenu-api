@@ -19,6 +19,9 @@ public enum CineMenuGenres {
     THRILLER(11);
 
     private final Integer cineMenuGenreId;
+    public Integer getCineMenuGenreId() {
+        return cineMenuGenreId;
+    }
 
     public int getId() {
         return this.cineMenuGenreId;

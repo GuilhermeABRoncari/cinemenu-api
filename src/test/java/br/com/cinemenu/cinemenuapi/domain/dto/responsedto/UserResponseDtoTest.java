@@ -34,7 +34,7 @@ class UserResponseDtoTest {
         String id = "1L";
         String username = "johndoe";
         String name = "John Doe";
-        UserProfile userProfile = new UserProfile("bio");
+        UserProfile userProfile = new UserProfile("bio", null, null);
         CineMenuUser cineMenuUser = new CineMenuUser(id, userProfile, name, username, "johndoe@example.com", "password", OffsetDateTime.now(), false, null, List.of(new MediaList()));
 
         // When

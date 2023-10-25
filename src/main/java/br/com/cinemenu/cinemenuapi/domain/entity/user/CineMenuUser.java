@@ -1,8 +1,10 @@
 package br.com.cinemenu.cinemenuapi.domain.entity.user;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.CineMenuUserRequestDto;
+import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserPreferencesRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserProfileRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
+import br.com.cinemenu.cinemenuapi.domain.enumeration.CineMenuGenres;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -51,7 +53,7 @@ public class CineMenuUser implements UserDetails {
     public CineMenuUser(CineMenuUserRequestDto userDto, String encodedPassword) {
         this.name = userDto.name();
         this.username = userDto.username();
-        this.profile = new UserProfile("");
+        this.profile = new UserProfile("", null, null);
         this.email = userDto.email();
         this.password = encodedPassword;
         this.registrationDate = OffsetDateTime.now();
@@ -102,5 +104,20 @@ public class CineMenuUser implements UserDetails {
         if(dto.name() != null) this.name = dto.name();
         if(dto.username() != null) this.username = dto.username();
         this.profile.update(dto);
+    }
+
+    public void setPreferences(UserPreferencesRequestDto userPreferencesRequestDto) {
+        userPreferencesRequestDto.genres().forEach(cineMenuGenres -> {
+            if (!this.profile.getGenrePreferences().contains(CineMenuGenres.fromId(cineMenuGenres.id()).getCineMenuGenreId())) {
+                this.profile.getGenrePreferences().add(CineMenuGenres.fromId(cineMenuGenres.id()).getCineMenuGenreId());
+            }
+        });
+
+        userPreferencesRequestDto.medias().forEach(userTMDBMediaRequestReference -> {
+            if (!this.profile.getTmdbMediaReferences().containsKey(userTMDBMediaRequestReference.tmdbId()) &&
+                    !this.profile.getTmdbMediaReferences().containsValue(userTMDBMediaRequestReference.mediaType())) {
+                this.profile.getTmdbMediaReferences().put(userTMDBMediaRequestReference.tmdbId(), userTMDBMediaRequestReference.mediaType());
+            }
+        });
     }
 }

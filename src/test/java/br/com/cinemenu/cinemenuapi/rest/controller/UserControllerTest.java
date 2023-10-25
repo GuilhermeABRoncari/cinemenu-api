@@ -1,11 +1,16 @@
 package br.com.cinemenu.cinemenuapi.rest.controller;
 
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.AccountDeleteRequestDto;
+import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserPreferencesRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserProfileRequestDto;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.PreviewMediaResponsePage;
+import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserPreferencesResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserProfileResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
 import br.com.cinemenu.cinemenuapi.domain.entity.user.UserProfile;
+import br.com.cinemenu.cinemenuapi.domain.enumeration.CineMenuGenres;
+import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import br.com.cinemenu.cinemenuapi.domain.repository.UserRepository;
 import br.com.cinemenu.cinemenuapi.infra.security.AuthenticationFacade;
 import br.com.cinemenu.cinemenuapi.rest.service.CineMenuUserService;
@@ -21,7 +26,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.time.OffsetDateTime;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -45,6 +50,7 @@ class UserControllerTest {
     private AccountDeleteRequestDto validAccountDeleteRequestDto;
     private UserProfileRequestDto userProfileRequestDto;
     private UserProfileResponseDto userProfileResponseDto;
+    private Map<Long, MediaType> mapReference = new HashMap<>();
 
     @BeforeEach
     void setup() {
@@ -63,8 +69,8 @@ class UserControllerTest {
         String username = "username";
         String password = "password";
         validAccountDeleteRequestDto = new AccountDeleteRequestDto(validEmail);
-        UserProfile userProfile = new UserProfile("validBiography");
-        validUser = new CineMenuUser(id, userProfile,name, username, validEmail, password, OffsetDateTime.now(), false, null, List.of(new MediaList()));
+        UserProfile userProfile = new UserProfile("validBiography", List.of(), mapReference);
+        validUser = new CineMenuUser(id, userProfile, name, username, validEmail, password, OffsetDateTime.now(), false, null, List.of(new MediaList()));
 
         userProfileRequestDto = new UserProfileRequestDto("new name", "newUsername", "bio");
         userProfileResponseDto = new UserProfileResponseDto(validUser);
@@ -121,6 +127,34 @@ class UserControllerTest {
         // Then
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         verify(repository).findByUsername(validUser.getUsername());
+    }
+
+    @Test
+    @DisplayName("Test method setUserPreferences() from UserController whit valid UserPreferencesRequestDto")
+    void testSetUserPreferencesScene01() {
+        // Given
+        List<UserPreferencesRequestDto.CineMenuGenresId> genreList = new ArrayList<>(Collections.singleton(new UserPreferencesRequestDto.CineMenuGenresId(CineMenuGenres.CRIME.getCineMenuGenreId())));
+        List<UserPreferencesRequestDto.UserTMDBMediaRequestReference> mediaReferences = Collections.singletonList(new UserPreferencesRequestDto.UserTMDBMediaRequestReference(1396L, MediaType.TV));
+        UserPreferencesRequestDto requestDto = new UserPreferencesRequestDto(genreList, mediaReferences);
+
+        // When
+        ResponseEntity<UserPreferencesResponseDto> controllerResponse = controller.setUserPreferences(requestDto);
+
+        // Then
+        assertEquals(HttpStatus.CREATED, controllerResponse.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Test method getRecommendationsByUserPreferences whit valid page number")
+    void testGetRecommendationsByUserPreferences() {
+        // Given
+        Integer page = 1;
+
+        // When
+        ResponseEntity<PreviewMediaResponsePage> controllerResponse = controller.getRecommendationsByUserPreferences(page);
+
+        // Then
+        assertEquals(HttpStatus.OK, controllerResponse.getStatusCode());
     }
 
 }

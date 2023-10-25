@@ -1,14 +1,20 @@
 package br.com.cinemenu.cinemenuapi.domain.entity;
 
+import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserPreferencesRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.UserProfileRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.entity.user.UserProfile;
+import br.com.cinemenu.cinemenuapi.domain.enumeration.CineMenuGenres;
+import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -24,7 +30,11 @@ class CineMenuUserTest {
         String email = "johndoe@example.com";
         String password = "password";
         OffsetDateTime registrationDate = OffsetDateTime.now();
-        UserProfile userProfile = new UserProfile("bio");
+        List<Integer> genreList = new ArrayList<>();
+        genreList.add(CineMenuGenres.ACTION.getCineMenuGenreId());
+        Map<Long, MediaType> mapReference = new HashMap<>();
+        mapReference.put(12L, MediaType.MOVIE);
+        UserProfile userProfile = new UserProfile("bio", genreList, mapReference);
 
         // When
         CineMenuUser cineMenuUser = new CineMenuUser(id, userProfile,name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
@@ -37,6 +47,8 @@ class CineMenuUserTest {
         assertEquals(email, cineMenuUser.getEmail());
         assertEquals(password, cineMenuUser.getPassword());
         assertEquals(registrationDate, cineMenuUser.getRegistrationDate());
+        assertEquals(genreList, cineMenuUser.getProfile().getGenrePreferences());
+        assertEquals(mapReference, cineMenuUser.getProfile().getTmdbMediaReferences());
         Assertions.assertTrue(cineMenuUser.getAuthorities().stream()
                 .anyMatch(authority -> authority.getAuthority().equals("ROLE_USER")));
         Assertions.assertTrue(cineMenuUser.isAccountNonExpired());
@@ -55,7 +67,7 @@ class CineMenuUserTest {
         String email = "johndoe@example.com";
         String password = "password";
         OffsetDateTime registrationDate = OffsetDateTime.now();
-        UserProfile userProfile = new UserProfile("bio");
+        UserProfile userProfile = new UserProfile("bio", List.of(), Map.of());
 
         // When
         CineMenuUser cineMenuUser01 = new CineMenuUser(id, userProfile, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
@@ -80,7 +92,7 @@ class CineMenuUserTest {
         String email = "johndoe@example.com";
         String password = "password";
         OffsetDateTime registrationDate = OffsetDateTime.now();
-        UserProfile userProfile = new UserProfile("bio");
+        UserProfile userProfile = new UserProfile("bio", List.of(), Map.of());
 
         // When
         CineMenuUser cineMenuUser01 = new CineMenuUser(firstId, userProfile, name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
@@ -104,7 +116,7 @@ class CineMenuUserTest {
         OffsetDateTime registrationDate = OffsetDateTime.now();
 
         var userProfileRequest = new UserProfileRequestDto("new name", "new username", "new bio");
-        CineMenuUser cineMenuUser = new CineMenuUser(id, new UserProfile("bio"),name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+        CineMenuUser cineMenuUser = new CineMenuUser(id, new UserProfile("bio", List.of(), Map.of()),name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
 
         // When
         cineMenuUser.updateProfile(userProfileRequest);
@@ -127,7 +139,7 @@ class CineMenuUserTest {
         OffsetDateTime registrationDate = OffsetDateTime.now();
 
         var userProfileRequest = new UserProfileRequestDto(null, null, null);
-        CineMenuUser cineMenuUser = new CineMenuUser(id, new UserProfile("bio"),name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+        CineMenuUser cineMenuUser = new CineMenuUser(id, new UserProfile("bio", List.of(), Map.of()),name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
 
         // When
         cineMenuUser.updateProfile(userProfileRequest);
@@ -136,5 +148,67 @@ class CineMenuUserTest {
         assertEquals("John Doe", cineMenuUser.getName());
         assertEquals("johndoe", cineMenuUser.getUsername());
         assertEquals("bio", cineMenuUser.getProfile().getBiography());
+    }
+
+    @Test
+    @DisplayName("Test setPreferences method whit valid requestDto")
+    void testSetPreferencesScene01() {
+        // Given
+        String id = "1L";
+        String name = "John Doe";
+        String username = "johndoe";
+        String email = "johndoe@example.com";
+        String password = "password";
+        OffsetDateTime registrationDate = OffsetDateTime.now();
+        List<Integer> genreList = new ArrayList<>();
+        genreList.add(CineMenuGenres.ACTION.getCineMenuGenreId());
+        Map<Long, MediaType> mapReference = new HashMap<>();
+        mapReference.put(12L, MediaType.MOVIE);
+        UserProfile userProfile = new UserProfile("bio", genreList, mapReference);
+        CineMenuUser cineMenuUser = new CineMenuUser(id, userProfile,name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+        List<UserPreferencesRequestDto.CineMenuGenresId> genresIdList = new ArrayList<>();
+        genresIdList.add(new UserPreferencesRequestDto.CineMenuGenresId(CineMenuGenres.ANIMATION.getCineMenuGenreId()));
+        List<UserPreferencesRequestDto.UserTMDBMediaRequestReference> mapReferenceRequest = new ArrayList<>();
+        mapReferenceRequest.add(new UserPreferencesRequestDto.UserTMDBMediaRequestReference(1396L, MediaType.TV));
+
+        UserPreferencesRequestDto requestDto = new UserPreferencesRequestDto(genresIdList, mapReferenceRequest);
+
+        // When
+        cineMenuUser.setPreferences(requestDto);
+
+        // Then
+        assertEquals(2, cineMenuUser.getProfile().getGenrePreferences().size());
+        assertEquals(2, cineMenuUser.getProfile().getTmdbMediaReferences().size());
+    }
+
+    @Test
+    @DisplayName("Test setPreferences method whit existing requestDto")
+    void testSetPreferencesScene02() {
+        // Given
+        String id = "1L";
+        String name = "John Doe";
+        String username = "johndoe";
+        String email = "johndoe@example.com";
+        String password = "password";
+        OffsetDateTime registrationDate = OffsetDateTime.now();
+        List<Integer> genreList = new ArrayList<>();
+        genreList.add(CineMenuGenres.ACTION.getCineMenuGenreId());
+        Map<Long, MediaType> mapReference = new HashMap<>();
+        mapReference.put(12L, MediaType.MOVIE);
+        UserProfile userProfile = new UserProfile("bio", genreList, mapReference);
+        CineMenuUser cineMenuUser = new CineMenuUser(id, userProfile,name, username, email, password, registrationDate, false, null, List.of(new MediaList()));
+        List<UserPreferencesRequestDto.CineMenuGenresId> genresIdList = new ArrayList<>();
+        genresIdList.add(new UserPreferencesRequestDto.CineMenuGenresId(CineMenuGenres.ACTION.getCineMenuGenreId()));
+        List<UserPreferencesRequestDto.UserTMDBMediaRequestReference> mapReferenceRequest = new ArrayList<>();
+        mapReferenceRequest.add(new UserPreferencesRequestDto.UserTMDBMediaRequestReference(12L, MediaType.MOVIE));
+
+        UserPreferencesRequestDto requestDto = new UserPreferencesRequestDto(genresIdList, mapReferenceRequest);
+
+        // When
+        cineMenuUser.setPreferences(requestDto);
+
+        // Then
+        assertEquals(1, cineMenuUser.getProfile().getGenrePreferences().size());
+        assertEquals(1, cineMenuUser.getProfile().getTmdbMediaReferences().size());
     }
 }
