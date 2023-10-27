@@ -10,10 +10,9 @@ import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.repository.UserRepository;
 import br.com.cinemenu.cinemenuapi.infra.security.AuthenticationFacade;
 import br.com.cinemenu.cinemenuapi.rest.service.CineMenuUserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/user")
 @AllArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class UserController {
 
     private final UserRepository repository;
@@ -39,6 +39,7 @@ public class UserController {
     }
 
     @GetMapping("/details")
+    @SecurityRequirement(name = "bearerAuth")
     public ResponseEntity<UserProfileResponseDto> getUserProfile() {
         return ResponseEntity.ok(service.getUserProfile(getUser()));
     }
