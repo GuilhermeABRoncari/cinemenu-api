@@ -1,0 +1,1 @@
+ALTER TABLE user_media_list ADD COLUMN created_by VARCHAR(255);

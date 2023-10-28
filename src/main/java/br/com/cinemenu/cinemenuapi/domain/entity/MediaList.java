@@ -40,6 +40,8 @@ public class MediaList {
     private OffsetDateTime lastChange;
     @ManyToOne
     private CineMenuUser user;
+    @Column(name = "created_by")
+    private String createdBy;
 
     public MediaList(MediaListRequestDto requestDto, CineMenuUser user) {
         this.title = requestDto.title().trim();
@@ -49,6 +51,7 @@ public class MediaList {
         this.amountCopy = 0;
         this.createdAt = OffsetDateTime.now();
         this.user = user;
+        this.createdBy = user.getId();
     }
 
     public MediaList(MediaList mediaListReference, CineMenuUser user) {
@@ -59,6 +62,7 @@ public class MediaList {
         this.amountCopy = 0;
         this.createdAt = OffsetDateTime.now();
         this.user = user;
+        this.createdBy = mediaListReference.getCreatedBy();
     }
 
     public void update(MediaListRequestDto requestDto) {

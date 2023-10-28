@@ -65,7 +65,7 @@ class UserMediaServiceTest {
         requestDto = new UserMediaRequestDto(List.of(elementsDto));
         userMedia = new UserMedia(elementsDto);
         anotherUserMedia = new UserMedia(elementsDto);
-        mediaList = new MediaList("ID", "Title", "Gracefully description", userMediaList, ListVisibility.PUBLIC, 0, 0, OffsetDateTime.now(), null, user);
+        mediaList = new MediaList("ID", "Title", "Gracefully description", userMediaList, ListVisibility.PUBLIC, 0, 0, OffsetDateTime.now(), null, user, "ID");
         user = new CineMenuUser("ID", new UserProfile("bio", List.of(), Map.of()),"name", "username", "email", "password", OffsetDateTime.now(), false, null, mediaListList);
 
         page = new Pageable() {
