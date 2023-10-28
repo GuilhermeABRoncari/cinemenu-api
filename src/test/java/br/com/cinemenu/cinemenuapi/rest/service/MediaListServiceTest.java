@@ -412,6 +412,7 @@ class MediaListServiceTest {
         user.getMediaLists().add(publicMediaList);
         user.getMediaLists().add(privateMediaList);
         when(userRepository.findById(validUserId)).thenReturn(Optional.ofNullable(user));
+        when(mediaListRepository.getAllPublicListsFromUser(user)).thenReturn(List.of(publicMediaList));
 
         // When
         Page<MediaListResponseDto> serviceResponse = service.getPublicListsPageByUserId(validUserId, page);
