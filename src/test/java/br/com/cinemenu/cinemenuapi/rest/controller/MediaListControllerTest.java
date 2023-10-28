@@ -244,4 +244,17 @@ class MediaListControllerTest {
         // Then
         assertEquals(HttpStatus.CREATED, controllerResponse.getStatusCode());
     }
+
+    @Test
+    @DisplayName("Test getPublicListsByUserId() method whit valid user id")
+    void testGetPublicListsByUserId() {
+        // Given
+        String validUserId = user.getId();
+
+        // When
+        ResponseEntity<Page<MediaListResponseDto>> controllerResponse = controller.getPublicListsByUserId(validUserId, page);
+
+        // Then
+        assertEquals(HttpStatus.OK, controllerResponse.getStatusCode());
+    }
 }
