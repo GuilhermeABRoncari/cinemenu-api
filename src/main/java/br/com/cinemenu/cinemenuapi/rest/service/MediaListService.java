@@ -29,6 +29,7 @@ public class MediaListService {
     private static final String LIST_NOT_FOUND_BY_QUERY = "List not found for query: %s";
     private static final String PUBLIC_LIST_NOT_FOUND_BY_QUERY = "Public lists not found for query: %s";
     private static final String LIST_NOT_FOUND = "List whit id: %s not found";
+    private static final String USER_NOT_FOUND = "User whit id: %s not found";
 
     @Transactional
     public MediaListResponseDto create(CineMenuUser user, MediaListRequestDto requestDto) {
@@ -122,6 +123,14 @@ public class MediaListService {
         userRepository.save(user);
 
         return new MediaListResponseDto(newMediaListByReference);
+    }
+
+    public Page<MediaListResponseDto> getPublicListsPageByUserId(String userId, Pageable pageable) {
+        CineMenuUser user = userRepository.findById(userId).orElseThrow(() -> new CineMenuEntityNotFoundException(USER_NOT_FOUND));
+
+        List<MediaListResponseDto> responseList = mediaListRepository.getAllPublicListsFromUser(user).stream().map(MediaListResponseDto::new).toList();
+
+        return buildPage(responseList, pageable);
     }
 
     private Page<MediaListResponseDto> buildPage(List<MediaListResponseDto> list, Pageable page) {
