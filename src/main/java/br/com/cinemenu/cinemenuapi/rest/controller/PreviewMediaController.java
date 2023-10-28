@@ -6,6 +6,7 @@ import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import br.com.cinemenu.cinemenuapi.rest.service.PreviewMediaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,9 @@ public class PreviewMediaController {
                     By default, the initial index of the page is based on 1 (one).
                     Page number can not be less than 0 (zero) or more than 500 (Five Hundred).
                     """,
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully return.")
+            },
             parameters = {
                     @Parameter(name = "q", description = "Search query.", required = true),
                     @Parameter(name = "page", description = "Page number.", required = true)
@@ -47,6 +51,9 @@ public class PreviewMediaController {
                     By default, the initial index of the page is based on 1 (one).
                     Page number can not be less than 0 (zero) or more than 500 (Five Hundred).
                     """,
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully return.")
+            },
             parameters = {
                     @Parameter(name = "id", description = "List of CineMenu Genres IDs.", required = true),
                     @Parameter(name = "page", description = "Page number.", required = true)
@@ -64,6 +71,9 @@ public class PreviewMediaController {
                     By default, the initial index of the page is based on 1 (one).
                     Page number can not be less than 0 (zero) or more than 500 (Five Hundred).
                     """,
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully return.")
+            },
             parameters = {
                     @Parameter(name = "page", description = "Page number.", required = true)
             }
@@ -76,6 +86,9 @@ public class PreviewMediaController {
     @Operation(
             summary = "Get movies from person ID.",
             description = "Search for movies using the provide person ID.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully return.")
+            },
             parameters = {
                     @Parameter(name = "id", description = "Person ID.", required = true)
             }
@@ -92,6 +105,9 @@ public class PreviewMediaController {
                     By default, the initial index of the page is based on 1 (one).
                     Page number can not be less than 0 (zero) or more than 500 (Five Hundred).
                     """,
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully return.")
+            },
             parameters = {
                     @Parameter(name = "id", description = "Person ID.", required = true)
             }
@@ -104,6 +120,9 @@ public class PreviewMediaController {
     @Operation(
             summary = "Get similar medias.",
             description = "Return a page of similar medias based in the provided media type and ID.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully return.")
+            },
             parameters = {
                     @Parameter(name = "id", description = "ID from the movie database", required = true),
                     @Parameter(name = "media", description = "Media Type = TV or MOVIE.", required = true),
@@ -121,6 +140,9 @@ public class PreviewMediaController {
             description = """
                     Return media details contains all credentials for this provided media.
                     """,
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully return.")
+            },
             parameters = {
                     @Parameter(name = "id", description = "ID from the movie database", required = true),
                     @Parameter(name = "media", description = "Media Type = TV or MOVIE.", required = true)

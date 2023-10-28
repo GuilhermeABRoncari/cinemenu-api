@@ -95,6 +95,9 @@ public class MediaListController {
                     By default, the initial index of the page is based on 0 (zero).
                     By default, this endpoint is sorted by created_at.DESC.
                     """,
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully return.")
+            },
             parameters = {
                     @Parameter(name = "page", description = "Page number.", required = true),
                     @Parameter(name = "sort", description = "Change the sort criterion.", required = false),
@@ -112,6 +115,9 @@ public class MediaListController {
                     Gets pagination of media by the list ID provided. 
                     By default, lists can only be accessed if they belong to the current user, or have public visibility.
                     """,
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully return.")
+            },
             parameters = {
                     @Parameter(name = "id_list", description = "ID of an existing media list.", required = true),
                     @Parameter(name = "page", description = "Page number.", required = true),
@@ -127,6 +133,9 @@ public class MediaListController {
     @Operation(
             summary = "Return a media list by ID.",
             description = "Return a media list by a existing media list belonging of the current user or if the list have a public visibility.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully return.")
+            },
             parameters = {
                     @Parameter(name = "id", description = "ID of an existing media list.", required = true)
             }
@@ -143,6 +152,9 @@ public class MediaListController {
                     By default, the initial index of the page is based on 0 (zero).
                     Its possible use parameters like size, and sort.
                     """,
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully return.")
+            },
             parameters = {
                     @Parameter(name = "q", description = "Query used to search.", required = true),
                     @Parameter(name = "page", description = "Page number.", required = true),
@@ -162,6 +174,9 @@ public class MediaListController {
                     By default, the initial index of the page is based on 0 (zero).
                     Its possible use parameters like size, and sort.
                     """,
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully return.")
+            },
             parameters = {
                     @Parameter(name = "q", description = "Query used to search.", required = true),
                     @Parameter(name = "page", description = "Page number.", required = true),
@@ -180,6 +195,9 @@ public class MediaListController {
                     Edit a list by the provided ID.
                     Is only possible to edit a list if the list belongs to current user.
                     """,
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully return.")
+            },
             parameters = {
                     @Parameter(name = "id", description = "ID of an existing media list belonging to current user.", required = true)
             }
@@ -195,6 +213,9 @@ public class MediaListController {
                     Edit a media by the provided ID.
                     Is only possible to edit a media if the media belongs to current user.
                     """,
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully return.")
+            },
             parameters = {
                     @Parameter(name = "id_media", description = "ID of an existing media belonging to current user.", required = true)
             }
@@ -210,6 +231,9 @@ public class MediaListController {
                     Delete a media list by provided ID.
                     Is only possible to delete this media list if the list belongs to current user.
                     """,
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Successfully deleted.")
+            },
             parameters = {
                     @Parameter(name = "id", description = "ID of a media list belonging of the current user.", required = true)
             }
@@ -226,6 +250,9 @@ public class MediaListController {
                     Delete a media by provided ID.
                     Is only possible to delete this media if the media belongs to current user.
                     """,
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Successfully deleted.")
+            },
             parameters = {
                     @Parameter(name = "id", description = "ID of a media belonging of the current user.", required = true)
             }
