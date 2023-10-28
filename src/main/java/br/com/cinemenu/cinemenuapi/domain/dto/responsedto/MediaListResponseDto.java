@@ -25,14 +25,16 @@ public record MediaListResponseDto(
         Integer amountCopy,
         @JsonProperty(value = "owner_id", index = 7)
         String ownerId,
-        @JsonProperty(value = "last_change", index = 8)
+        @JsonProperty(value = "created_by", index = 8)
+        String createdBy,
+        @JsonProperty(value = "last_change", index = 9)
         OffsetDateTime lastChange
 ) {
     public MediaListResponseDto(MediaList previewMediaList) {
         this(
                 previewMediaList.getId(), previewMediaList.getTitle(), previewMediaList.getDescription(), previewMediaList.getUserMedias().size(),
                 previewMediaList.getVisibility(), previewMediaList.getAmountLike(), previewMediaList.getAmountCopy(),
-                previewMediaList.getUser().getId(), previewMediaList.getLastChange()
+                previewMediaList.getUser().getId(), previewMediaList.getCreatedBy(), previewMediaList.getLastChange()
         );
     }
 }
