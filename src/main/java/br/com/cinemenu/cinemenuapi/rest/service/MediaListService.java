@@ -128,9 +128,7 @@ public class MediaListService {
     public Page<MediaListResponseDto> getPublicListsPageByUserId(String userId, Pageable pageable) {
         CineMenuUser user = userRepository.findById(userId).orElseThrow(() -> new CineMenuEntityNotFoundException(USER_NOT_FOUND));
 
-        List<MediaListResponseDto> responseList = user.getMediaLists().stream()
-                .filter(mediaList -> mediaList.getVisibility().equals(ListVisibility.PUBLIC))
-                .map(MediaListResponseDto::new).toList();
+        List<MediaListResponseDto> responseList = mediaListRepository.getAllPublicListsFromUser(user).stream().map(MediaListResponseDto::new).toList();
 
         return buildPage(responseList, pageable);
     }
