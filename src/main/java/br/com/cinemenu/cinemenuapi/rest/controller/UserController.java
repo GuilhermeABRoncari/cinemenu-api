@@ -10,6 +10,8 @@ import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
 import br.com.cinemenu.cinemenuapi.domain.repository.UserRepository;
 import br.com.cinemenu.cinemenuapi.infra.security.AuthenticationFacade;
 import br.com.cinemenu.cinemenuapi.rest.service.CineMenuUserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -29,32 +31,65 @@ public class UserController {
 
 
     @PostMapping("/preference")
+    @Operation(
+            summary = "Set user preferences.",
+            description = " Set the preferences of the current user."
+    )
     public ResponseEntity<UserPreferencesResponseDto> setUserPreferences(@RequestBody @Valid UserPreferencesRequestDto userPreferencesRequestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.setUserPreferences(getUser(), userPreferencesRequestDto));
     }
 
     @GetMapping("/recommendations")
+    @Operation(
+            summary = "Get recommendations of medias.",
+            description = """
+                    Get a page of medias from the movie database based in user preferences.
+                    By default, the initial index of the page is based on 1 (one).
+                    Page number can not be less than 0 (zero) or more than 500 (Five Hundred).
+                    """,
+            parameters = {
+                    @Parameter(name = "page", description = "Page number", required = true)
+            }
+    )
     public ResponseEntity<PreviewMediaResponsePage> getRecommendationsByUserPreferences(@RequestParam("page") Integer pageNumber) {
         return ResponseEntity.ok(service.getRecommendations(getUser(), pageNumber));
     }
 
     @GetMapping("/details")
-    @SecurityRequirement(name = "bearerAuth")
+    @Operation(
+            summary = "Get the current user details.",
+            description = "Return the user profile from the current user."
+    )
     public ResponseEntity<UserProfileResponseDto> getUserProfile() {
         return ResponseEntity.ok(service.getUserProfile(getUser()));
     }
 
     @GetMapping("/details_bio")
+    @Operation(
+            summary = "Get user details profile by ID.",
+            description = "Return a user profile from the provided user ID.",
+            parameters = {
+                    @Parameter(name = "id", description = "User ID.")
+            }
+    )
     public ResponseEntity<UserProfileResponseDto> getUserProfileById(@RequestParam(name = "id") String id) {
         return ResponseEntity.ok(service.getUserProfileById(id));
     }
 
     @PutMapping("/details_bio")
+    @Operation(
+            summary = "Edit the current user profile.",
+            description = "Change/edit the profile details from the current user."
+    )
     public ResponseEntity<UserProfileResponseDto> updateUserProfile(@RequestBody @Valid UserProfileRequestDto dto) {
         return ResponseEntity.ok(service.updateUserProfile(getUser(), dto));
     }
 
     @DeleteMapping("/account")
+    @Operation(
+            summary = "Soft delete the account of the current user.",
+            description = "Soft delete the current user account."
+    )
     public ResponseEntity<HttpStatus> delete(@RequestBody @Valid AccountDeleteRequestDto dto) {
         service.deleteUserAccount(getUser(), dto);
         return ResponseEntity.noContent().build();

@@ -52,7 +52,24 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
                                 
                 A Cine Menu API é a sua ferramenta definitiva para explorar e desfrutar de um mundo de entretenimento. Crie sua conta hoje e comece a personalizar sua experiência de cinema e séries como nunca antes!
                                 
-                                
+                     Media Types = TV, MOVIE or PERSON
+                     CineMenu Genres IDs: 
+                            ACTION = 67
+                            ADVENTURE = 89
+                            ANIMATION = 13
+                            COMEDY = 32
+                            CRIME = 70
+                            DOCUMENTARY = 72
+                            DRAMA = 76
+                            FAMILY = 46
+                            FANTASY = 98
+                            HISTORY = 57
+                            HORROR = 66
+                            MUSIC = 91
+                            MYSTERY = 16
+                            ROMANCE = 38
+                            SCIENCE_FICTION = 78
+                            THRILLER = 11        
                 """,
         contact = @Contact(
                 name = "Guilherme Roncari",
