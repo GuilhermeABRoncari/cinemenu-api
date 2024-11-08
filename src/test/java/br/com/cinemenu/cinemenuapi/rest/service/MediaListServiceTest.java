@@ -403,4 +403,34 @@ class MediaListServiceTest {
             service.copyListById(user, invalidId);
         });
     }
+
+    @Test
+    @DisplayName("Test getPublicListsPageByUserId() method whit valid user ID and page")
+    void testGetPublicListsPageByUserIdScene01() {
+        // Given
+        String validUserId = user.getId();
+        user.getMediaLists().add(publicMediaList);
+        user.getMediaLists().add(privateMediaList);
+        when(userRepository.findById(validUserId)).thenReturn(Optional.ofNullable(user));
+        when(mediaListRepository.getAllPublicListsFromUser(user)).thenReturn(List.of(publicMediaList));
+
+        // When
+        Page<MediaListResponseDto> serviceResponse = service.getPublicListsPageByUserId(validUserId, page);
+
+        // Then
+        assertEquals(1, serviceResponse.getContent().size());
+        verify(userRepository).findById(validUserId);
+    }
+
+    @Test
+    @DisplayName("Test getPublicListsPageByUserId() method whit invalid user ID")
+    void testGetPublicListsPageByUserIdScene02() {
+        // Given
+        String invalidUserId = "invalidID";
+
+        // When // Then
+        assertThrows(CineMenuEntityNotFoundException.class, () -> {
+            service.getPublicListsPageByUserId(invalidUserId, page);
+        });
+    }
 }

@@ -188,6 +188,28 @@ public class MediaListController {
         return ResponseEntity.ok(mediaListService.getPublicMediaListsBySearch(query, page));
     }
 
+    @GetMapping("/user")
+    @Operation(
+            summary = "Return all public media lists from user ID.",
+            description = """
+                    Get all media lists whit public visibility from the provided user ID.
+                    By default, the initial index of the page is based on 0 (zero).
+                    Its possible use parameters like size, and sort.
+                    """,
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully return.")
+            },
+            parameters = {
+                    @Parameter(name = "user_id", description = "ID of an existing user", required = true),
+                    @Parameter(name = "page", description = "Page number.", required = true),
+                    @Parameter(name = "sort", description = "Change the sort criterion.", required = false),
+                    @Parameter(name = "size", description = "Change the number of elements for page.", required = false)
+            }
+    )
+    public ResponseEntity<Page<MediaListResponseDto>> getPublicListsByUserId(@RequestParam("user_id") String userId, Pageable pageable) {
+        return ResponseEntity.ok(mediaListService.getPublicListsPageByUserId(userId, pageable));
+    }
+
     @PutMapping
     @Operation(
             summary = "Edit a list by ID.",
