@@ -26,8 +26,8 @@ public class AuthenticationController {
     @Operation(
             summary = "Create user account",
             description = """
-            Create a user account using a unique username and email, name, password whose required eight characters containing at least one uppercase letter, one special character, and one number.
-            """,
+                    Create a user account using a unique username and email, name, password whose required eight characters containing at least one uppercase letter, one special character, and one number.
+                    """,
             responses = {
                     @ApiResponse(responseCode = "201", description = "Success to account creation and login automatically.")
             }
@@ -41,8 +41,8 @@ public class AuthenticationController {
     @Operation(
             summary = "Login existing user account",
             description = """
-            Login to user account using valid email and password.
-            """,
+                    Login to user account using valid email and password.
+                    """,
             responses = {
                     @ApiResponse(responseCode = "200", description = "Success to login and return a valid token.")
             }
