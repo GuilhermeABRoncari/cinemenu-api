@@ -4,6 +4,7 @@ import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.CineMenuUserRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.requestdto.LoginRequestDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.TokenResponseDto;
 import br.com.cinemenu.cinemenuapi.rest.service.CineMenuUserService;
+import br.com.cinemenu.cinemenuapi.rest.service.EmailService;
 import br.com.cinemenu.cinemenuapi.rest.service.SignupService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,11 +28,14 @@ class AuthenticationControllerTest {
     @Mock
     private SignupService signupService;
 
+    @Mock
+    private EmailService emailService;
+
     @BeforeEach
     void setup() {
         userService = Mockito.mock(CineMenuUserService.class);
         signupService = Mockito.mock(SignupService.class);
-        authenticationController = new AuthenticationController(userService, signupService);
+        authenticationController = new AuthenticationController(userService, signupService, emailService);
     }
 
     @Test

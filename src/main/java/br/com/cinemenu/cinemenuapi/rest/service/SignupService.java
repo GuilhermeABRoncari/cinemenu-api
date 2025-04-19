@@ -26,7 +26,7 @@ public class SignupService {
         passwordValidation(userDto.password(), userDto.confirmationPassword());
     }
 
-    void passwordValidation(String password, String confirmationPassword) {
+    public void passwordValidation(String password, String confirmationPassword) {
         if (!password.equals(confirmationPassword)) {
             throw new IllegalArgumentException(NOT_SAME_PASSWORD);
         }
