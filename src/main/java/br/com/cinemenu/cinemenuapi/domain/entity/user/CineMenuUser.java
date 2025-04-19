@@ -7,10 +7,7 @@ import br.com.cinemenu.cinemenuapi.domain.entity.MediaList;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.CineMenuGenres;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
@@ -41,6 +38,7 @@ public class CineMenuUser implements UserDetails {
     private String name;
     private String username;
     private String email;
+    @Setter
     private String password;
     @Column(name = "registration_date")
     private OffsetDateTime registrationDate;

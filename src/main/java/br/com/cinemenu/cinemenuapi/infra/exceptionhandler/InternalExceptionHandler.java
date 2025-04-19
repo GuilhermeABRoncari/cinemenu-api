@@ -76,6 +76,6 @@ public class InternalExceptionHandler {
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private record ExceptionResponse(Integer status, String fields, List<String> messages, OffsetDateTime dateTime){}
+    public record ExceptionResponse(Integer status, String fields, List<String> messages, OffsetDateTime dateTime){}
 
 }

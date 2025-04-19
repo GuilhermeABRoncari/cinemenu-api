@@ -37,9 +37,10 @@ public class SecurityConfigurations {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST, "/login", "/signup").permitAll()
+                .requestMatchers(HttpMethod.POST, "/login", "/signup", "/recovery-password",
+                        "/recovery-password/confirm").permitAll()
                 .requestMatchers(HttpMethod.GET, "/cinemenu/**").permitAll()
-                .requestMatchers( AUTH_WHITELIST).permitAll()
+                .requestMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest().authenticated()
                 .and().addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

@@ -6,13 +6,14 @@ import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.TokenResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserPreferencesResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.dto.responsedto.UserProfileResponseDto;
 import br.com.cinemenu.cinemenuapi.domain.entity.user.CineMenuUser;
-import br.com.cinemenu.cinemenuapi.domain.enumeration.CineMenuGenres;
 import br.com.cinemenu.cinemenuapi.domain.enumeration.MediaType;
 import br.com.cinemenu.cinemenuapi.domain.repository.UserRepository;
 import br.com.cinemenu.cinemenuapi.infra.exceptionhandler.exception.CineMenuEntityNotFoundException;
 import br.com.cinemenu.cinemenuapi.infra.security.SecurityConfigurations;
 import br.com.cinemenu.cinemenuapi.infra.security.TokenService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Generated;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -126,5 +127,15 @@ public class CineMenuUserService {
         }
 
         throw new IllegalArgumentException(EMPTY_PREFERENCES.formatted(user.getUsername()));
+    }
+
+    public void updatePassword(@Email @NotBlank String email, String newPassword) {
+        CineMenuUser user = repository.getReferenceByEmail(email);
+        if (user == null) {
+            throw new CineMenuEntityNotFoundException(USER_NOT_FOUND.formatted(email));
+        }
+
+        user.setPassword(securityConfigurations.passwordEncoder().encode(newPassword));
+        repository.save(user);
     }
 }
